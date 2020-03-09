@@ -1,0 +1,27 @@
+1. Requirements due date and set it for today
+2. Need ability to login as a certain user; need to add that
+3. We want a three-layer application:
+	A. Top: Interface (what user sees)
+	B. Middle: API (a way to query database)
+	C. Bottom: Datebase
+4. Deliverables
+	A. Proposed 10-day sprints
+	B. Acknowledged delivery date to be 53 days from now
+5. How should we do the first sprint?
+	A. Create a backlog
+	B. Create categories for products
+	C. We're using Trello to track progress and tasks
+6. Lowered priorities of difficult requirements (adding descriptions and images to products)
+7. Establish authentication methods to distinguish consumer with employee (maybe a different button). Each different user will see a different screen based on their authentication. 
+*unsuccessfully searched for a product dataset*
+*posited scraping Walmart for sample data*
+*looked up details on Ionic*
+*found qrcode generator*
+8. Determined desktop gui to be a generic console / command line
+9. Start with the mobile app and successfully connect to the database
+---------------------------------------------------------------------
+Closing remarks:
+- Complete requirements by tonight and submitted by 8am 3/10 (everyone)
+- Brainstorm method to mass-switch unavailable items to avialable (Corbin)
+- Upload sample data to all categories to database (Corbin)
+- Learning how to search/query things in Mongo (Matthew)
