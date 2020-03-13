@@ -25,3 +25,9 @@ Closing remarks:
 - Brainstorm method to mass-switch unavailable items to avialable (Corbin)
 - Upload sample data to all categories to database (Corbin)
 - Learning how to search/query things in Mongo (Matthew)
+
+---------------------------------------------------------------------
+UPDATE: added two requirements (new user login and existing user login)
+	added closing remarks
+		- Make sure Ionic app can connect to database
+		- Design frontend and backend for the login screen for both desktop (python) and app (javascript) users
