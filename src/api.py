@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import urllib.parse
 from pprint import pprint
 from pymongo import MongoClient
 
@@ -9,10 +10,21 @@ class Api:
     The API class implements the Innoventory API which is used to interact
     with the backend MongoDB instance. 
     '''
-    authenConnectionString = "mongodb+srv://AuthenTest:test@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
-    customerConnectionString = ""
-    employeeConnectionString = ""
-    managerConnectionString = ""
+    authenUsername = urllib.parse.quote("AuthenTest")
+    authenPassword = urllib.parse.quote("test")
+    authenConnectionString = f"mongodb+srv://{authenUsername}:{authenPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
+    
+    customerUsername = urllib.parse.quote("customer")
+    customerPassword = urllib.parse.quote("gIcgQXd4prd1C3yk")
+    customerConnectionString = f"mongodb+srv://{customerUsername}:{customerPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
+    
+    employeeUsername = urllib.parse.quote("employee")
+    employeePassword = urllib.parse.quote("")
+    employeeConnectionString = f"mongodb+srv://{employeeUsername}:{employeePassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
+
+    managerUsername = urllib.parse.quote("manager")
+    managerPassword = urllib.parse.quote("")
+    managerConnectionString = f"mongodb+srv://{managerUsername}:{managerPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
 
     emptyUser = {'username': '', 'password': ''}
 
@@ -23,10 +35,24 @@ class Api:
         return client
 
     def authenticate(self, user={}):
-        self.user = user
-
-    def search(self):
         pass
+
+    # A test
+    def searchGrocery(self, term):
+        # The term to search for
+        self.term = term
+        # Get database connection client
+        client = self.connect(self.customerConnectionString)
+        # Switch to Innoventory database
+        db = client.Innoventory
+        # Search the Grocery collection
+        result = db.Grocery.find_one(self.term)
+
+        return result
+
+
+
+
     
 
 class Login(Api):
@@ -107,6 +133,14 @@ if __name__ == "__main__":
     # No login information given
     user = loginTest.login()
     pprint(user)
+
+    # Connection tests
+    api = Api()
+    connect1 = api.connect(api.customerConnectionString)
+    testSearch = api.searchGrocery({'item':'Clam Nectar'})
+    pprint(testSearch)
+
+
 
 
 
