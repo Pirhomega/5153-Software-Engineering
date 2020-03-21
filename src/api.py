@@ -37,6 +37,9 @@ class Api:
     def authenticate(self, user={}):
         pass
 
+    def create(self, document={}):
+        pass
+
     # A test
     def searchGrocery(self, term):
         # The term to search for
@@ -109,6 +112,59 @@ class Login(Api):
         return userInfo
 
     
+class UserManager(Api):
+    '''
+    The UserManager class contains methods for creating users and modifying
+    '''
+
+    # Connects to the Authen database and switches to the Users collection
+    def connectToAuthen(self):
+        # Get connection to MongoDB instance as the authen user
+        client = self.connect(Api.authenConnectionString)
+        # Connect to Authen db
+        db = client.Authen
+        # Switch to Users collection
+        collection = db.Users
+
+        return collection
+
+    # The createUser method creates a new user if the given username is not already in use
+    def createUser(self, data={}):
+        self.data = data
+        status = False
+
+        collection = self.connectToAuthen()
+
+        # Make sure username does not already exist
+        # find_one returns None if the username is not in the Users collection
+        userExists = collection.find_one({'username': self.data['username']})
+        # If the username does not already exist, it is safe to create the new user
+        if userExists == None:
+            result = collection.insert_one(self.data)
+            status = True
+        
+        # Return true for successful user creation, false for user creation failure
+        return status
+
+    # The removeUser function removes a user account from the Users collection if it exists
+    # The number of documents removed is returned as an integer value
+    def removeUser(self, data={}):
+        self.data = data
+        status = 0
+        
+        collection = self.connectToAuthen()
+
+        # If the username exists, remove it from the Users collection
+        result = collection.delete_one(self.data)
+        status = result.deleted_count
+
+        return status
+
+
+
+
+
+
         
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
@@ -117,6 +173,7 @@ if __name__ == "__main__":
     invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
 
     # Login tests
+    print("*****LOGIN TESTS*****")
     loginTest = Login()
     # Valid username and password test
     user = loginTest.login(validTestUser)
@@ -131,13 +188,28 @@ if __name__ == "__main__":
     user = loginTest.login()
     pprint(user)
 
+    print("*****CONNECTION TESTS*****")
     # Connection tests
     api = Api()
     connect1 = api.connect(api.customerConnectionString)
     testSearch = api.searchGrocery({'item':'Clam Nectar'})
     pprint(testSearch)
 
-
+    print("*****CREATE USER TEST*****")
+    userTest = UserManager()
+    # Create a user that doesn't exist
+    result = userTest.createUser({'username': 'test', 'password': 'test'})
+    print(f"Create user account (should be True): {result}")
+    # Remove the user that was just created
+    result = userTest.removeUser({'username': 'test'})
+    print(f"Delete a user account (should be 1): {result}")
+    # Try to create a user using a username that is taken already
+    result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
+    print(f"Try to create a user with a username that's taken (should be False): {result}")
+    # Try to delete a user that doesn't exist
+    result = userTest.removeUser({'username': 'test'})
+    print(f"Try to delete an account that doesn't exist (should be 0): {result}")
+    
 
 
 
