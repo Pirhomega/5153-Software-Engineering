@@ -110,9 +110,6 @@ class Login(Api):
 
     
         
-        
-
-
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
     validTestUser = {'username':'bwalker', 'password':'GC2020'}
