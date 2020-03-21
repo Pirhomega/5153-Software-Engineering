@@ -67,7 +67,7 @@ class Login(Api):
     the user's information is returned as a dictionary. If the username and/or password
     are not correct, an Api.emptyUser dictionary is returned.
     '''
-    def checkPassword(self, user={'username': '', 'password': ''}):
+    def authenticate(self, user={'username': '', 'password': ''}):
         self.user = user
         validPassword = False
         # Get connection to database
@@ -104,7 +104,7 @@ class Login(Api):
     '''
     def login(self, user={'username': '', 'password': ''}):
         self.user = user
-        userInfo = self.checkPassword(self.user)
+        userInfo = self.authenticate(self.user)
 
         return userInfo
 
