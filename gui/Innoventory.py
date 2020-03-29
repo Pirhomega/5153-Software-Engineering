@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pymongo
 import urllib.parse
 import pprint
@@ -15,6 +17,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.behaviors import ButtonBehavior  
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
+import api
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -34,11 +37,6 @@ collections=[]
 
 #     def login(self):
 #         wm.current="homepage"
-
-
-
-
-
 
 class Img(Image):
     pass
@@ -60,25 +58,32 @@ class Login(Screen):
     username = ObjectProperty(None)
     password = ObjectProperty(None)
 
-
-    
     def login(self):
         self.username =  urllib.parse.quote(self.usernameIn.text) # passwordHell
         self.password =  urllib.parse.quote(self.passwordIn.text) # XR9lYeOp036C%@&@cQn*8z3BU4\
-
-
+        
+        # Get an instance of the login class from the api
+        login = api.Login()
         try:
-            global client, db, collections
-            client = pymongo.MongoClient(f"mongodb+srv://{self.username}:{self.password}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority")
-            db = client.Innoventory
-            collections = db.list_collection_names()
-            print("Connected")   
-            wm.current = "homepage"
-            self.reset()
+            # Will return a dictionary of user information. If the username and/or password
+            # are wrong, an emtpy username and password are returned
+            result = login.login({'username': self.username, 'password': self.password})
+            
+            if(result['username'] != "" and result['password'] != ""):
+                # If the login is successful, take the user to the homepage window
+                wm.current = "homepage"
+            else:
+                # Create a popup window to display the authentication failure
+                invalidLoginPopup = Popup(title="Authentication Failure", title_align="center", 
+                    content=Label(text="Login Failed"), size_hint=(None, None), size=(250,250))
+                
+                # Show the authentication failure popup
+                invalidLoginPopup.open()
 
-        except pymongo.errors.OperationFailure or pymongo.errors.InvalidURI:
-            print("ruh-roh")
+            # Reset the login page
             self.reset()
+        except:
+            print("Invalid login")
 
     #Removes input from text boxes
     def reset(self):
