@@ -1,3 +1,4 @@
+#!C:\Users\Owner\AppData\Local\Programs\Python\Python36\python.exe
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'login_test_qt.ui'
@@ -47,7 +48,7 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, 370, 351, 181))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("../../../../Pictures/Screenshots/Screenshot (10).png"))
+        self.label.setPixmap(QtGui.QPixmap("login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
