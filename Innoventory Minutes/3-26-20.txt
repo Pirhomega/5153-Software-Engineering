@@ -1,0 +1,19 @@
+1. Announced GUI needs to be worked on by everyone since it's harder than expected
+2. Switch to kivy, which supports Python.
+3. Figure how to run python code within kivy code
+4. Develop the desktop app with html and python
+	a. https://www.tutorialspoint.com/python/tk_button.htm
+	b. https://wiki.python.org/moin/TkInter
+	c. https://stackoverflow.com/questions/29734208/how-can-i-connect-my-python-script-with-my-html-file
+5. Iterations last one week
+----------------------------------------------------------------------------------
+Closing remarks:
+- Corbin and Matt will work on html / tkInter
+- Broday will continue working on kivy
+- Ben will work on kivy and html / tkInter
+- Begin iteration four today
+----------------------------------------------------------------------------------
+Deliverables:
+- Have ability for managers and regular users to create an account (login / create account page)
+- Let users collection hold user permissions
+- Create home page for both user types
