@@ -1,4 +1,3 @@
-#!C:\Users\Owner\AppData\Local\Programs\Python\Python36\python.exe
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'login_test_qt.ui'
@@ -9,6 +8,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from api import Login
+import sys, time
 
 
 class Ui_MainWindow(object):
@@ -63,6 +64,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
+        # when button is pressed, call login method
         self.login_button.clicked.connect(self.login)
 
     def retranslateUi(self, MainWindow):
@@ -73,11 +75,25 @@ class Ui_MainWindow(object):
         self.login_button.setText(_translate("MainWindow", "Login"))
 
     def login(self, MainWindow):
-        username_password = {"username": self.username_textbox.toPlainText(),
-                            "password": self.password_textbox.toPlainText()}
+        username_password = {   'username': self.username_textbox.toPlainText(), 
+                                "password": self.password_textbox.toPlainText()}
+        log_in_attempt = Login()
+        _, login_success = log_in_attempt.login(username_password)
+        self.login_result(login_success)
+
+    def login_result(self, login_success):
+        self.login_success = login_success
+        print(self.login_success)
+        if self.login_success == True:
+            self.login_button.setText("Success!")
+        else:
+            self.login_button.setText("Failed!")
+        self.update()
+
+    def update(self):
+        self.label.adjustSize()
 
 if __name__ == "__main__":
-    import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
