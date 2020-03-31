@@ -194,4 +194,15 @@ WindowManager:
             on_release:
                 root.manager.transition.direction = "left"
                 root.createAccount()
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.45,"y":0.15}
+            size_hint: 0.1, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "login"
+
         
