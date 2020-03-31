@@ -53,11 +53,6 @@ class Api:
 
         return result
 
-
-
-
-    
-
 class Login(Api):
     '''
     The Login class provides the functionality to query the MongoDB instance
@@ -83,6 +78,10 @@ class Login(Api):
         # returns a single document or None if there is no match
         userInfo = collection.find_one({'username':self.user['username']})
 
+        #########################################################################
+        login_success = False
+        #########################################################################
+
         # if found, check to see if password matches
         if userInfo != None:
             # check password retrieved from database vs input password
@@ -92,6 +91,7 @@ class Login(Api):
             # Password tests
             if validPassword:
                 print("Valid username, valid password")
+                login_success = True
             else:
                 print("Valid username, invalid password")
                 userInfo = Api.emptyUser
@@ -99,7 +99,7 @@ class Login(Api):
             print("Username does not exist")
             userInfo = Api.emptyUser
 
-        return userInfo
+        return userInfo, login_success
 
     '''
     The login method accepts a user dictionary containing the username and password.
@@ -107,9 +107,8 @@ class Login(Api):
     '''
     def login(self, user={'username': '', 'password': ''}):
         self.user = user
-        userInfo = self.authenticate(self.user)
-
-        return userInfo
+        # returns the userInfo dictionary and a boolean, login_success
+        return self.authenticate(self.user)
 
     
 class UserManager(Api):
@@ -175,17 +174,21 @@ if __name__ == "__main__":
     # Login tests
     print("*****LOGIN TESTS*****")
     loginTest = Login()
+    
     # Valid username and password test
-    user = loginTest.login(validTestUser)
+    user, login_success = loginTest.login(validTestUser)
     pprint(user)
+
     # Valid username, invalid password test
-    user = loginTest.login(invalidPassword)
+    user, login_success = loginTest.login(invalidPassword)
     pprint(user)
+
     # Invalid username, Invalid password
-    user = loginTest.login(invalidUsername)
+    user, login_success = loginTest.login(invalidUsername)
     pprint(user)
+
     # No login information given
-    user = loginTest.login()
+    user, login_success = loginTest.login()
     pprint(user)
 
     print("*****CONNECTION TESTS*****")
@@ -197,15 +200,19 @@ if __name__ == "__main__":
 
     print("*****CREATE USER TEST*****")
     userTest = UserManager()
+
     # Create a user that doesn't exist
     result = userTest.createUser({'username': 'test', 'password': 'test'})
     print(f"Create user account (should be True): {result}")
+
     # Remove the user that was just created
     result = userTest.removeUser({'username': 'test'})
     print(f"Delete a user account (should be 1): {result}")
+
     # Try to create a user using a username that is taken already
     result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
     print(f"Try to create a user with a username that's taken (should be False): {result}")
+
     # Try to delete a user that doesn't exist
     result = userTest.removeUser({'username': 'test'})
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
