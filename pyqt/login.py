@@ -83,7 +83,6 @@ class Ui_MainWindow(object):
 
     def login_result(self, login_success):
         self.login_success = login_success
-        print(self.login_success)
         if self.login_success == True:
             self.login_button.setText("Success!")
         else:
