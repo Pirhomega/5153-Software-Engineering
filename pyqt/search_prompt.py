@@ -40,7 +40,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when button is pressed, call search method
-        self.login_button.clicked.connect(self.search_products)
+        self.search_button.clicked.connect(self.search_products)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -49,11 +49,9 @@ class Ui_MainWindow(object):
         self.search_prompt_label.setText(_translate("MainWindow", "What are you looking for?"))
 
     def search_products(self, MainWindow):
-        username_password = {   'username': self.username_textbox.toPlainText(), 
-                                "password": self.password_textbox.toPlainText()}
-        log_in_attempt = Login()
-        _, login_success = log_in_attempt.login(username_password)
-        self.login_result(login_success)
+        search_attempt = Api()
+        search_string = self.search_box.toPlainText()
+        search_attempt.search({"item": search_string})
 
     def login_result(self, login_success):
         self.login_success = login_success
