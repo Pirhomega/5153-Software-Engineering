@@ -158,6 +158,17 @@ class UserManager(Api):
         status = result.deleted_count
 
         return status
+    
+    # 
+    def changePassword(self, oldData = {}, newData = {}):
+        self.data = oldData
+        self.data2 = newData
+
+        # If the data authenticates, change the user's password 
+        collection = self.connectToAuthen()
+        collection.update_one(self.data, {'$set':self.data2})
+        return True
+
 
 
 
