@@ -53,12 +53,25 @@ class Api:
 
         return result
     
-    # This function will search the connected database for whatever is in 'term'
+    # search the product collection for a specific item
     def search(self, term):
         self.term = term
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
-        result = db.Products.find(self.term)
+        # will hold all cursors from queries
+        result = []
+        # split the search term by whitespace
+        new_search = self.term["item"].split()
+        # search database by each word in term
+        for word in new_search:
+            # mini_result = db.Products.find({ "item": "/"+word+"/" })
+            # result.append(mini_result)
+            result.append(db.Products.find({ "item": {'$regex': word }}))
+            for val in range(0,4):
+                # mini_result = db.Products.find({"details.name"+str(val):"/"+word+"/"})
+                # result.append(mini_result)
+                result.append(db.Products.find({"details.name"+str(val):{'$regex': word }}))
+        return result
 
 class Login(Api):
     '''
