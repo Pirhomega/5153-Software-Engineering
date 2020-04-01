@@ -52,6 +52,13 @@ class Api:
         result = db.Grocery.find_one(self.term)
 
         return result
+    
+    # This function will search the connected database for whatever is in 'term'
+    def search(self, term):
+        self.term = term
+        client = self.connect(self.customerConnectionString)
+        db = client.Innoventory
+        result = db.Products.find(self.term)
 
 class Login(Api):
     '''
