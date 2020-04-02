@@ -1,0 +1,24 @@
+- Demonstrate python and kivy login and search capabilities
+	- Desktop allows log-in and search result printing
+	- Mobile allows log-in and log-out, password change, nuke option
+- Expressed desire to add relevant images to items (and make them clickable)
+- Discussed shopping cart schema
+	- Have its own collection (Shopping Cart)
+	- Format:
+		{username: [
+				{"item":<item_name>,"quantity":<number_of_items>},
+			   	{"item":<item_name>,"quantity":<number_of_items>}
+			  ]}
+	- Item price will be determined at checkout by returning to the item in the database and grabbing the price from there
+	- There needs to be a "Clear Cart", "Checkout", "Change Quantity" button
+- Next iteration (numba 5) will be over search functionality
+- Talked about project rubric
+------------------------------------------------------------------------------------------------------------------------------
+Deliverables:
+- Implement a valid searching GUI
+	- displays a list of item names
+	- items should be clickable
+	- an item's page should have availability, price, quantity, and (eventually) picture
+- Python GUI needs to transition from login page to search page
+- Search bar needs to appear on search results page
+- Think about writing tests while writing the code (keep you automated and manual tests around)
