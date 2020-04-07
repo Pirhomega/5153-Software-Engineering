@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="search_prompt_label">
@@ -70,6 +70,19 @@
         <width>271</width>
         <height>41</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="no_results_notif">
+      <property name="geometry">
+       <rect>
+        <x>146</x>
+        <y>353</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>

@@ -66,12 +66,21 @@ class Api:
         for word in new_search:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
             # result.append(mini_result)
-            result.append(db.Products.find({ "item": {'$regex': word }}))
-            for val in range(0,4):
-                # mini_result = db.Products.find({"details.name"+str(val):"/"+word+"/"})
-                # result.append(mini_result)
-                result.append(db.Products.find({"details.name"+str(val):{'$regex': word }}))
+            result.append(list(db.Products.find({ "item": {'$regex': word }})))
         return result
+    # a simple print function for item names
+    def display_results(self, search_result):
+        for doc in search_result:
+            for result in doc:
+                print(result['item'])
+    # Returns an unordered set of item names from a search
+    def parse_results(self, search_result):
+        # Use a set to avoid duplicate results
+        items = set()
+        for doc in search_result:
+            for result in doc:
+                items.add(result['item'])
+        return items
 
 class Login(Api):
     '''
