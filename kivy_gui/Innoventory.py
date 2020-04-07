@@ -236,7 +236,7 @@ class Search(RecycleView):
         print(results)
 
         self.users = ['broday', 'ben', 'corbin', 'matthew']
-        self.data = [{'text': str(user)} for user in self.users]
+        self.data = [{'text': str(item)} for item in results]
 
 
 
