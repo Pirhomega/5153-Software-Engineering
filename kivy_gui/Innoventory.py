@@ -1,3 +1,4 @@
+#!usr/bin/env python3
 
 import pymongo
 import urllib.parse
@@ -16,6 +17,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.behaviors import ButtonBehavior  
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
+from kivy.uix.recycleview import RecycleView
 import api
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -209,7 +211,37 @@ class CreateAccount(Screen):
         self.usernameIn.text = ""
         self.passwordIn.text = ""
 
-"""
+
+'''
+ $$$$$$\                                          $$\       
+$$  __$$\                                         $$ |      
+$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
+\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
+ \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
+$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
+\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
+ \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+'''
+class Search(RecycleView):
+    def __init__(self, **kwargs):
+        super(Search, self).__init__(**kwargs)
+
+        apiSearch = api.Api()
+        testSearch = apiSearch.search({'item': 'Clam Nectar'})
+
+        print("Unfiltered api display")
+        apiSearch.display_results(testSearch)
+        print("Parsed results")
+        results = apiSearch.parse_results(testSearch)
+        print(results)
+
+        self.users = ['broday', 'ben', 'corbin', 'matthew']
+        self.data = [{'text': str(user)} for user in self.users]
+
+
+
+
+'''
  $$$$$$\             $$\     $$\     $$\                               $$\      $$\                               
 $$  __$$\            $$ |    $$ |    \__|                              $$$\    $$$ |                              
 $$ /  \__| $$$$$$\ $$$$$$\ $$$$$$\   $$\ $$$$$$$\   $$$$$$\   $$$$$$$\ $$$$\  $$$$ | $$$$$$\  $$$$$$$\  $$\   $$\ 
@@ -221,14 +253,14 @@ $$\   $$ |$$   ____| $$ |$$\ $$ |$$\ $$ |$$ |  $$ |$$ |  $$ | \____$$\ $$ |\$  /
                                                    $$\   $$ |                                                     
                                                    \$$$$$$  |                                                     
                                                     \______/                                                      
-"""
+'''
 class SettingsMenu(Screen):
     def changePassword(self):
         wm.current = "changePassword"
 
 
 
-"""
+'''
  $$$$$$\  $$\                                                     $$$$$$$\                                                                       $$\ 
 $$  __$$\ $$ |                                                    $$  __$$\                                                                      $$ |
 $$ /  \__|$$$$$$$\   $$$$$$\  $$$$$$$\   $$$$$$\   $$$$$$\        $$ |  $$ |$$$$$$\   $$$$$$$\  $$$$$$$\ $$\  $$\  $$\  $$$$$$\   $$$$$$\   $$$$$$$ |
@@ -240,7 +272,7 @@ $$ |  $$\ $$ |  $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$   ____|      $$ |     $$  _
                                         $$\   $$ |                                                                                                   
                                         \$$$$$$  |                                                                                                   
                                          \______/                                                                                                    
-# """
+'''
 class ChangePassword(Screen,):
     oldPassword = ObjectProperty(None)
     newPassword = ObjectProperty(None)
@@ -280,8 +312,23 @@ class ChangePassword(Screen,):
         self.newPasswordIn.text = ""
         self.newPasswordIn2.text = ""
 
+'''
+$$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
+\__$$  __|                   $$ |    $$  __$$\             $$ |    $$ |                        
+   $$ | $$$$$$\   $$$$$$$\ $$$$$$\   $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+   $$ |$$  __$$\ $$  _____|\_$$  _|  $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+   $$ |$$$$$$$$ |\$$$$$$\    $$ |    $$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+   $$ |$$   ____| \____$$\   $$ |$$\ $$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+   $$ |\$$$$$$$\ $$$$$$$  |  \$$$$  |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+   \__| \_______|\_______/    \____/ \_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                      
+'''
+class TestButton(Screen):
+    test_input = ObjectProperty(None)
 
-"""
+    def testSearch(self):
+        wm.current = "searchView"
+
+'''
 $$\      $$\ $$\                     
 $$$\    $$$ |\__|                    
 $$$$\  $$$$ |$$\  $$$$$$$\  $$$$$$$\ 
@@ -290,13 +337,13 @@ $$ \$$$  $$ |$$ |\$$$$$$\  $$ /
 $$ |\$  /$$ |$$ | \____$$\ $$ |      
 $$ | \_/ $$ |$$ |$$$$$$$  |\$$$$$$$\ 
 \__|     \__|\__|\_______/  \_______|
-"""                                                                    
+'''                                                                    
                                      
 kv = Builder.load_file("Innoventory.kv")
 
 wm = WindowManager()
 screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
-            SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"), Hell(name='hell')]
+            SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"), Hell(name='hell'), TestButton(name='testButton')]
 for screen in screens:
     wm.add_widget(screen)
 
@@ -305,6 +352,9 @@ class main(App):
     def build(self):
         return wm
 
+class TestApp(App):
+    def build(self):
+        return Search()
 
 '''
 $$\      $$\           $$\           
@@ -318,3 +368,4 @@ $$ | \_/ $$ |\$$$$$$$ |$$ |$$ |  $$ |
 '''
 if __name__ == "__main__":
     main().run()
+    #TestApp().run()

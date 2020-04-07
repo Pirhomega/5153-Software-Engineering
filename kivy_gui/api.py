@@ -53,6 +53,43 @@ class Api:
 
         return result
 
+    # search the product collection for a specific item
+    def search(self, term):
+        self.term = term
+        client = self.connect(self.customerConnectionString)
+        db = client.Innoventory
+        # will hold all cursors from queries
+        result = []
+        # split the search term by whitespace
+        new_search = self.term["item"].split()
+        # search database by each word in term
+        for word in new_search:
+            # mini_result = db.Products.find({ "item": "/"+word+"/" })
+            # result.append(mini_result)
+            result.append(list(db.Products.find({ "item": {'$regex': word }})))
+            
+        return result
+    
+    # a simple print function for item names
+    def display_results(self, search_result):
+
+        for doc in search_result:
+            for result in doc:
+                print(result['item'])
+
+    # Returns an unordered set of item names from a search
+    def parse_results(self, search_result):
+        # Use a set to avoid duplicate results
+        items = set()
+        
+        for doc in search_result:
+            for result in doc:
+                items.add(result['item'])
+
+        return items
+
+
+
 class Login(Api):
     '''
     The Login class provides the functionality to query the MongoDB instance
