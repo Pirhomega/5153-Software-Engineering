@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from pymongo import MongoClient
 from checkout import Ui_CheckoutWindow
 
-cluster = MongoClient("mongodb+srv://mStanley:Jankitup32@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority")
+cluster = MongoClient("passwordinfo")
 db = cluster["Innoventory"]
 collection = db["Products"]
 
@@ -84,7 +84,7 @@ class Ui_MainWindow(object):
         self.photo.setFrameShape(QtWidgets.QFrame.Box)
         self.photo.setLineWidth(2)
         self.photo.setText("")
-        self.photo.setPixmap(QtGui.QPixmap("../Pictures/Saved Pictures/banana.jpg"))
+        self.photo.setPixmap(QtGui.QPixmap("currants.jpg"))
         self.photo.setScaledContents(True)
         self.photo.setObjectName("photo")
         self.quantity = QtWidgets.QLabel(self.centralwidget)
