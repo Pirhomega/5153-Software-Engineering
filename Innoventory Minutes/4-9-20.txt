@@ -1,0 +1,20 @@
+- Demonstrated desktop app progress
+	- search results are clickable
+	- each item has a separate page
+- Demonstrated kivy searching
+	- you can search strings and return names of items
+	- iteration 6 begins
+--------------------------------------------------------------------------------------------------------------
+Deliverables:
+- Kivy
+	- search and clickable results need to work
+- Desktop
+	- add shopping cart
+		- Have its own collection (Shopping Cart) and member functions
+		- Format:
+			{username: [
+					{"item":<item_name>,"quantity":<number_of_items>},
+			   		{"item":<item_name>,"quantity":<number_of_items>}
+			 	 ]}
+	- make login persistent
+	- add back buttons
