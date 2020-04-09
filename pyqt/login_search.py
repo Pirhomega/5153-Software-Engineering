@@ -178,7 +178,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when button is pressed, call login method
@@ -266,6 +266,7 @@ class Ui_MainWindow(object):
         # print("Item in row", self.listWidget.row(item), "was clicked!")
         detail_string = ""
         self.switch_page(3)
+        # print(self.search_result[0][0])
         self.item_name.setText(self.search_result[0][self.listWidget.row(item)]["item"])
         if "details" in self.search_result[0][self.listWidget.row(item)]:
             for num in range(0,len(self.search_result[0][self.listWidget.row(item)]["details"])):
