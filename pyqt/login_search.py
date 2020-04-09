@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
         font.setFamily("Onyx")
         font.setPointSize(16)
 
-        # login page code
+        # login page code (page 1)
         self.page_1 = QtWidgets.QWidget()
         self.page_1.setObjectName("page_1")
         self.stackedWidget.addWidget(self.page_1)
@@ -61,15 +61,15 @@ class Ui_MainWindow(object):
         self.failure_notif.setAlignment(QtCore.Qt.AlignCenter)
         self.failure_notif.setObjectName("failure_notif")
 
-        # search page code
+        # search page code (page 2)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
+        self.stackedWidget.addWidget(self.page_2)
         self.search_prompt_label = QtWidgets.QLabel(self.page_2)
         self.search_prompt_label.setGeometry(QtCore.QRect(90, 200, 211, 41))
         self.search_prompt_label.setFont(font)
         self.search_prompt_label.setAlignment(QtCore.Qt.AlignCenter)
         self.search_prompt_label.setObjectName("search_prompt_label")
-
         
         self.no_results_notif = QtWidgets.QLabel(self.page_2)
         self.no_results_notif.setGeometry(QtCore.QRect(146, 353, 101, 31))
@@ -83,20 +83,93 @@ class Ui_MainWindow(object):
         self.search_box = QtWidgets.QTextEdit(self.page_2)
         self.search_box.setGeometry(QtCore.QRect(60, 250, 271, 41))
         self.search_box.setObjectName("search_box")
-        self.stackedWidget.addWidget(self.page_2)
 
-        # search results code
+        # search results code (page 3)
         self.page_3 = QtWidgets.QWidget()
         self.page_3.setObjectName("page_3")
+        self.stackedWidget.addWidget(self.page_3)
         self.listWidget = QtWidgets.QListWidget(self.page_3)
         self.listWidget.setGeometry(QtCore.QRect(10, 10, 381, 571))
         self.listWidget.setObjectName("listWidget")
-        self.stackedWidget.addWidget(self.page_3)
 
-        # page 4 code
+        # item page code (page 4)
         self.page_4 = QtWidgets.QWidget()
         self.page_4.setObjectName("page_4")
         self.stackedWidget.addWidget(self.page_4)
+        self.backButton = QtWidgets.QPushButton(self.page_4)
+        self.backButton.setGeometry(QtCore.QRect(10, 540, 101, 31))
+        self.backButton.setObjectName("backButton")
+        self.addbutton = QtWidgets.QPushButton(self.page_4)
+        self.addbutton.setGeometry(QtCore.QRect(280, 540, 101, 31))
+        self.addbutton.setObjectName("addbutton")
+        self.name = QtWidgets.QLabel(self.page_4)
+        self.name.setGeometry(QtCore.QRect(10, 190, 121, 31))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.name.setFont(font)
+        self.name.setObjectName("name")
+        self.item_name = QtWidgets.QLabel(self.page_4)
+        self.item_name.setGeometry(QtCore.QRect(140, 200, 251, 111))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.item_name.setFont(font)
+        self.item_name.setScaledContents(True)
+        self.item_name.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.item_name.setWordWrap(True)
+        self.item_name.setObjectName("item_name")
+        self.itemdescription = QtWidgets.QLabel(self.page_4)
+        self.itemdescription.setGeometry(QtCore.QRect(10, 300, 121, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.itemdescription.setFont(font)
+        self.itemdescription.setObjectName("itemdescription")
+        self.description_text = QtWidgets.QLabel(self.page_4)
+        self.description_text.setGeometry(QtCore.QRect(140, 310, 251, 131))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.description_text.setFont(font)
+        self.description_text.setScaledContents(True)
+        self.description_text.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.description_text.setWordWrap(True)
+        self.description_text.setObjectName("description_text")
+        self.line = QtWidgets.QFrame(self.page_4)
+        self.line.setGeometry(QtCore.QRect(0, 170, 401, 16))
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.line_2 = QtWidgets.QFrame(self.page_4)
+        self.line_2.setGeometry(QtCore.QRect(0, 510, 401, 16))
+        self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        self.photo = QtWidgets.QLabel(self.page_4)
+        self.photo.setGeometry(QtCore.QRect(10, 10, 381, 151))
+        self.photo.setFrameShape(QtWidgets.QFrame.Box)
+        self.photo.setLineWidth(2)
+        self.photo.setText("")
+        self.photo.setPixmap(QtGui.QPixmap("surprise_shaq.jpg"))
+        self.photo.setScaledContents(True)
+        self.photo.setObjectName("photo")
+        self.quantity = QtWidgets.QLabel(self.page_4)
+        self.quantity.setGeometry(QtCore.QRect(10, 450, 121, 31))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.quantity.setFont(font)
+        self.quantity.setObjectName("quantity")
+        self.numitems = QtWidgets.QLabel(self.page_4)
+        self.numitems.setGeometry(QtCore.QRect(140, 450, 171, 31))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.numitems.setFont(font)
+        self.numitems.setObjectName("numitems")
+
+####################################################################################################
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -104,20 +177,22 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+        # sets the starting page to index 0 when app is started
         self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when button is pressed, call login method
         self.login_button.clicked.connect(self.login)
-
-        # make sure current page displaying is the search page
-        self.switch_page(self.page_1)
                 
         # when button is pressed, call search method
         self.search_button.clicked.connect(self.search_products)
 
         # if an item is clicked, go to item's page
-        self.listWidget.itemClicked.connect(self.switch_temp)
+        self.listWidget.itemClicked.connect(self.display_item_page)
+
+        # # when back button is pressed, call switch to previous page
+        # self.backButton.clicked.connect(lambda: self.switch_page(self.page_3))
+        self.backButton.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -127,6 +202,14 @@ class Ui_MainWindow(object):
         self.username_label.setText(_translate("MainWindow", "Username"))
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.login_button.setText(_translate("MainWindow", "Login"))
+        self.backButton.setText(_translate("MainWindow", "Back"))
+        self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
+        self.name.setText(_translate("MainWindow", "Name:"))
+        self.item_name.setText(_translate("MainWindow", ""))
+        self.itemdescription.setText(_translate("MainWindow", "Description:"))
+        self.description_text.setText(_translate("MainWindow", "Description"))
+        self.quantity.setText(_translate("MainWindow", "Quantity: "))
+        self.numitems.setText(_translate("MainWindow", ""))
 
     # attempt to log in to Innoventory with username and password offered
     def login(self, MainWindow):
@@ -140,13 +223,13 @@ class Ui_MainWindow(object):
     def login_result(self, login_success):
         self.login_success = login_success
         if self.login_success == True:
-            self.switch_page(self.page_2)
+            self.switch_page(1)
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
 
-    # # readjusts label sizes so text inside will not overflow
-    # def update(self, widget):
-    #     widget.adjustSize()
+    # readjusts label sizes so text inside will not overflow
+    def update(self, widget):
+        widget.adjustSize()
 
     # run an item search using the API
     def search_products(self):
@@ -155,7 +238,7 @@ class Ui_MainWindow(object):
             search_attempt = Api()
             self.search_result = search_attempt.search({"item": search_string})
             if self.search_result != [[]]:
-                self.switch_page(self.page_3)
+                self.switch_page(2)
                 self.display_results()
             else:
                 self.no_results_notif.setText("No results found")
@@ -173,11 +256,25 @@ class Ui_MainWindow(object):
     # will switch to widget representing page 'next_page'
     def switch_page(self, next_page):
         self.next_page = next_page
-        self.stackedWidget.setCurrentWidget(self.next_page)
+        # if the argument 'next_page' is an integer, 
+        if isinstance(self.next_page, int):
+            self.stackedWidget.setCurrentIndex(self.next_page)
+        else:
+            self.stackedWidget.setCurrentWidget(self.next_page)
     
-    def switch_temp(self, item):
+    def display_item_page(self, item):
         # print("Item in row", self.listWidget.row(item), "was clicked!")
-        print(item.text())
+        detail_string = ""
+        self.switch_page(3)
+        self.item_name.setText(self.search_result[0][self.listWidget.row(item)]["item"])
+        if "details" in self.search_result[0][self.listWidget.row(item)]:
+            for num in range(0,len(self.search_result[0][self.listWidget.row(item)]["details"])):
+                detail_string += str(self.search_result[0][self.listWidget.row(item)]["details"]["name" + str(num)]) + "\n"
+        self.description_text.setText(detail_string)
+        self.numitems.setText(str(self.search_result[0][self.listWidget.row(item)]["quantity"]))
+        self.update(self.item_name)
+        self.update(self.description_text)
+        # print(item.text())
         
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
