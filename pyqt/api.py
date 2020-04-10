@@ -193,7 +193,7 @@ class UserManager(Api):
 
 class ShoppingCart(Api):
     # only call this when a user is creating an account
-    def createCart(self,user={'username': ''}):
+    def createCart(self, user={'username': ''}):
         self.user = user
         # Get connection to MongoDB instance as the authen user
         client = self.connect(Api.authenConnectionString)
@@ -201,12 +201,24 @@ class ShoppingCart(Api):
         db = client.Authen
         # Switch to Users collection
         self.collection = db.Shopping_Cart
+        # ooga = {self.user['username']: []}
+        # print(type({self.user['username']: []}))
         
-        self.collection.insert_one({self.user['username']: []})
+        self.collection.insert_one({'username': self.user['username'], 'cart': []})
 
-    def addCart(self,item={}):
+    def addCart(self,user={'username': ''}, item={}):
+        self.user = user
         self.item = item
-        self.collection.update_one({self.user['username']}, $set:{})
+        self.collection.update_one(
+                {'username': self.user['username']}, 
+                {'$push': {'cart': {'$each' :[ self.item ]}}}
+        )
+    def removeCart(self,user={'username': ''}, item={}):
+        self.user = user
+        self.item = item
+        self.collection.update_one(
+                {'username': self.user['username']}, 
+                {'$pull': {'cart': self.item }})
 
 
 
@@ -263,7 +275,14 @@ if __name__ == "__main__":
     result = userTest.removeUser({'username': 'test'})
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
-
+    # Create a shopping cart for a user, add some items to it, then remove items from it
+    shop_cart = ShoppingCart()
+    shop_cart.createCart({'username': 'bwalker'})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12,'available':False})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
+    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12})
 
 
 
