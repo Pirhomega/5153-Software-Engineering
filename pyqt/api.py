@@ -123,9 +123,9 @@ class UserManager(Api):
         # Connect to Authen db
         db = client.Authen
         # Switch to Users collection
-        collection = db.Users
+        collection = db.Users      
 
-        return collection
+        return collection 
 
     # The createUser method creates a new user if the given username is not already in use
     def createUser(self, data={}):
@@ -141,6 +141,9 @@ class UserManager(Api):
         if userExists == None:
             result = collection.insert_one(self.data)
             status = True
+
+        # create the user's shopping cart in the 'Shopping_Cart' collection
+        ShoppingCart.createCart(self.data['username'])
         
         # Return true for successful user creation, false for user creation failure
         return status
@@ -159,8 +162,22 @@ class UserManager(Api):
 
         return status
 
+class ShoppingCart(Api):
+    # only call this when a user is creating an account
+    def createCart(self,user={'username': ''}):
+        self.user = user
+        # Get connection to MongoDB instance as the authen user
+        client = self.connect(Api.authenConnectionString)
+        # Connect to Authen db
+        db = client.Authen
+        # Switch to Users collection
+        self.collection = db.Shopping_Cart
+        
+        self.collection.insert_one({self.user['username']: []})
 
-
+    def addCart(self,item={}):
+        self.item = item
+        self.collection.update_one({self.user['username']}, $set:{})
 
 
 

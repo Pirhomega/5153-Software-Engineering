@@ -1,4 +1,4 @@
-- Demonstrate python and kivy login and search capabilities
+{- Demonstrate python and kivy login and search capabilities
 	- Desktop allows log-in and search result printing
 	- Mobile allows log-in and log-out, password change, nuke option
 - Expressed desire to add relevant images to items (and make them clickable)
