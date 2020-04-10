@@ -90,9 +90,9 @@
    <widget class="QPushButton" name="login_button">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>154</x>
       <y>320</y>
-      <width>75</width>
+      <width>101</width>
       <height>23</height>
      </rect>
     </property>
@@ -104,8 +104,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>370</y>
-      <width>351</width>
+      <y>400</y>
+      <width>361</width>
       <height>181</height>
      </rect>
     </property>
@@ -113,10 +113,26 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../../Pictures/Screenshots/Screenshot (10).png</pixmap>
+     <pixmap>login_shaq.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="failure_notif">
+    <property name="geometry">
+     <rect>
+      <x>136</x>
+      <y>360</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
