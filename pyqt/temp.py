@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'login_test_qt.ui'
+# Form implementation generated from reading ui file 'login.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -8,8 +8,6 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from api import Login
-import sys, time
 
 
 class Ui_MainWindow(object):
@@ -44,14 +42,19 @@ class Ui_MainWindow(object):
         self.password_label.setAlignment(QtCore.Qt.AlignCenter)
         self.password_label.setObjectName("password_label")
         self.login_button = QtWidgets.QPushButton(self.centralwidget)
-        self.login_button.setGeometry(QtCore.QRect(170, 320, 75, 23))
+        self.login_button.setGeometry(QtCore.QRect(154, 320, 101, 23))
         self.login_button.setObjectName("login_button")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(20, 370, 351, 181))
+        self.label.setGeometry(QtCore.QRect(20, 400, 361, 181))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
+        self.failure_notif = QtWidgets.QLabel(self.centralwidget)
+        self.failure_notif.setGeometry(QtCore.QRect(136, 360, 141, 31))
+        self.failure_notif.setText("")
+        self.failure_notif.setAlignment(QtCore.Qt.AlignCenter)
+        self.failure_notif.setObjectName("failure_notif")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 403, 21))
@@ -63,9 +66,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
-        # when button is pressed, call login method
-        self.login_button.clicked.connect(self.login)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -74,26 +74,9 @@ class Ui_MainWindow(object):
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.login_button.setText(_translate("MainWindow", "Login"))
 
-    def login(self, MainWindow):
-        username_password = {   'username': self.username_textbox.toPlainText(), 
-                                "password": self.password_textbox.toPlainText()}
-        log_in_attempt = Login()
-        _, login_success = log_in_attempt.login(username_password)
-        self.login_result(login_success)
-
-    def login_result(self, login_success):
-        self.login_success = login_success
-        print(self.login_success)
-        if self.login_success == True:
-            self.login_button.setText("Success!")
-        else:
-            self.login_button.setText("Failed!")
-        self.update()
-
-    def update(self):
-        self.label.adjustSize()
 
 if __name__ == "__main__":
+    import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
