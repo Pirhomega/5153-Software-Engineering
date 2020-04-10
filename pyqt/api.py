@@ -191,6 +191,8 @@ class UserManager(Api):
 
         return status
 
+# This class represents all the shopping cart functionality
+# See __main__ for example code
 class ShoppingCart(Api):
     # only call this when a user is creating an account
     def createCart(self, user={'username': ''}):
@@ -204,8 +206,12 @@ class ShoppingCart(Api):
         # ooga = {self.user['username']: []}
         # print(type({self.user['username']: []}))
         
+        # create an empty array for cart items
         self.collection.insert_one({'username': self.user['username'], 'cart': []})
 
+    # appends a dictionary to the 'cart' list (adds an item to the cart)
+    # Example:
+    #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
     def addCart(self,user={'username': ''}, item={}):
         self.user = user
         self.item = item
@@ -213,6 +219,10 @@ class ShoppingCart(Api):
                 {'username': self.user['username']}, 
                 {'$push': {'cart': {'$each' :[ self.item ]}}}
         )
+
+    # removes an item from the user's cart
+    # Example:
+    #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
     def removeCart(self,user={'username': ''}, item={}):
         self.user = user
         self.item = item
@@ -220,9 +230,6 @@ class ShoppingCart(Api):
                 {'username': self.user['username']}, 
                 {'$pull': {'cart': self.item }})
 
-
-
-        
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
     validTestUser = {'username':'bwalker', 'password':'GC2020'}
