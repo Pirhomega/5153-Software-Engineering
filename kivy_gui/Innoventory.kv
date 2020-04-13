@@ -1,14 +1,10 @@
-WindowManager:
-    Login:
-    Homepage:
-    CreateAccount:
-
 <FloatLay>:
     canvas:
         Rectangle:
             pos: self.pos
             size: self.size
             source:"background.jpg"
+
 <GridLay>:
     canvas:
         Color:
@@ -16,12 +12,25 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
+
 <Img>:
     allow_stretch: True
     keep_ratio: True
 
 
-
+ 
+# $$\                           $$\           
+# $$ |                          \__|          
+# $$ |       $$$$$$\   $$$$$$\  $$\ $$$$$$$\  
+# $$ |      $$  __$$\ $$  __$$\ $$ |$$  __$$\ 
+# $$ |      $$ /  $$ |$$ /  $$ |$$ |$$ |  $$ |
+# $$ |      $$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |
+# $$$$$$$$\ \$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |
+# \________| \______/  \____$$ |\__|\__|  \__|
+#                     $$\   $$ |              
+#                     \$$$$$$  |              
+#                      \______/      
+          
 <Login>:
     name: "login"
 
@@ -34,30 +43,21 @@ WindowManager:
             size_hint: 0.33,0.33
             pos_hint: {"center_x":0.5,"top":0.99}
             
-        Label:
-            text:"Username:"
-            font_size: (20)
-            pos_hint: {"x":0.1, "top":0.65}
-            size_hint: 0.35, 0.07
-
-        Label:
-            text:"Password:"
-            font_size: (20)
-            pos_hint: {"x":0.1, "top":0.55}
-            size_hint: 0.35,0.07
 
         TextInput:
             id: usernameIn
+            hint_text:"Username"
             font_size: (20) 
-            pos_hint: {"x": 0.45 , "top":0.65}
-            size_hint: 0.4, 0.07
+            pos_hint: {"center_x": 0.5 , "top":0.65}
+            size_hint: 0.5, 0.07
             multiline: False
             
         TextInput:
             id: passwordIn
+            hint_text:"Password"
             font_size: (20)
-            pos_hint: {"x": 0.45, "top":0.55}
-            size_hint: 0.4, 0.07
+            pos_hint: {"center_x": 0.5, "top":0.55}
+            size_hint: 0.5, 0.07
             multiline: False
             password: True
             
@@ -83,6 +83,20 @@ WindowManager:
 
 
 
+
+
+# $$\   $$\                                                                           
+# $$ |  $$ |                                                                          
+# $$ |  $$ | $$$$$$\  $$$$$$\$$$$\   $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  
+# $$$$$$$$ |$$  __$$\ $$  _$$  _$$\ $$  __$$\ $$  __$$\  \____$$\ $$  __$$\ $$  __$$\ 
+# $$  __$$ |$$ /  $$ |$$ / $$ / $$ |$$$$$$$$ |$$ /  $$ | $$$$$$$ |$$ /  $$ |$$$$$$$$ |
+# $$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |$$  __$$ |$$ |  $$ |$$   ____|
+# $$ |  $$ |\$$$$$$  |$$ | $$ | $$ |\$$$$$$$\ $$$$$$$  |\$$$$$$$ |\$$$$$$$ |\$$$$$$$\ 
+# \__|  \__| \______/ \__| \__| \__| \_______|$$  ____/  \_______| \____$$ | \_______|
+#                                             $$ |                $$\   $$ |          
+#                                             $$ |                \$$$$$$  |          
+#                                             \__|                 \______/           
+
 <Homepage>:
     
     name: "homepage"
@@ -90,60 +104,86 @@ WindowManager:
     searchPhraseIn: searchPhrase
 
     FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
         TextInput:
             id: searchPhrase
+            hint_text: "Enter an item to search for"
             font_size: 20
-            pos_hint: {"x": 0.05, "top":0.98}
-            size_hint: .8, 0.07
+            pos_hint: {"x": 0.05, "top":0.63}
+            size_hint: .90, 0.08
             multiline: False
 
-        ImgButton:
-            source: "search2.png"
-            pos_hint: {"right":0.97,"y":0.89}   
-            size_hint: 0.1,0.1
+        # ImgButton:
+        #     source: "search2.png"
+        #     pos_hint: {"center_x":0.5,"top":0.8}   
+        #     size_hint: 0.2,0.2
 
-            on_release: 
+        #     on_press:
+        #         source: "search2_press.png"
+        #         print("press")
+
+        #     on_release: 
+        #         isource: "search.png"
+        #         root.search()
+        #         root.manager.transition.direction = "up"
+        #         print("release")
+                
+        # Button:
+
+        #     pos_hint:{"center_x":0.5,"top":0.8}
+        #     size_hint:0.2,0.2
+        #     background_normal:"search2.png"
+        #     background_down:"search2_press.png"
+
+        #     on_release:
+        #         root.search()
+        #         root.manager.transition.direction = "up"
+
+        Button:
+            text: "Search"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"top":0.45}
+            size_hint: 0.4, 0.2
+ 
+            on_release:
                 root.search()
                 root.manager.transition.direction = "up"
                 
-        GridLayout:
-            cols:1
-            size_hint:1,.87
-      
-            GridLayout:
-                cols:2
 
-                Button:
-                    text: "Plants"
-                    on_release:
-                        category = 0
-                        root.catSearch(category)
-                Button:
-                    text: "Football"
-                    on_release:
-                        category = 1
-                        root.catSearch(category)
-                Button:
-                    text: "Users"
-                    on_release:
-                        category = 2
-                        root.catSearch(category)
-                Button:
-                    text: "Medical"
-                    on_release:
-                        category = 3
-                        root.catSearch(category)
-                Button:
-                    text: "Grocery"
-                    on_release:
-                        category = 4
-                        root.catSearch(category)
-                Button:
-                    text: "Vehicles"
-                    on_release:
-                        category = 5
-                        root.catSearch(category)
+        Button:
+            text: "Logout"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.logout()
+        
+        Button:
+            text: "Settings"
+            font_size: (20)
+            pos_hint:{"right":0.95,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.settingsMenu()
+
                     
+
+#  $$$$$$\                                  $$\                $$$$$$\                                                      $$\     
+# $$  __$$\                                 $$ |              $$  __$$\                                                     $$ |    
+# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\  $$$$$$\    $$$$$$\  $$ /  $$ | $$$$$$$\  $$$$$$$\  $$$$$$\  $$\   $$\ $$$$$$$\  $$$$$$\   
+# $$ |      $$  __$$\ $$  __$$\  \____$$\ \_$$  _|  $$  __$$\ $$$$$$$$ |$$  _____|$$  _____|$$  __$$\ $$ |  $$ |$$  __$$\ \_$$  _|  
+# $$ |      $$ |  \__|$$$$$$$$ | $$$$$$$ |  $$ |    $$$$$$$$ |$$  __$$ |$$ /      $$ /      $$ /  $$ |$$ |  $$ |$$ |  $$ |  $$ |    
+# $$ |  $$\ $$ |      $$   ____|$$  __$$ |  $$ |$$\ $$   ____|$$ |  $$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ |$$\ 
+# \$$$$$$  |$$ |      \$$$$$$$\ \$$$$$$$ |  \$$$$  |\$$$$$$$\ $$ |  $$ |\$$$$$$$\ \$$$$$$$\ \$$$$$$  |\$$$$$$  |$$ |  $$ |  \$$$$  |
+#  \______/ \__|       \_______| \_______|   \____/  \_______|\__|  \__| \_______| \_______| \______/  \______/ \__|  \__|   \____/                                                                                                                                                                                                                                                                                                                                                                                                  
 
 <CreateAccount>:
 
@@ -158,30 +198,20 @@ WindowManager:
             size_hint: 0.33,0.33
             pos_hint: {"center_x":0.5,"top":0.99}
 
-        Label:
-            text:"Username:"
-            font_size: (20)
-            pos_hint: {"x":0.1, "top":0.65}
-            size_hint: 0.35, 0.07
-
-        Label:
-            text:"Password:"
-            font_size: (20)
-            pos_hint: {"x":0.1, "top":0.55}
-            size_hint: 0.35,0.07
-
         TextInput:
             id: usernameIn
+            hint_text:"Username"
             font_size: (20) 
-            pos_hint: {"x": 0.45 , "top":0.65}
-            size_hint: 0.4, 0.07
+            pos_hint: {"center_x": 0.5 , "top":0.65}
+            size_hint: 0.5, 0.07
             multiline: False
             
         TextInput:
             id: passwordIn
-            font_size: (20)
-            pos_hint: {"x": 0.45, "top":0.55}
-            size_hint: 0.4, 0.07
+            hint_text:"Password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.55}
+            size_hint: 0.5, 0.07
             multiline: False
             password: True
 
@@ -198,11 +228,232 @@ WindowManager:
         Button:
             text: "Back"
             font_size: (20)
-            pos_hint:{"x":0.45,"y":0.15}
-            size_hint: 0.1, 0.1
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
 
             on_release:
                 root.manager.transition.direction = "right"
                 root.manager.current = "login"
 
+
+
+#  $$$$$$\                                          $$\       
+# $$  __$$\                                         $$ |      
+# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
+# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
+#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
+# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
+# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
+#  \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                         
+                                                                                                                                                                                                                                                                                                                                                                                                 
+<Search>:
+
+    viewclass: 'Label'
+
+    RecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+
+
+
+
+#  $$$$$$\             $$\     $$\     $$\                               $$\      $$\                               
+# $$  __$$\            $$ |    $$ |    \__|                              $$$\    $$$ |                              
+# $$ /  \__| $$$$$$\ $$$$$$\ $$$$$$\   $$\ $$$$$$$\   $$$$$$\   $$$$$$$\ $$$$\  $$$$ | $$$$$$\  $$$$$$$\  $$\   $$\ 
+# \$$$$$$\  $$  __$$\\_$$  _|\_$$  _|  $$ |$$  __$$\ $$  __$$\ $$  _____|$$\$$\$$ $$ |$$  __$$\ $$  __$$\ $$ |  $$ |
+#  \____$$\ $$$$$$$$ | $$ |    $$ |    $$ |$$ |  $$ |$$ /  $$ |\$$$$$$\  $$ \$$$  $$ |$$$$$$$$ |$$ |  $$ |$$ |  $$ |
+# $$\   $$ |$$   ____| $$ |$$\ $$ |$$\ $$ |$$ |  $$ |$$ |  $$ | \____$$\ $$ |\$  /$$ |$$   ____|$$ |  $$ |$$ |  $$ |
+# \$$$$$$  |\$$$$$$$\  \$$$$  |\$$$$  |$$ |$$ |  $$ |\$$$$$$$ |$$$$$$$  |$$ | \_/ $$ |\$$$$$$$\ $$ |  $$ |\$$$$$$  |
+#  \______/  \_______|  \____/  \____/ \__|\__|  \__| \____$$ |\_______/ \__|     \__| \_______|\__|  \__| \______/ 
+#                                                    $$\   $$ |                                                     
+#                                                    \$$$$$$  |                                                     
+#                                                     \______/                                                      
+
+<SettingsMenu>:
+    name:"settingsMenu"
+
+    FloatLay:
+
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
+        Button:
+            text: "Change Password"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"center_y":0.6}
+            size_hint: 0.3, 0.1
+
+            on_release:
+                root.manager.transition.direction = "left"
+                root.changePassword()
+
+        Button:
+            text: "Launch Nukes"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"center_y":0.48}
+            size_hint: 0.3, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = 'hell'
+          
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "homepage"
+
+
+
+#  $$$$$$\  $$\                                               $$$$$$$\                                                                       $$\ 
+# $$  __$$\ $$ |                                              $$  __$$\                                                                      $$ |
+# $$ /  \__|$$$$$$$\   $$$$$$\  $$$$$$$\   $$$$$$\   $$$$$$\  $$ |  $$ |$$$$$$\   $$$$$$$\  $$$$$$$\ $$\  $$\  $$\  $$$$$$\   $$$$$$\   $$$$$$$ |
+# $$ |      $$  __$$\  \____$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$$$$$$  |\____$$\ $$  _____|$$  _____|$$ | $$ | $$ |$$  __$$\ $$  __$$\ $$  __$$ |
+# $$ |      $$ |  $$ | $$$$$$$ |$$ |  $$ |$$ /  $$ |$$$$$$$$ |$$  ____/ $$$$$$$ |\$$$$$$\  \$$$$$$\  $$ | $$ | $$ |$$ /  $$ |$$ |  \__|$$ /  $$ |
+# $$ |  $$\ $$ |  $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$   ____|$$ |     $$  __$$ | \____$$\  \____$$\ $$ | $$ | $$ |$$ |  $$ |$$ |      $$ |  $$ |
+# \$$$$$$  |$$ |  $$ |\$$$$$$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$$\ $$ |     \$$$$$$$ |$$$$$$$  |$$$$$$$  |\$$$$$\$$$$  |\$$$$$$  |$$ |      \$$$$$$$ |
+#  \______/ \__|  \__| \_______|\__|  \__| \____$$ | \_______|\__|      \_______|\_______/ \_______/  \_____\____/  \______/ \__|       \_______|
+#                                         $$\   $$ |                                                                                             
+#                                         \$$$$$$  |                                                                                             
+#                                          \______/                                                                                              
+                                                                                       
+<ChangePassword>:
+    name:"changePassword"
+    oldPasswordIn: oldPasswordIn
+    newPasswordIn: newPasswordIn
+    newPasswordIn2: newPasswordIn2
+    FloatLay:
+
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
+        TextInput:
+            id: oldPasswordIn
+            hint_text:"Enter your old password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.66}
+            size_hint: 0.5, 0.07
+            multiline: False
+            password:True
+
+        TextInput:
+            id: newPasswordIn
+            hint_text:"Enter your new password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.56}
+            size_hint: 0.5, 0.07
+            multiline: False
+            password:True
+
+        TextInput:
+            id: newPasswordIn2
+            hint_text:"Re-enter your new password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.46}
+            size_hint: 0.5, 0.07
+            multiline: False
+            password:True            
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "settingsMenu"
         
+        Button:
+            text: "Submit"
+            font_size: (20)
+            pos_hint:{"x":0.75,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.changePass()
+                root.manager.transition.direction = "left"
+                root.manager.current = "homepage"
+
+<Hell>:
+    name:"hell"
+    FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.2,0.2
+            pos_hint: {"center_x":0.5,"y":0.85}
+        Img:
+            source: "nuke.gif"
+            size_hint:1,1
+            anim_delay: 0.05
+
+        Button:
+            text: "Live with yourself"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.01}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "homepage"
+
+        Button:
+            text: "End it all"
+            font_size: (20)
+            pos_hint:{"right":0.95,"y":0.01}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "login"
+
+
+
+# $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
+# \__$$  __|                   $$ |    $$  __$$\             $$ |    $$ |                        
+#    $$ | $$$$$$\   $$$$$$$\ $$$$$$\   $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+#    $$ |$$  __$$\ $$  _____|\_$$  _|  $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+#    $$ |$$$$$$$$ |\$$$$$$\    $$ |    $$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+#    $$ |$$   ____| \____$$\   $$ |$$\ $$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+#    $$ |\$$$$$$$\ $$$$$$$  |  \$$$$  |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+#    \__| \_______|\_______/    \____/ \_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                      
+
+<TestButton>:
+    name: "testButton"
+    input: test_input
+
+    FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+            
+        TextInput:
+            id: test_input
+            hint_text:"test_input"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.65}
+            size_hint: 0.5, 0.07
+            multiline: False
+            
+        Button:
+            text: "Test"
+            font_size: (20)
+            pos_hint:{"x":0.2,"y":0.05}
+            size_hint: 0.6, 0.2
+            
+            on_release:
+                root.testSearch()
