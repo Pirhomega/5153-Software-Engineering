@@ -1,24 +1,33 @@
 #!usr/bin/env python3
 
+import api
 import pymongo
 import urllib.parse
 import pprint
+
+# Kivy imports are now in alphabetical order
 from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-from kivy.uix.image import Image
 from kivy.core.window import Window
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.behaviors import ButtonBehavior  
-from kivy.uix.widget import Widget
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, ListProperty, BooleanProperty, StringProperty
+
+# Kivy uix imports
+from kivy.uix.behaviors import ButtonBehavior, FocusBehavior
+from kivy.uix.boxlayout import BoxLayout ######
 from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.recyclegridlayout import RecycleGridLayout #######
 from kivy.uix.recycleview import RecycleView
-import api
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior #######
+from kivy.uix.recycleview.views import RecycleDataViewBehavior #######
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.textinput import TextInput
+from kivy.uix.widget import Widget
+
 
 pp = pprint.PrettyPrinter(indent=4)
 username = ""
@@ -50,6 +59,9 @@ class WindowManager(ScreenManager):
     pass
 
 class ImgButton(ButtonBehavior,Image):
+    pass
+
+class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     pass
 
 class Hell(Screen):
@@ -312,6 +324,80 @@ class ChangePassword(Screen,):
         self.newPasswordIn.text = ""
         self.newPasswordIn2.text = ""
 
+
+'''
+$$$$$$$\                      $$\    $$\ $$\                         
+$$  __$$\                     $$ |   $$ |\__|                        
+$$ |  $$ | $$$$$$\   $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+$$$$$$$  |$$  __$$\ $$  _____|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+$$  __$$< $$$$$$$$ |$$ /       \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+$$ |  $$ |$$   ____|$$ |        \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+$$ |  $$ |\$$$$$$$\ \$$$$$$$\    \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+\__|  \__| \_______| \_______|    \_/    \__| \_______| \_____\____/                                                                                                                                                                                                       
+'''
+class RecView(BoxLayout):
+    search_data = ListProperty([])
+
+    def __init__(self, **kwargs):
+        super(RecView, self).__init__(**kwargs)
+        self.test()
+
+    # Do a test search to show the recycleview functionality
+    def test(self):
+        # Get an instance of the api
+        apiSearch = api.Api()
+        # Do the search
+        testSearch = apiSearch.search({'item': 'Clam Nectar'})
+        # Print search results for testing
+        apiSearch.display_results(testSearch)
+        # Parse results to only have a list of items
+        # The full detail of each item is still in testSearch at this point
+        results = apiSearch.parse_results(testSearch)
+        # Print list of items for testing
+        print(results)
+
+        # A list comprehension that builds a list of strings of item names
+        self.search_data = [{'text': str(item)} for item in results]
+
+    
+
+
+'''
+ $$$$$$\            $$\                       $$\               $$\       $$\           $$$$$$$\              $$\     $$\                         
+$$  __$$\           $$ |                      $$ |              $$ |      $$ |          $$  __$$\             $$ |    $$ |                        
+$$ /  \__| $$$$$$\  $$ | $$$$$$\   $$$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  $$ | $$$$$$\  $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+\$$$$$$\  $$  __$$\ $$ |$$  __$$\ $$  _____|\_$$  _|   \____$$\ $$  __$$\ $$ |$$  __$$\ $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+ \____$$\ $$$$$$$$ |$$ |$$$$$$$$ |$$ /        $$ |     $$$$$$$ |$$ |  $$ |$$ |$$$$$$$$ |$$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+$$\   $$ |$$   ____|$$ |$$   ____|$$ |        $$ |$$\ $$  __$$ |$$ |  $$ |$$ |$$   ____|$$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+\$$$$$$  |\$$$$$$$\ $$ |\$$$$$$$\ \$$$$$$$\   \$$$$  |\$$$$$$$ |$$$$$$$  |$$ |\$$$$$$$\ $$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+ \______/  \_______|\__| \_______| \_______|   \____/  \_______|\_______/ \__| \_______|\_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+'''
+class SelectableButton(RecycleDataViewBehavior, Button):
+    '''
+    The SelectableButton class modifies the 
+    '''
+    my_index = None
+    can_select = BooleanProperty(True)
+    selected = BooleanProperty(False)
+
+    # Extend recycle_view_attrs from the RecycleDataViewBehavior class
+    def refresh_view_attrs(self, rec_view, my_index, data):
+        self.my_index = my_index
+        return super(SelectableButton, self).refresh_view_attrs(rec_view, my_index, data)
+
+    def on_touch_down(self, touch):
+        pass
+
+    def apply_selection(self, rec_view, my_index, am_selected):
+        self.selected = am_selected
+
+    def on_press(self):
+        print("pressed")
+
+    def update_changes(self, txt):
+        pass
+
+
 '''
 $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
 \__$$  __|                   $$ |    $$  __$$\             $$ |    $$ |                        
@@ -323,6 +409,11 @@ $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\
    \__| \_______|\_______/    \____/ \_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                      
 '''
 class TestButton(Screen):
+    ''' 
+    The TestButton class is used to test a specific button functionality on a kivy screen.
+    This may be useful for observing the behavior of a method bound to a button press.
+    '''
+    # If text input is needed, use test_input
     test_input = ObjectProperty(None)
 
     def testSearch(self):
@@ -338,23 +429,39 @@ $$ |\$  /$$ |$$ | \____$$\ $$ |
 $$ | \_/ $$ |$$ |$$$$$$$  |\$$$$$$$\ 
 \__|     \__|\__|\_______/  \_______|
 '''                                                                    
-                                     
+
+# Load the kv language file that supplements this python script
+# Much of the functionality of this app is intertwined with the kv lang script                                    
 kv = Builder.load_file("Innoventory.kv")
 
+# Get a window manager object to switch between screens
 wm = WindowManager()
+
+# A list of screens - each is a class that inherits from the Screen class in kivy.uix.screenmanager
 screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
             SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"), Hell(name='hell'), TestButton(name='testButton')]
+
+# Add each screen widget to the window manager
 for screen in screens:
     wm.add_widget(screen)
 
-wm.current = "login"  #default login
+# Set the first screen the user will see when the app is launched
+# By default, the first screen is the login screen
+wm.current = "login"
+
+# Build the main app
+# If main().run() is called from main, the full app will be launched
 class main(App):
     def build(self):
         return wm
 
+# Build a test app
+# If TestApp().run() is called from main, a subset of functionality is being tested
 class TestApp(App):
+    title = "Search Functionality Test"
+
     def build(self):
-        return Search()
+        return RecView()
 
 '''
 $$\      $$\           $$\           
