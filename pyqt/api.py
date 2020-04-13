@@ -152,9 +152,9 @@ class UserManager(Api):
         # Connect to Authen db
         db = client.Authen
         # Switch to Users collection
-        collection = db.Users
+        collection = db.Users      
 
-        return collection
+        return collection 
 
     # The createUser method creates a new user if the given username is not already in use
     def createUser(self, data={}):
@@ -170,6 +170,9 @@ class UserManager(Api):
         if userExists == None:
             result = collection.insert_one(self.data)
             status = True
+
+        # create the user's shopping cart in the 'Shopping_Cart' collection
+        ShoppingCart.createCart(self.data['username'])
         
         # Return true for successful user creation, false for user creation failure
         return status
@@ -188,12 +191,45 @@ class UserManager(Api):
 
         return status
 
-
-
-
-
-
+# This class represents all the shopping cart functionality
+# See __main__ for example code
+class ShoppingCart(Api):
+    # only call this when a user is creating an account
+    def createCart(self, user={'username': ''}):
+        self.user = user
+        # Get connection to MongoDB instance as the authen user
+        client = self.connect(Api.authenConnectionString)
+        # Connect to Authen db
+        db = client.Authen
+        # Switch to Users collection
+        self.collection = db.Shopping_Cart
+        # ooga = {self.user['username']: []}
+        # print(type({self.user['username']: []}))
         
+        # create an empty array for cart items
+        self.collection.insert_one({'username': self.user['username'], 'cart': []})
+
+    # appends a dictionary to the 'cart' list (adds an item to the cart)
+    # Example:
+    #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    def addCart(self,user={'username': ''}, item={}):
+        self.user = user
+        self.item = item
+        self.collection.update_one(
+                {'username': self.user['username']}, 
+                {'$push': {'cart': {'$each' :[ self.item ]}}}
+        )
+
+    # removes an item from the user's cart
+    # Example:
+    #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
+    def removeCart(self,user={'username': ''}, item={}):
+        self.user = user
+        self.item = item
+        self.collection.update_one(
+                {'username': self.user['username']}, 
+                {'$pull': {'cart': self.item }})
+
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
     validTestUser = {'username':'bwalker', 'password':'GC2020'}
@@ -246,7 +282,14 @@ if __name__ == "__main__":
     result = userTest.removeUser({'username': 'test'})
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
-
+    # Create a shopping cart for a user, add some items to it, then remove items from it
+    shop_cart = ShoppingCart()
+    shop_cart.createCart({'username': 'bwalker'})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12,'available':False})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
+    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12})
 
 
 
