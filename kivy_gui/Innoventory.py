@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!usr/bin/env python3
 
 import pymongo
 import urllib.parse
@@ -17,9 +17,11 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.behaviors import ButtonBehavior  
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
+from kivy.uix.recycleview import RecycleView
 import api
 
 pp = pprint.PrettyPrinter(indent=4)
+username = ""
 
 ############################### UNCOMMENT TO SKIP LOGIN ########################
 
@@ -50,6 +52,9 @@ class WindowManager(ScreenManager):
 class ImgButton(ButtonBehavior,Image):
     pass
 
+class Hell(Screen):
+    pass
+
 '''
 $$\                           $$\           
 $$ |                          \__|          
@@ -64,15 +69,21 @@ $$$$$$$$\ \$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |
                      \______/               
 '''
 class Login(Screen):
+
     username = ObjectProperty(None)
     password = ObjectProperty(None)
 
     def login(self):
-        self.username =  urllib.parse.quote(self.usernameIn.text) # passwordHell
-        self.password =  urllib.parse.quote(self.passwordIn.text) # XR9lYeOp036C%@&@cQn*8z3BU4\
-        
         # Get an instance of the login class from the api
         login = api.Login()
+
+        global username  # made this global on line 22
+        
+        self.username =  urllib.parse.quote(self.usernameIn.text) # passwordHell
+        self.password =  urllib.parse.quote(self.passwordIn.text) # XR9lYeOp036C%@&@cQn*8z3BU4\
+
+        username = self.username
+        
         try:
             # Will return a dictionary of user information. If the username and/or password
             # are wrong, an emtpy username and password are returned
@@ -119,32 +130,44 @@ $$ |  $$ |\$$$$$$  |$$ | $$ | $$ |\$$$$$$$\ $$$$$$$  |\$$$$$$$ |\$$$$$$$ |\$$$$$
 '''
 class Homepage(Screen):
     searchPhrase = ObjectProperty(None)
+       
+    def logout(self):
+        wm.current = "login"
+    
+    def settingsMenu(self):
+        wm.current = "settingsMenu"
 
     def search(self): ###################################################   DOESN'T WORK #####
-        self.searchPhrase = self.searchPhraseIn.text
-        print(self.searchPhrase)
-        results = []
-        #look in every collection in the db
-        for collection in collections:
-            print(collection)
-            #search each collection for a match
-
-        """https://docs.mongodb.com/manual/text-search/index.html"""
-        #     results.append(db.collection.find({$text: {$search: self.searchPhrase}}))
-        # print(results)
-        #     results.append(db.Vehicles.find({"$text": {"$search": "Honda"}}))
-        # print(results)
-
-
-
-
-
-    def catSearch(self,cat): #cat is an index
-        collection = collections[cat]
-        items = db[collection].find({})
-        for item in items:
-            pp.pprint(item)
         
+        if(self.searchPhraseIn.text != ""):
+            self.searchPhrase = self.searchPhraseIn.text
+            print(self.searchPhrase)
+            self.searchPhraseIn.text = ""
+    #     else:
+    #         # Create a popup window to display the authentication failure
+    #         emptySearchPopup = Popup(title="Invalid Search", title_align="center", 
+    #             content=Label(text="Search cannot be empty"), size_hint=(None, None), size=(250,250))
+    #         emptySearchPopup.open()
+
+    #     results = []
+    #     #look in every collection in the db
+    #     for collection in collections:
+    #         print(collection)
+    #         #search each collection for a match
+
+    #     """https://docs.mongodb.com/manual/text-search/index.html"""
+    #     #     results.append(db.collection.find({$text: {$search: self.searchPhrase}}))
+    #     # print(results)
+    #     #     results.append(db.Vehicles.find({"$text": {"$search": "Honda"}}))
+    #     # print(results)
+
+    # def catSearch(self,cat): #cat is an index
+    #     collection = collections[cat]
+    #     items = db[collection].find({})
+    #     for item in items:
+    #         pp.pprint(item)
+        
+
 
 '''
  $$$$$$\                                  $$\                $$$$$$\                                                      $$\     
@@ -189,11 +212,138 @@ class CreateAccount(Screen):
         self.passwordIn.text = ""
 
 
+'''
+ $$$$$$\                                          $$\       
+$$  __$$\                                         $$ |      
+$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
+\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
+ \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
+$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
+\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
+ \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+'''
+class Search(RecycleView):
+    def __init__(self, **kwargs):
+        super(Search, self).__init__(**kwargs)
 
+        apiSearch = api.Api()
+        testSearch = apiSearch.search({'item': 'Clam Nectar'})
+
+        print("Unfiltered api display")
+        apiSearch.display_results(testSearch)
+        print("Parsed results")
+        results = apiSearch.parse_results(testSearch)
+        print(results)
+
+        self.users = ['broday', 'ben', 'corbin', 'matthew']
+        self.data = [{'text': str(item)} for item in results]
+
+
+
+
+'''
+ $$$$$$\             $$\     $$\     $$\                               $$\      $$\                               
+$$  __$$\            $$ |    $$ |    \__|                              $$$\    $$$ |                              
+$$ /  \__| $$$$$$\ $$$$$$\ $$$$$$\   $$\ $$$$$$$\   $$$$$$\   $$$$$$$\ $$$$\  $$$$ | $$$$$$\  $$$$$$$\  $$\   $$\ 
+\$$$$$$\  $$  __$$\\_$$  _|\_$$  _|  $$ |$$  __$$\ $$  __$$\ $$  _____|$$\$$\$$ $$ |$$  __$$\ $$  __$$\ $$ |  $$ |
+ \____$$\ $$$$$$$$ | $$ |    $$ |    $$ |$$ |  $$ |$$ /  $$ |\$$$$$$\  $$ \$$$  $$ |$$$$$$$$ |$$ |  $$ |$$ |  $$ |
+$$\   $$ |$$   ____| $$ |$$\ $$ |$$\ $$ |$$ |  $$ |$$ |  $$ | \____$$\ $$ |\$  /$$ |$$   ____|$$ |  $$ |$$ |  $$ |
+\$$$$$$  |\$$$$$$$\  \$$$$  |\$$$$  |$$ |$$ |  $$ |\$$$$$$$ |$$$$$$$  |$$ | \_/ $$ |\$$$$$$$\ $$ |  $$ |\$$$$$$  |
+ \______/  \_______|  \____/  \____/ \__|\__|  \__| \____$$ |\_______/ \__|     \__| \_______|\__|  \__| \______/ 
+                                                   $$\   $$ |                                                     
+                                                   \$$$$$$  |                                                     
+                                                    \______/                                                      
+'''
+class SettingsMenu(Screen):
+    def changePassword(self):
+        wm.current = "changePassword"
+
+
+
+'''
+ $$$$$$\  $$\                                                     $$$$$$$\                                                                       $$\ 
+$$  __$$\ $$ |                                                    $$  __$$\                                                                      $$ |
+$$ /  \__|$$$$$$$\   $$$$$$\  $$$$$$$\   $$$$$$\   $$$$$$\        $$ |  $$ |$$$$$$\   $$$$$$$\  $$$$$$$\ $$\  $$\  $$\  $$$$$$\   $$$$$$\   $$$$$$$ |
+$$ |      $$  __$$\  \____$$\ $$  __$$\ $$  __$$\ $$  __$$\       $$$$$$$  |\____$$\ $$  _____|$$  _____|$$ | $$ | $$ |$$  __$$\ $$  __$$\ $$  __$$ |
+$$ |      $$ |  $$ | $$$$$$$ |$$ |  $$ |$$ /  $$ |$$$$$$$$ |      $$  ____/ $$$$$$$ |\$$$$$$\  \$$$$$$\  $$ | $$ | $$ |$$ /  $$ |$$ |  \__|$$ /  $$ |
+$$ |  $$\ $$ |  $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$   ____|      $$ |     $$  __$$ | \____$$\  \____$$\ $$ | $$ | $$ |$$ |  $$ |$$ |      $$ |  $$ |
+\$$$$$$  |$$ |  $$ |\$$$$$$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$$\       $$ |     \$$$$$$$ |$$$$$$$  |$$$$$$$  |\$$$$$\$$$$  |\$$$$$$  |$$ |      \$$$$$$$ |
+ \______/ \__|  \__| \_______|\__|  \__| \____$$ | \_______|      \__|      \_______|\_______/ \_______/  \_____\____/  \______/ \__|       \_______|
+                                        $$\   $$ |                                                                                                   
+                                        \$$$$$$  |                                                                                                   
+                                         \______/                                                                                                    
+'''
+class ChangePassword(Screen,):
+    oldPassword = ObjectProperty(None)
+    newPassword = ObjectProperty(None)
+    newPassword2 = ObjectProperty(None)
+    
+    def back(self):
+        wm.current = "settingsMenu"
+    
+    # Changes the user password
+    def changePass(self):
+        login = api.Login()
+        manage = api.UserManager()
+
+        self.oldPassword =  urllib.parse.quote(self.oldPasswordIn.text)
+        self.newPassword =  urllib.parse.quote(self.newPasswordIn.text)
+        self.newPassword2 =  urllib.parse.quote(self.newPasswordIn2.text)
+        
+        if(self.newPassword == self.newPassword2):
+            # Pass the new and old data to the api
+           result = manage.changePassword(
+                {'username': username, 'password': self.oldPassword},
+                {'username': username, 'password': self.newPassword})
+        self.reset()
+            
+        if result == True:
+            # Password change succesful popup
+            passChangePopup = Popup(title="Success", title_align="center", 
+                content=Label(text="Password Changed!"), size_hint=(None, None), size=(250,250))
+            passChangePopup.open()
+        
+        else:
+            print("password change fail")
+   
+    # Removes input from text boxes
+    def reset(self):
+        self.oldPasswordIn.text = ""
+        self.newPasswordIn.text = ""
+        self.newPasswordIn2.text = ""
+
+'''
+$$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
+\__$$  __|                   $$ |    $$  __$$\             $$ |    $$ |                        
+   $$ | $$$$$$\   $$$$$$$\ $$$$$$\   $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+   $$ |$$  __$$\ $$  _____|\_$$  _|  $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+   $$ |$$$$$$$$ |\$$$$$$\    $$ |    $$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+   $$ |$$   ____| \____$$\   $$ |$$\ $$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+   $$ |\$$$$$$$\ $$$$$$$  |  \$$$$  |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+   \__| \_______|\_______/    \____/ \_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                      
+'''
+class TestButton(Screen):
+    test_input = ObjectProperty(None)
+
+    def testSearch(self):
+        wm.current = "searchView"
+
+'''
+$$\      $$\ $$\                     
+$$$\    $$$ |\__|                    
+$$$$\  $$$$ |$$\  $$$$$$$\  $$$$$$$\ 
+$$\$$\$$ $$ |$$ |$$  _____|$$  _____|
+$$ \$$$  $$ |$$ |\$$$$$$\  $$ /      
+$$ |\$  /$$ |$$ | \____$$\ $$ |      
+$$ | \_/ $$ |$$ |$$$$$$$  |\$$$$$$$\ 
+\__|     \__|\__|\_______/  \_______|
+'''                                                                    
+                                     
 kv = Builder.load_file("Innoventory.kv")
 
 wm = WindowManager()
-screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage")]
+screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
+            SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"), Hell(name='hell'), TestButton(name='testButton')]
 for screen in screens:
     wm.add_widget(screen)
 
@@ -202,6 +352,9 @@ class main(App):
     def build(self):
         return wm
 
+class TestApp(App):
+    def build(self):
+        return Search()
 
 '''
 $$\      $$\           $$\           
@@ -214,4 +367,5 @@ $$ | \_/ $$ |\$$$$$$$ |$$ |$$ |  $$ |
 \__|     \__| \_______|\__|\__|  \__|                                                                                                        
 '''
 if __name__ == "__main__":
-    main().run()
+    #main().run()
+    TestApp().run()
