@@ -391,11 +391,15 @@ class SelectableButton(RecycleDataViewBehavior, Button):
 
     def on_press(self):
         item = self.text
+        print(f"LABEL: {item} ")
         #Display detailed item info
         API = api.Api()
         results = API.search({"item" : f"{item}"})
-        print(results)
-        wm.current ="prodInfo"
+        try:
+            print(f"RESULTS: {results}\n")
+        except:
+            print("probably an encoding error")
+        wm.current ="prodInfo" #THIS DOESN'T WORK FOR SOME REASON
 
     def update_changes(self, txt):
         pass
