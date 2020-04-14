@@ -18,6 +18,8 @@
     keep_ratio: True
 
 
+<SelectableButton>:
+
  
 # $$\                           $$\           
 # $$ |                          \__|          
@@ -388,6 +390,17 @@
                 root.manager.transition.direction = "left"
                 root.manager.current = "homepage"
 
+                
+
+# $$\   $$\           $$\ $$\ 
+# $$ |  $$ |          $$ |$$ |
+# $$ |  $$ | $$$$$$\  $$ |$$ |
+# $$$$$$$$ |$$  __$$\ $$ |$$ |
+# $$  __$$ |$$$$$$$$ |$$ |$$ |
+# $$ |  $$ |$$   ____|$$ |$$ |
+# $$ |  $$ |\$$$$$$$\ $$ |$$ |
+# \__|  \__| \_______|\__|\__|
+
 <Hell>:
     name:"hell"
     FloatLay:
@@ -419,6 +432,88 @@
             on_release:
                 root.manager.transition.direction = "up"
                 root.manager.current = "login"
+
+
+
+
+
+# $$$$$$$\                      $$\    $$\ $$\                         
+# $$  __$$\                     $$ |   $$ |\__|                        
+# $$ |  $$ | $$$$$$\   $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+# $$$$$$$  |$$  __$$\ $$  _____|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+# $$  __$$< $$$$$$$$ |$$ /       \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+# $$ |  $$ |$$   ____|$$ |        \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+# $$ |  $$ |\$$$$$$$\ \$$$$$$$\    \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+# \__|  \__| \_______| \_______|    \_/    \__| \_______| \_____\____/                                                                       
+                                                                   
+<RecView>:
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source:"background.jpg"
+            
+    BoxLayout:
+        orientation: 'vertical'
+
+        GridLayout:
+            size_hint: 1, None
+            size_hint_y: None
+            height: 25
+            cols: 2
+
+            Label: 
+                text: 'Items'     
+
+
+        BoxLayout:
+            RecycleView:
+
+                viewclass: 'SelectableButton'       
+                data: root.search_data
+                
+
+                SelectableRecycleGridLayout:
+                    cols: 1
+                    default_size: None, dp(20)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    multiselect: False
+                    touch_multiselect: False
+
+
+                                                                        
+# $$$$$$$\                            $$\                       $$\     $$$$$$\            $$$$$$\           
+# $$  __$$\                           $$ |                      $$ |    \_$$  _|          $$  __$$\          
+# $$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$\   $$\  $$$$$$$\ $$$$$$\     $$ |  $$$$$$$\  $$ /  \__|$$$$$$\  
+# $$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |$$ |  $$ |$$  _____|\_$$  _|    $$ |  $$  __$$\ $$$$\    $$  __$$\ 
+# $$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |$$ |  $$ |$$ /        $$ |      $$ |  $$ |  $$ |$$  _|   $$ /  $$ |
+# $$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\   $$ |  $$ |  $$ |$$ |     $$ |  $$ |
+# $$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  |$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
+# \__|      \__|       \______/  \_______| \______/  \_______|   \____/ \______|\__|  \__|\__|      \______/ 
+
+<ProdInfo>:
+    name: "prodInfo"
+
+    FloatLay:
+
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}      
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "homepage"
+
 
 
 
@@ -457,70 +552,3 @@
             
             on_release:
                 root.testSearch()
-
-
-
-
-#  $$$$$$\            $$\                       $$\               $$\       $$\           $$$$$$$\              $$\     $$\                         
-# $$  __$$\           $$ |                      $$ |              $$ |      $$ |          $$  __$$\             $$ |    $$ |                        
-# $$ /  \__| $$$$$$\  $$ | $$$$$$\   $$$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  $$ | $$$$$$\  $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
-# \$$$$$$\  $$  __$$\ $$ |$$  __$$\ $$  _____|\_$$  _|   \____$$\ $$  __$$\ $$ |$$  __$$\ $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
-#  \____$$\ $$$$$$$$ |$$ |$$$$$$$$ |$$ /        $$ |     $$$$$$$ |$$ |  $$ |$$ |$$$$$$$$ |$$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
-# $$\   $$ |$$   ____|$$ |$$   ____|$$ |        $$ |$$\ $$  __$$ |$$ |  $$ |$$ |$$   ____|$$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
-# \$$$$$$  |\$$$$$$$\ $$ |\$$$$$$$\ \$$$$$$$\   \$$$$  |\$$$$$$$ |$$$$$$$  |$$ |\$$$$$$$\ $$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
-#  \______/  \_______|\__| \_______| \_______|   \____/  \_______|\_______/ \__| \_______|\_______/  \______/    \____/  \____/  \______/ \__|  \__|
-
-<SelectableButton>:
-    
-    # Draw a background to indicate selection
-    canvas.before:
-        Color:
-            rgba: (.0, 0.9, .1, .3) if self.selected else (0, 0, 0, 1)
-        Rectangle:
-            pos: self.pos
-            size: self.size     
-
-                                                                                                                                                                                                                                                                                
-
-# $$$$$$$\                      $$\    $$\ $$\                         
-# $$  __$$\                     $$ |   $$ |\__|                        
-# $$ |  $$ | $$$$$$\   $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
-# $$$$$$$  |$$  __$$\ $$  _____|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
-# $$  __$$< $$$$$$$$ |$$ /       \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
-# $$ |  $$ |$$   ____|$$ |        \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
-# $$ |  $$ |\$$$$$$$\ \$$$$$$$\    \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
-# \__|  \__| \_______| \_______|    \_/    \__| \_______| \_____\____/                                                                       
-                                                                   
-<RecView>:
-    BoxLayout:
-        orientation: 'vertical'
-
-        GridLayout:
-            size_hint: 1, None
-            size_hint_y: None
-            height: 25
-            cols: 1
-
-            Label: 
-                text: 'Items'     
-
-
-        BoxLayout:
-            RecycleView:
-
-                viewclass: 'SelectableButton'       
-                data: root.search_data
-                
-
-                SelectableRecycleGridLayout:
-                    cols: 1
-                    default_size: None, dp(20)
-                    default_size_hint: 1, None
-                    size_hint_y: None
-                    height: self.minimum_height
-                    orientation: 'vertical'
-                    multiselect: True
-                    touch_multiselect: True  
-
-                                                                        
-

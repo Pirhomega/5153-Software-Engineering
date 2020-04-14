@@ -196,7 +196,7 @@ class UserManager(Api):
 
         return status
     
-    # 
+    # Modifies a user password.
     def changePassword(self, oldData = {}, newData = {}):
         self.data = oldData
         self.data2 = newData
