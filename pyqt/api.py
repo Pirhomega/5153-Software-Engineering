@@ -216,8 +216,8 @@ class ShoppingCart(Api):
         self.user = user
         self.item = item
         self.collection.update_one(
-                {'username': self.user['username']}, 
-                {'$push': {'cart': {'$each' :[ self.item ]}}}
+                self.user, 
+                {'$push': {'cart': {'$each': [ self.item ]}}}
         )
 
     # removes an item from the user's cart
@@ -227,60 +227,71 @@ class ShoppingCart(Api):
         self.user = user
         self.item = item
         self.collection.update_one(
-                {'username': self.user['username']}, 
-                {'$pull': {'cart': self.item }})
-
+            self.user, 
+            {'$pull': {'cart': self.item }}
+        )
+    
+    # modify an item quantity
+    def changeQuan(self,user={'username':''}, item={}, quantity=1):
+        self.user = user
+        self.item = item
+        self.quantity = quantity
+        self.collection.update_one(
+            filter=self.user,
+            update={'$set': {f"cart.$[element].quantity": self.quantity}},
+            array_filters=[{'element': self.item}]
+        )
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
-    validTestUser = {'username':'bwalker', 'password':'GC2020'}
-    invalidPassword = {'username':'bwalker', 'password':'wrong'}
-    invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
+    # validTestUser = {'username':'bwalker', 'password':'GC2020'}
+    # invalidPassword = {'username':'bwalker', 'password':'wrong'}
+    # invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
 
-    # Login tests
-    print("*****LOGIN TESTS*****")
-    loginTest = Login()
+    # # Login tests
+    # print("*****LOGIN TESTS*****")
+    # loginTest = Login()
     
-    # Valid username and password test
-    user, login_success = loginTest.login(validTestUser)
-    pprint(user)
+    # # Valid username and password test
+    # user, login_success = loginTest.login(validTestUser)
+    # pprint(user)
 
-    # Valid username, invalid password test
-    user, login_success = loginTest.login(invalidPassword)
-    pprint(user)
+    # # Valid username, invalid password test
+    # user, login_success = loginTest.login(invalidPassword)
+    # pprint(user)
 
-    # Invalid username, Invalid password
-    user, login_success = loginTest.login(invalidUsername)
-    pprint(user)
+    # # Invalid username, Invalid password
+    # user, login_success = loginTest.login(invalidUsername)
+    # pprint(user)
 
-    # No login information given
-    user, login_success = loginTest.login()
-    pprint(user)
+    # # No login information given
+    # user, login_success = loginTest.login()
+    # pprint(user)
 
-    print("*****CONNECTION TESTS*****")
-    # Connection tests
-    api = Api()
-    connect1 = api.connect(api.customerConnectionString)
-    testSearch = api.searchGrocery({'item':'Clam Nectar'})
-    pprint(testSearch)
+    # print("*****CONNECTION TESTS*****")
+    # # Connection tests
+    # api = Api()
+    # connect1 = api.connect(api.customerConnectionString)
+    # testSearch = api.searchGrocery({'item':'Clam Nectar'})
+    # pprint(testSearch)
 
-    print("*****CREATE USER TEST*****")
-    userTest = UserManager()
+    # print("*****CREATE USER TEST*****")
+    # userTest = UserManager()
 
-    # Create a user that doesn't exist
-    result = userTest.createUser({'username': 'test', 'password': 'test'})
-    print(f"Create user account (should be True): {result}")
+    # # Create a user that doesn't exist
+    # result = userTest.createUser({'username': 'test', 'password': 'test'})
+    # print(f"Create user account (should be True): {result}")
 
-    # Remove the user that was just created
-    result = userTest.removeUser({'username': 'test'})
-    print(f"Delete a user account (should be 1): {result}")
+    # # Remove the user that was just created
+    # result = userTest.removeUser({'username': 'test'})
+    # print(f"Delete a user account (should be 1): {result}")
 
-    # Try to create a user using a username that is taken already
-    result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
-    print(f"Try to create a user with a username that's taken (should be False): {result}")
+    # # Try to create a user using a username that is taken already
+    # result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
+    # print(f"Try to create a user with a username that's taken (should be False): {result}")
 
-    # Try to delete a user that doesn't exist
-    result = userTest.removeUser({'username': 'test'})
-    print(f"Try to delete an account that doesn't exist (should be 0): {result}")
+    # # Try to delete a user that doesn't exist
+    # result = userTest.removeUser({'username': 'test'})
+    # print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
     # Create a shopping cart for a user, add some items to it, then remove items from it
     shop_cart = ShoppingCart()
@@ -288,6 +299,7 @@ if __name__ == "__main__":
     shop_cart.addCart({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True})
     shop_cart.addCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12,'available':False})
     shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    shop_cart.changeQuan({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True}, 1235)
     shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
     shop_cart.removeCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12})
 
