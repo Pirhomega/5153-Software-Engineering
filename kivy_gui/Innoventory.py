@@ -64,6 +64,7 @@ class ImgButton(ButtonBehavior,Image):
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     pass
 
+
 class Hell(Screen):
     pass
 
@@ -224,34 +225,6 @@ class CreateAccount(Screen):
         self.passwordIn.text = ""
 
 
-'''
- $$$$$$\                                          $$\       
-$$  __$$\                                         $$ |      
-$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
-\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
- \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
-$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
-\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
- \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-'''
-class Search(RecycleView):
-    def __init__(self, **kwargs):
-        super(Search, self).__init__(**kwargs)
-
-        apiSearch = api.Api()
-        testSearch = apiSearch.search({'item': 'Clam Nectar'})
-
-        print("Unfiltered api display")
-        apiSearch.display_results(testSearch)
-        print("Parsed results")
-        results = apiSearch.parse_results(testSearch)
-        print(results)
-
-        self.users = ['broday', 'ben', 'corbin', 'matthew']
-        self.data = [{'text': str(item)} for item in results]
-
-
-
 
 '''
  $$$$$$\             $$\     $$\     $$\                               $$\      $$\                               
@@ -326,6 +299,33 @@ class ChangePassword(Screen):
 
 
 '''
+ $$$$$$\                                          $$\       
+$$  __$$\                                         $$ |      
+$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
+\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
+ \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
+$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
+\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
+ \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+'''
+class Search(Screen):
+    def __init__(self, **kwargs):
+        super(Search, self).__init__(**kwargs)
+
+        apiSearch = api.Api()
+        testSearch = apiSearch.search({'item': 'Clam Nectar'})
+
+        print("Unfiltered api display")
+        apiSearch.display_results(testSearch)
+        print("Parsed results")
+        results = apiSearch.parse_results(testSearch)
+        print(results)
+
+        self.users = ['broday', 'ben', 'corbin', 'matthew']
+        self.data = [{'text': str(item)} for item in results]
+
+
+'''
 $$$$$$$\                      $$\    $$\ $$\                         
 $$  __$$\                     $$ |   $$ |\__|                        
 $$ |  $$ | $$$$$$\   $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
@@ -336,7 +336,7 @@ $$ |  $$ |\$$$$$$$\ \$$$$$$$\    \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
 \__|  \__| \_______| \_______|    \_/    \__| \_______| \_____\____/                                                                                                                                                                                                       
 '''
 class RecView(Screen,BoxLayout,GridLayout):
-    search_data = ListProperty([])
+    my_label = ListProperty([])
 
     def __init__(self, **kwargs):
         super(RecView, self).__init__(**kwargs)
@@ -357,7 +357,8 @@ class RecView(Screen,BoxLayout,GridLayout):
         print(results)
 
         # A list comprehension that builds a list of strings of item names
-        self.search_data = [{'text': str(item)} for item in results]
+        self.my_label = [{'text': str(item)} for item in results]
+
 
     
 
@@ -374,12 +375,13 @@ $$\   $$ |$$   ____|$$ |$$   ____|$$ |        $$ |$$\ $$  __$$ |$$ |  $$ |$$ |$$
 '''
 class SelectableButton(RecycleDataViewBehavior, Button):
     '''
-    The SelectableButton class modifies the 
+    The SelectableButton class is used for displaying search results as clickable buttons. Clicking or selecting a button
+    will take the user to a new page with a detailed breakdown of the item's information.
     '''
-
     my_index = None
     can_select = BooleanProperty(True)
-    selected = BooleanProperty(False)
+    selected = BooleanProperty(False) 
+
 
     # Extend recycle_view_attrs from the RecycleDataViewBehavior class
     def refresh_view_attrs(self, rec_view, my_index, data):
@@ -392,13 +394,17 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     def on_press(self):
         item = self.text
         print(f"LABEL: {item} ")
-        #Display detailed item info
-        API = api.Api()
-        results = API.search({"item" : f"{item}"})
-        try:
-            print(f"RESULTS: {results}\n")
-        except:
-            print("probably an encoding error")
+
+        
+
+
+        #detail_data = None
+
+
+        
+        #print(f"DATA: {detail_data}")
+        
+
         wm.current ="prodInfo" #THIS DOESN'T WORK FOR SOME REASON
 
     def update_changes(self, txt):
@@ -486,7 +492,7 @@ wm = WindowManager()
 # A list of screens - each is a class that inherits from the Screen class in kivy.uix.screenmanager
 screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
             SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"),
-             Hell(name='hell'), TestButton(name='testButton'), ProdInfo(name="prodInfo")]
+             Hell(name='hell'), TestButton(name='testButton'), ProdInfo(name="prodInfo"), RecView(name="recView")]
 
 # Add each screen widget to the window manager
 for screen in screens:
@@ -494,7 +500,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "homepage"
+wm.current = "recView"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched
@@ -521,5 +527,5 @@ $$ | \_/ $$ |\$$$$$$$ |$$ |$$ |  $$ |
 \__|     \__| \_______|\__|\__|  \__|                                                                                                        
 '''
 if __name__ == "__main__":
-    #main().run()
-    TestApp().run()
+    main().run()
+    #TestApp().run()
