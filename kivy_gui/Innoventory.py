@@ -326,20 +326,20 @@ class Search(Screen):
 
 
 '''
-$$$$$$$\                      $$\    $$\ $$\                         
-$$  __$$\                     $$ |   $$ |\__|                        
-$$ |  $$ | $$$$$$\   $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
-$$$$$$$  |$$  __$$\ $$  _____|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
-$$  __$$< $$$$$$$$ |$$ /       \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
-$$ |  $$ |$$   ____|$$ |        \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
-$$ |  $$ |\$$$$$$$\ \$$$$$$$\    \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
-\__|  \__| \_______| \_______|    \_/    \__| \_______| \_____\____/                                                                                                                                                                                                       
+ $$$$$$\                                          $$\      $$\    $$\ $$\                         
+$$  __$$\                                         $$ |     $$ |   $$ |\__|                        
+$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+ \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |\$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ | \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |  \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+ \______/  \_______| \_______|\__|       \_______|\__|  \__|   \_/    \__| \_______| \_____\____/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 '''
-class RecView(Screen,BoxLayout,GridLayout):
+class SearchView(Screen,BoxLayout,GridLayout):
     my_label = ListProperty([])
 
     def __init__(self, **kwargs):
-        super(RecView, self).__init__(**kwargs)
+        super(SearchView, self).__init__(**kwargs)
         self.test()
 
     # Do a test search to show the recycleview functionality
@@ -347,7 +347,7 @@ class RecView(Screen,BoxLayout,GridLayout):
         # Get an instance of the api
         apiSearch = api.Api()
         # Do the search
-        testSearch = apiSearch.search({'item': 'x'})
+        testSearch = apiSearch.search({'item': 'Clam Nectar'})
         # Print search results for testing
         apiSearch.display_results(testSearch)
         # Parse results to only have a list of items
@@ -492,7 +492,7 @@ wm = WindowManager()
 # A list of screens - each is a class that inherits from the Screen class in kivy.uix.screenmanager
 screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
             SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"),
-             Hell(name='hell'), TestButton(name='testButton'), ProdInfo(name="prodInfo"), RecView(name="recView")]
+             Hell(name='hell'), TestButton(name='testButton'), ProdInfo(name="prodInfo"), SearchView(name="searchView")]
 
 # Add each screen widget to the window manager
 for screen in screens:
@@ -500,7 +500,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "recView"
+wm.current = "searchView"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched
@@ -514,7 +514,7 @@ class TestApp(App):
     title = "Search Functionality Test"
 
     def build(self):
-        return RecView()
+        return SearchView()
 
 '''
 $$\      $$\           $$\           
