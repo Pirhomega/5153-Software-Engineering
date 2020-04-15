@@ -150,12 +150,27 @@ class Homepage(Screen):
     def settingsMenu(self):
         wm.current = "settingsMenu"
 
-    def search(self): ###################################################   DOESN'T WORK #####
+    def search(self):
         
         if(self.searchPhraseIn.text != ""):
             self.searchPhrase = self.searchPhraseIn.text
             print(self.searchPhrase)
             self.searchPhraseIn.text = ""
+
+            # Get an instance of the api
+            apiSearch = api.Api()
+            query = apiSearch.search({'item': self.searchPhrase})
+            apiSearch.display_results(query)
+
+            #print("Parsed results")
+            parsed_results = apiSearch.parse_results(query)
+            #print(parsed_results)
+            
+            # Show the query results in the SearchView
+            wm.get_screen("searchView").send_query_results(query, parsed_results)
+            wm.current = "searchView"
+            
+            
     #     else:
     #         # Create a popup window to display the authentication failure
     #         emptySearchPopup = Popup(title="Invalid Search", title_align="center", 
@@ -308,21 +323,26 @@ $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
 \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
  \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 '''
-class Search(Screen):
-    def __init__(self, **kwargs):
-        super(Search, self).__init__(**kwargs)
+class Search():
 
-        apiSearch = api.Api()
-        testSearch = apiSearch.search({'item': 'Clam Nectar'})
+    def search_test(self, phrase=None):
+        self.phrase = str(phrase)
 
-        print("Unfiltered api display")
-        apiSearch.display_results(testSearch)
-        print("Parsed results")
-        results = apiSearch.parse_results(testSearch)
-        print(results)
+        if(self.phrase != None):
+            print("Homepage data test:")
+            print(phrase)
 
-        self.users = ['broday', 'ben', 'corbin', 'matthew']
-        self.data = [{'text': str(item)} for item in results]
+            # Get an instance of the api
+            apiSearch = api.Api()
+            testSearch = apiSearch.search({'item': self.phrase})
+            apiSearch.display_results(testSearch)
+
+            print("Parsed results")
+            results = apiSearch.parse_results(testSearch)
+            print(results)
+
+        
+        
 
 
 '''
@@ -336,11 +356,13 @@ $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ | \$$$  /  $$ |$$   _
  \______/  \_______| \_______|\__|       \_______|\__|  \__|   \_/    \__| \_______| \_____\____/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 '''
 class SearchView(Screen,BoxLayout,GridLayout):
+    full_data = ListProperty([])
     my_label = ListProperty([])
 
     def __init__(self, **kwargs):
         super(SearchView, self).__init__(**kwargs)
-        self.test()
+        
+        #self.test()
 
     # Do a test search to show the recycleview functionality
     def test(self):
@@ -359,23 +381,24 @@ class SearchView(Screen,BoxLayout,GridLayout):
         # A list comprehension that builds a list of strings of item names
         self.my_label = [{'text': str(item)} for item in results]
 
-
+    def send_query_results(self, full_data=None, labels=None):
+        self.full_data = full_data
+        self.my_label = [{'text': str(item)} for item in labels]
+        
     
-
-
 '''
- $$$$$$\            $$\                       $$\               $$\       $$\           $$$$$$$\              $$\     $$\                         
-$$  __$$\           $$ |                      $$ |              $$ |      $$ |          $$  __$$\             $$ |    $$ |                        
-$$ /  \__| $$$$$$\  $$ | $$$$$$\   $$$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  $$ | $$$$$$\  $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
-\$$$$$$\  $$  __$$\ $$ |$$  __$$\ $$  _____|\_$$  _|   \____$$\ $$  __$$\ $$ |$$  __$$\ $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
- \____$$\ $$$$$$$$ |$$ |$$$$$$$$ |$$ /        $$ |     $$$$$$$ |$$ |  $$ |$$ |$$$$$$$$ |$$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
-$$\   $$ |$$   ____|$$ |$$   ____|$$ |        $$ |$$\ $$  __$$ |$$ |  $$ |$$ |$$   ____|$$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
-\$$$$$$  |\$$$$$$$\ $$ |\$$$$$$$\ \$$$$$$$\   \$$$$  |\$$$$$$$ |$$$$$$$  |$$ |\$$$$$$$\ $$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
- \______/  \_______|\__| \_______| \_______|   \____/  \_______|\_______/ \__| \_______|\_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+ $$$$$$\                                          $$\       $$$$$$$\              $$\     $$\                         
+$$  __$$\                                         $$ |      $$  __$$\             $$ |    $$ |                        
+$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+ \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |$$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+ \______/  \_______| \_______|\__|       \_______|\__|  \__|\_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                                                                                                  
 '''
-class SelectableButton(RecycleDataViewBehavior, Button):
+class SearchButton(RecycleDataViewBehavior, Button):
     '''
-    The SelectableButton class is used for displaying search results as clickable buttons. Clicking or selecting a button
+    The SearchButton class is used for displaying search results as clickable buttons. Clicking or selecting a button
     will take the user to a new page with a detailed breakdown of the item's information.
     '''
     my_index = None
@@ -386,7 +409,7 @@ class SelectableButton(RecycleDataViewBehavior, Button):
     # Extend recycle_view_attrs from the RecycleDataViewBehavior class
     def refresh_view_attrs(self, rec_view, my_index, data):
         self.my_index = my_index
-        return super(SelectableButton, self).refresh_view_attrs(rec_view, my_index, data)
+        return super(SearchButton, self).refresh_view_attrs(rec_view, my_index, data)
 
     def apply_selection(self, rec_view, my_index, am_selected):
         self.selected = am_selected
@@ -395,17 +418,7 @@ class SelectableButton(RecycleDataViewBehavior, Button):
         item = self.text
         print(f"LABEL: {item} ")
 
-        
-
-
-        #detail_data = None
-
-
-        
-        #print(f"DATA: {detail_data}")
-        
-
-        wm.current ="prodInfo" #THIS DOESN'T WORK FOR SOME REASON
+        wm.current ="prodInfo"
 
     def update_changes(self, txt):
         pass
@@ -500,7 +513,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "searchView"
+wm.current = "homepage"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched
