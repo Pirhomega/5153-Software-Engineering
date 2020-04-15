@@ -1,3 +1,5 @@
+
+
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'search.ui'
@@ -47,19 +49,22 @@ class Ui_MainWindow(object):
         self.password_label.setAlignment(QtCore.Qt.AlignCenter)
         self.password_label.setObjectName("password_label")
         self.login_button = QtWidgets.QPushButton(self.page_1)
-        self.login_button.setGeometry(QtCore.QRect(154, 320, 101, 23))
+        self.login_button.setGeometry(QtCore.QRect(154, 310, 101, 23))
         self.login_button.setObjectName("login_button")
         self.label = QtWidgets.QLabel(self.page_1)
-        self.label.setGeometry(QtCore.QRect(20, 400, 361, 181))
+        self.label.setGeometry(QtCore.QRect(60, 440, 291, 151))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("login_shaq.png"))
+        self.label.setPixmap(QtGui.QPixmap("../images/login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.failure_notif = QtWidgets.QLabel(self.page_1)
-        self.failure_notif.setGeometry(QtCore.QRect(136, 360, 141, 31))
+        self.failure_notif.setGeometry(QtCore.QRect(130, 390, 151, 31))
         self.failure_notif.setText("")
         self.failure_notif.setAlignment(QtCore.Qt.AlignCenter)
         self.failure_notif.setObjectName("failure_notif")
+        self.create_account_button = QtWidgets.QPushButton(self.page_1)
+        self.create_account_button.setGeometry(QtCore.QRect(154, 350, 101, 23))
+        self.create_account_button.setObjectName("create_account_button")
 
         # search page code (page 2)
         self.page_2 = QtWidgets.QWidget()
@@ -151,7 +156,7 @@ class Ui_MainWindow(object):
         self.photo.setFrameShape(QtWidgets.QFrame.Box)
         self.photo.setLineWidth(2)
         self.photo.setText("")
-        self.photo.setPixmap(QtGui.QPixmap("surprise_shaq.jpg"))
+        self.photo.setPixmap(QtGui.QPixmap("../images/surprise_shaq.jpg"))
         self.photo.setScaledContents(True)
         self.photo.setObjectName("photo")
         self.quantity = QtWidgets.QLabel(self.page_4)
@@ -181,8 +186,11 @@ class Ui_MainWindow(object):
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        # when button is pressed, call login method
+        # when login button is pressed, call login method
         self.login_button.clicked.connect(self.login)
+
+        # when create account button is pressed
+        self.create_account_button.connect()
                 
         # when button is pressed, call search method
         self.search_button.clicked.connect(self.search_products)
@@ -202,6 +210,7 @@ class Ui_MainWindow(object):
         self.username_label.setText(_translate("MainWindow", "Username"))
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.login_button.setText(_translate("MainWindow", "Login"))
+        self.create_account_button.setText(_translate("MainWindow", "Create Account"))
         self.backButton.setText(_translate("MainWindow", "Back"))
         self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
         self.name.setText(_translate("MainWindow", "Name:"))
@@ -226,6 +235,11 @@ class Ui_MainWindow(object):
             self.switch_page(1)
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
+    
+    # changes pages to the create account page and lets user
+    # enter info
+    def create_account(self):
+        
 
     # readjusts label sizes so text inside will not overflow
     def update(self, widget):
