@@ -94,8 +94,11 @@ class Ui_MainWindow(object):
         self.page_3.setObjectName("page_3")
         self.stackedWidget.addWidget(self.page_3)
         self.listWidget = QtWidgets.QListWidget(self.page_3)
-        self.listWidget.setGeometry(QtCore.QRect(10, 10, 381, 571))
+        self.listWidget.setGeometry(QtCore.QRect(10, 10, 381, 521))
         self.listWidget.setObjectName("listWidget")
+        self.backButton1 = QtWidgets.QPushButton(self.page_3)
+        self.backButton1.setGeometry(QtCore.QRect(10, 540, 101, 31))
+        self.backButton1.setObjectName("backButton1")
 
         # item page code (page 4)
         self.page_4 = QtWidgets.QWidget()
@@ -183,14 +186,14 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when login button is pressed, call login method
         self.login_button.clicked.connect(self.login)
 
-        # when create account button is pressed
-        self.create_account_button.connect()
+        # # when create account button is pressed
+        # self.create_account_button.connect(self.)
                 
         # when button is pressed, call search method
         self.search_button.clicked.connect(self.search_products)
@@ -198,9 +201,10 @@ class Ui_MainWindow(object):
         # if an item is clicked, go to item's page
         self.listWidget.itemClicked.connect(self.display_item_page)
 
-        # # when back button is pressed, call switch to previous page
+        # # when back buttons are pressed, call switch to previous page
         # self.backButton.clicked.connect(lambda: self.switch_page(self.page_3))
         self.backButton.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
+        self.backButton1.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -212,6 +216,7 @@ class Ui_MainWindow(object):
         self.login_button.setText(_translate("MainWindow", "Login"))
         self.create_account_button.setText(_translate("MainWindow", "Create Account"))
         self.backButton.setText(_translate("MainWindow", "Back"))
+        self.backButton1.setText(_translate("MainWindow", "Back"))
         self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
         self.name.setText(_translate("MainWindow", "Name:"))
         self.item_name.setText(_translate("MainWindow", ""))
@@ -236,9 +241,9 @@ class Ui_MainWindow(object):
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
     
-    # changes pages to the create account page and lets user
-    # enter info
-    def create_account(self):
+    # # changes pages to the create account page and lets user
+    # # enter info
+    # def create_account(self):
         
 
     # readjusts label sizes so text inside will not overflow
@@ -259,6 +264,7 @@ class Ui_MainWindow(object):
 
     # print search results to a list widget
     def display_results(self):
+        self.listWidget.clear()
         for result in self.search_result[0]:
             item_string = result["item"] + " "
             # if "details" in result:
