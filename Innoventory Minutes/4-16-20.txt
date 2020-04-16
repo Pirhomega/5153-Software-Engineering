@@ -1,0 +1,17 @@
+- Demonstrated kivy search results page
+	- search results are clickable and show item page with details
+- Demonstrated desktop app progress
+	- create account page works
+	- back button works
+- Shopping cart works
+- Discussed converting python code to an executable; deploying the app on android
+- iteration 7 begins
+----------------------------------------------------------------------
+Deliverables:
+- Kivy
+	- implement shopping cart
+- Desktop
+	- fix up create account functionality (fix back button and have page switch to login page when account created)
+	- include shopping cart and checkout page
+	- logout button
+- Pretty up the repo (delayed due date)
