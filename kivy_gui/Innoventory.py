@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+#!/usr/bin/env python3
 
 import api
 import pymongo
@@ -64,9 +64,6 @@ class ImgButton(ButtonBehavior,Image):
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     pass
 
-
-class Hell(Screen):
-    pass
 
 '''
 $$\                           $$\           
@@ -154,22 +151,42 @@ class Homepage(Screen):
         
         if(self.searchPhraseIn.text != ""):
             self.searchPhrase = self.searchPhraseIn.text
-            print(self.searchPhrase)
+            #print(self.searchPhrase)
             self.searchPhraseIn.text = ""
 
             # Get an instance of the api
             apiSearch = api.Api()
             query = apiSearch.search({'item': self.searchPhrase})
-            apiSearch.display_results(query)
+            #apiSearch.display_results(query)
 
             #print("Parsed results")
             parsed_results = apiSearch.parse_results(query)
-            #print(parsed_results)
+            # Check that there are results for the query
+            resultBool = self.checkForResults(parsed_results)
+            # print(parsed_results)
             
-            # Show the query results in the SearchView
-            wm.get_screen("searchView").send_query_results(query, parsed_results)
-            wm.current = "searchView"
-            
+            if resultBool:
+                # Show the query results in the SearchView
+                wm.get_screen("searchView").send_query_results(query, parsed_results)
+                wm.get_screen("prodInfo").send_query_results(query, parsed_results)
+                wm.current = "searchView"
+            else:
+                wm.current = "homepage"
+
+    # If a query has at least one result, returns True. If a query has no 
+    # results, returns False and creates a popup       
+    def checkForResults(self, parsed_results):
+        # Check if there are no results
+        if not parsed_results:
+            # Create a popup
+            noResults = Popup(title="No results", title_align="center", 
+                content=Label(text="No matches for your query"), 
+                size_hint=(None, None), size=(250,250))
+            # Show the authentication failure popup
+            noResults.open()
+            return False
+        else:
+            return True
             
     #     else:
     #         # Create a popup window to display the authentication failure
@@ -313,33 +330,33 @@ class ChangePassword(Screen):
         self.newPasswordIn2.text = ""
 
 
-'''
- $$$$$$\                                          $$\       
-$$  __$$\                                         $$ |      
-$$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
-\$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
- \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
-$$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
-\$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
- \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-'''
-class Search():
+# '''
+#  $$$$$$\                                          $$\       
+# $$  __$$\                                         $$ |      
+# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
+# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
+#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
+# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
+# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
+#  \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+# '''
+# class Search():
 
-    def search_test(self, phrase=None):
-        self.phrase = str(phrase)
+#     def search_test(self, phrase=None):
+#         self.phrase = str(phrase)
 
-        if(self.phrase != None):
-            print("Homepage data test:")
-            print(phrase)
+#         if(self.phrase != None):
+#             print("Homepage data test:")
+#             print(phrase)
 
-            # Get an instance of the api
-            apiSearch = api.Api()
-            testSearch = apiSearch.search({'item': self.phrase})
-            apiSearch.display_results(testSearch)
+#             # Get an instance of the api
+#             apiSearch = api.Api()
+#             testSearch = apiSearch.search({'item': self.phrase})
+#             apiSearch.display_results(testSearch)
 
-            print("Parsed results")
-            results = apiSearch.parse_results(testSearch)
-            print(results)
+#             print("Parsed results")
+#             results = apiSearch.parse_results(testSearch)
+#             print(results)
 
         
         
@@ -361,22 +378,21 @@ class SearchView(Screen,BoxLayout,GridLayout):
 
     def __init__(self, **kwargs):
         super(SearchView, self).__init__(**kwargs)
-        
-        #self.test()
+        self.test()
 
     # Do a test search to show the recycleview functionality
     def test(self):
         # Get an instance of the api
         apiSearch = api.Api()
         # Do the search
-        testSearch = apiSearch.search({'item': 'Clam Nectar'})
+        testSearch = apiSearch.search({'item': 'x'})
         # Print search results for testing
         apiSearch.display_results(testSearch)
         # Parse results to only have a list of items
         # The full detail of each item is still in testSearch at this point
         results = apiSearch.parse_results(testSearch)
         # Print list of items for testing
-        print(results)
+        # print(results)
 
         # A list comprehension that builds a list of strings of item names
         self.my_label = [{'text': str(item)} for item in results]
@@ -384,6 +400,8 @@ class SearchView(Screen,BoxLayout,GridLayout):
     def send_query_results(self, full_data=None, labels=None):
         self.full_data = full_data
         self.my_label = [{'text': str(item)} for item in labels]
+
+
         
     
 '''
@@ -401,10 +419,6 @@ class SearchButton(RecycleDataViewBehavior, Button):
     The SearchButton class is used for displaying search results as clickable buttons. Clicking or selecting a button
     will take the user to a new page with a detailed breakdown of the item's information.
     '''
-    my_index = None
-    can_select = BooleanProperty(True)
-    selected = BooleanProperty(False) 
-
 
     # Extend recycle_view_attrs from the RecycleDataViewBehavior class
     def refresh_view_attrs(self, rec_view, my_index, data):
@@ -416,9 +430,11 @@ class SearchButton(RecycleDataViewBehavior, Button):
 
     def on_press(self):
         item = self.text
-        print(f"LABEL: {item} ")
-
-        wm.current ="prodInfo"
+        #print(f"LABEL: {item} ")
+        # send the item the user clicks on to prodInfo
+        wm.get_screen("prodInfo").sendItem(item)
+        wm.transition.direction = "left"
+        wm.current = "prodInfo"
 
     def update_changes(self, txt):
         pass
@@ -435,13 +451,58 @@ $$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\   $$ |  $$
 $$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  |$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
 \__|      \__|       \______/  \_______| \______/  \_______|   \____/ \______|\__|  \__|\__|      \______/ 
  """
-class ProdInfo(Screen):
-    pass
+class ProdInfo(Screen, BoxLayout, GridLayout):
 
+    item = None # what the user clicked on in the results list
+    product = ListProperty([]) # the dicitonary of the item the user clicked
+    full_data = ListProperty([])
+    my_label = ListProperty([])
 
+    # get the list of all results
+    def send_query_results(self, full_data=None, labels=None):
+        self.full_data = full_data
 
+    # get the item the user clicked on
+    def sendItem(self, item=None):
+        self.item = item
+        self.getProduct()
 
+    # get the dict of the item the user clicked on
+    def getProduct(self):
+        print(self.item)
+        for lis in self.full_data:
+            #pp.pprint(lis)
+            for dic in lis:
+                #pp.pprint(dic) 
+                print(f'{dic["item"]}, {self.item}')
 
+                # if the "item" entry in the dict matched the item the user
+                # clicked on, assign the entire dict to product
+                if dic["item"] == self.item:
+                    print(type(dic))
+                    self.product = [{"text": str(dic[key])} for key in dic.keys()] 
+                    print(self.product)
+    
+
+"""
+$$$$$$$\                            $$\                       $$\   $$\    $$\ $$\                         
+$$  __$$\                           $$ |                      $$ |  $$ |   $$ |\__|                        
+$$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$\   $$\  $$$$$$$\ $$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+$$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |$$ |  $$ |$$  _____|\_$$  _|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+$$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |$$ |  $$ |$$ /        $$ |   \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+$$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+\__|      \__|       \______/  \_______| \______/  \_______|   \____/   \_/    \__| \_______| \_____\____/ 
+"""
+
+class ProdView(RecycleDataViewBehavior, Button):
+
+    def refresh_view_attrs(self, rec_view, my_index, data):
+        self.my_index = my_index
+        return super(ProdView, self).refresh_view_attrs(rec_view, my_index, data)
+
+    def apply_selection(self, rec_view, my_index, am_selected): 
+        self.selected = am_selected
 
 
 #  $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\   
@@ -505,7 +566,7 @@ wm = WindowManager()
 # A list of screens - each is a class that inherits from the Screen class in kivy.uix.screenmanager
 screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
             SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"),
-             Hell(name='hell'), TestButton(name='testButton'), ProdInfo(name="prodInfo"), SearchView(name="searchView")]
+             TestButton(name='testButton'), ProdInfo(name="prodInfo"), SearchView(name="searchView")]
 
 # Add each screen widget to the window manager
 for screen in screens:
@@ -513,7 +574,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "homepage"
+wm.current = "searchView"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched
