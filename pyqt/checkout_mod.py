@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pymongo import MongoClient
 
-cluster = MongoClient("mongodb+srv://mStanley:Jankitup32@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority")
+cluster = MongoClient("passwordinfo")
 db = cluster["Innoventory"]
 collection = db["Products"]
 
