@@ -10,7 +10,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from api import Api, Login
+from PyQt5.QtGui import QMovie
+from api import Api, Login, UserManager, ShoppingCart
 import sys
 
 class Ui_MainWindow(object):
@@ -66,6 +67,57 @@ class Ui_MainWindow(object):
         self.create_account_button.setGeometry(QtCore.QRect(154, 350, 101, 23))
         self.create_account_button.setObjectName("create_account_button")
 
+        # create account code (page 1.5)
+        self.page_1_5 = QtWidgets.QWidget()
+        self.page_1_5.setObjectName("page_1_5")
+        self.stackedWidget.addWidget(self.page_1_5)      
+        self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox.setGeometry(QtCore.QRect(10,190,381,381))
+        self.groupBox.setObjectName("groupBox")
+        self.Username = QtWidgets.QLabel(self.groupBox)
+        self.Username.setGeometry(QtCore.QRect(30,40,91,16))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        font.setBold(True)
+        font.setWeight(75)     
+        self.Username.setFont(font)
+        self.Username.setObjectName("Username")
+        self.UserInput = QtWidgets.QLineEdit(self.groupBox)
+        self.UserInput.setGeometry(QtCore.QRect(160,40,211,31))
+        self.UserInput.setObjectName("UserInput")
+        self.Password = QtWidgets.QLabel(self.groupBox)
+        self.Password.setGeometry(QtCore.QRect(30,150,91,16))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        font.setBold(True)
+        font.setWeight(75)
+        self.Password.setFont(font)
+        self.Password.setObjectName("Password")
+        self.Passinput = QtWidgets.QLineEdit(self.groupBox)
+        self.Passinput.setGeometry(QtCore.QRect(160,150,211,31))
+        self.Passinput.setObjectName("Passinput")
+        self.Passinput.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.CancelButton = QtWidgets.QPushButton(self.groupBox)
+        self.CancelButton.setGeometry(QtCore.QRect(10,260,121,31))
+        self.CancelButton.setObjectName("CancelButton")
+        self.CreateButton = QtWidgets.QPushButton(self.groupBox)
+        self.CreateButton.setGeometry(QtCore.QRect(250,260,121,31))
+        self.CreateButton.setObjectName("CreateButton")
+        self.Instructions = QtWidgets.QLabel(self.groupBox)
+        self.Instructions.setGeometry(QtCore.QRect(10,200,331,41))
+        font = QtGui.QFont()
+        font.setPointSize(7)
+        font.setBold(True)
+        font.setWeight(75)
+        self.Instructions.setFont(font)
+        self.Instructions.setObjectName("Instructions")
+        self.photo = QtWidgets.QLabel(self.centralwidget)
+        self.photo.setGeometry(QtCore.QRect(110,10,181,171))
+        self.photo.setText("")
+        self.photo.setPixmap(QtGui.QPixmap("Charles_Barkley.jpg"))
+        self.photo.setScaledContents(True)
+        self.photo.setObjectName("photo")
+
         # search page code (page 2)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
@@ -75,13 +127,11 @@ class Ui_MainWindow(object):
         self.search_prompt_label.setFont(font)
         self.search_prompt_label.setAlignment(QtCore.Qt.AlignCenter)
         self.search_prompt_label.setObjectName("search_prompt_label")
-        
         self.no_results_notif = QtWidgets.QLabel(self.page_2)
         self.no_results_notif.setGeometry(QtCore.QRect(146, 353, 101, 31))
         self.failure_notif.setText("")
         self.no_results_notif.setAlignment(QtCore.Qt.AlignCenter)
         self.no_results_notif.setObjectName("no_results_notif")
-
         self.search_button = QtWidgets.QPushButton(self.page_2)
         self.search_button.setGeometry(QtCore.QRect(150, 310, 91, 23))
         self.search_button.setObjectName("search_button")
@@ -192,8 +242,11 @@ class Ui_MainWindow(object):
         # when login button is pressed, call login method
         self.login_button.clicked.connect(self.login)
 
-        # # when create account button is pressed
-        # self.create_account_button.connect(self.)
+        # when the user clicks the 'create account' button from the main page
+        self.create_account_button.clicked.connect(lambda: self.switch_page(1))
+
+        # Connect the createuser button with the checkinput function
+        self.CreateButton.clicked.connect(self.checkinput)
                 
         # when button is pressed, call search method
         self.search_button.clicked.connect(self.search_products)
@@ -215,6 +268,12 @@ class Ui_MainWindow(object):
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.login_button.setText(_translate("MainWindow", "Login"))
         self.create_account_button.setText(_translate("MainWindow", "Create Account"))
+        self.groupBox.setTitle(_translate("MainWindow", "Input field"))
+        self.Username.setText(_translate("MainWindow", "Username"))
+        self.Password.setText(_translate("MainWindow", "Password"))
+        self.CancelButton.setText(_translate("MainWindow", "Back"))
+        self.CreateButton.setText(_translate("MainWindow", "Create User"))
+        self.Instructions.setText(_translate("MainWindow", "Please enter the username and password for your new account."))
         self.backButton.setText(_translate("MainWindow", "Back"))
         self.backButton1.setText(_translate("MainWindow", "Back"))
         self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
@@ -241,9 +300,42 @@ class Ui_MainWindow(object):
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
     
-    # # changes pages to the create account page and lets user
-    # # enter info
-    # def create_account(self):
+    # If the user does something weird, tell them off.
+    def error(self, cause):
+        self.photo.setPixmap(QtGui.QPixmap("../images/Mad_Charlie.jpg"))
+
+        if cause == 1:
+            self.Instructions.setText("Error: Please enter a value for username and password")
+            self.Instructions.adjustSize()
+        
+        elif cause == 2:
+            self.Instructions.setText("Error: That username has already been taken.")
+            self.Instructions.adjustSize()
+
+    # Once the user has filled in the input fields, check to see if they are
+    # compatible. If everything works out, then upload their information into the
+    # "users" collection.
+    def checkinput(self):
+        username = self.UserInput.text()
+        password = self.Passinput.text()
+
+        # If the user is lazy
+        if username == '' or password == '':
+            self.error(1)
+
+        # Make sure there are not any other accounts with this name
+        elif collection.count_documents({"username": username}) > 0:
+            self.error(2)
+        
+        # Upload the requested info into our database
+        else:
+            collection.insert_one({"username": username, "password": password})
+            self.Instructions.setText("Success! Your account has been created!")
+            self.Instructions.adjustSize()
+
+            self.gif = QMovie('../images/Success.gif')
+            self.photo.setMovie(self.gif)
+            self.gif.start()
         
 
     # readjusts label sizes so text inside will not overflow
