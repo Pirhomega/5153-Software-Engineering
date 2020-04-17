@@ -168,11 +168,11 @@ class UserManager(Api):
         userExists = collection.find_one({'username': self.data['username']})
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
-            result = collection.insert_one(self.data)
+            collection.insert_one(self.data)
             status = True
 
-        # create the user's shopping cart in the 'Shopping_Cart' collection
-        ShoppingCart.createCart(self.data['username'])
+            # create the user's shopping cart in the 'Shopping_Cart' collection
+            ShoppingCart(self.data).createCart()
         
         # Return true for successful user creation, false for user creation failure
         return status
@@ -187,6 +187,10 @@ class UserManager(Api):
 
         # If the username exists, remove it from the Users collection
         result = collection.delete_one(self.data)
+
+        # remove user's shopping cart
+        ShoppingCart(self.data).eraseUser()
+
         status = result.deleted_count
 
         return status
@@ -194,26 +198,23 @@ class UserManager(Api):
 # This class represents all the shopping cart functionality
 # See __main__ for example code
 class ShoppingCart(Api):
-    # only call this when a user is creating an account
-    def createCart(self, user={'username': ''}):
-        self.user = user
-        # Get connection to MongoDB instance as the authen user
+    def __init__(self, user={'username': ''}):
         client = self.connect(Api.authenConnectionString)
         # Connect to Authen db
         db = client.Authen
         # Switch to Users collection
         self.collection = db.Shopping_Cart
-        # ooga = {self.user['username']: []}
-        # print(type({self.user['username']: []}))
-        
+        self.user = user
+
+    # only call this when a user is creating an account
+    def createCart(self):
         # create an empty array for cart items
         self.collection.insert_one({'username': self.user['username'], 'cart': []})
 
     # appends a dictionary to the 'cart' list (adds an item to the cart)
     # Example:
     #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
-    def addCart(self,user={'username': ''}, item={}):
-        self.user = user
+    def addCart(self, item={}):
         self.item = item
         self.collection.update_one(
                 self.user, 
@@ -223,8 +224,7 @@ class ShoppingCart(Api):
     # removes an item from the user's cart
     # Example:
     #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
-    def removeCart(self,user={'username': ''}, item={}):
-        self.user = user
+    def removeCart(self, item={}):
         self.item = item
         self.collection.update_one(
             self.user, 
@@ -232,8 +232,7 @@ class ShoppingCart(Api):
         )
     
     # modify an item quantity
-    def changeQuan(self,user={'username':''}, item={}, quantity=1):
-        self.user = user
+    def changeQuan(self, item={}, quantity=1):
         self.item = item
         self.quantity = quantity
         self.collection.update_one(
@@ -241,8 +240,14 @@ class ShoppingCart(Api):
             update={'$set': {f"cart.$[element].quantity": self.quantity}},
             array_filters=[{'element': self.item}]
         )
+
+    # erase user's cart
+    def eraseUser(self):
+        self.collection.delete_one(self.user)
+
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
+    import time
     validTestUser = {'username':'bwalker', 'password':'GC2020'}
     invalidPassword = {'username':'bwalker', 'password':'wrong'}
     invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
@@ -273,35 +278,40 @@ if __name__ == "__main__":
     connect1 = api.connect(api.customerConnectionString)
     testSearch = api.searchGrocery({'item':'Clam Nectar'})
     pprint(testSearch)
-
     print("*****CREATE USER TEST*****")
     userTest = UserManager()
 
     # Create a user that doesn't exist
     result = userTest.createUser({'username': 'test', 'password': 'test'})
     print(f"Create user account (should be True): {result}")
+    time.sleep(5)
 
     # Remove the user that was just created
     result = userTest.removeUser({'username': 'test'})
     print(f"Delete a user account (should be 1): {result}")
+    time.sleep(5)
 
     # Try to create a user using a username that is taken already
     result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
     print(f"Try to create a user with a username that's taken (should be False): {result}")
+    time.sleep(5)
 
     # Try to delete a user that doesn't exist
     result = userTest.removeUser({'username': 'test'})
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
-    # Create a shopping cart for a user, add some items to it, then remove items from it
-    shop_cart = ShoppingCart()
-    shop_cart.createCart({'username': 'bwalker'})
-    shop_cart.addCart({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True})
-    shop_cart.addCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12,'available':False})
-    shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
-    shop_cart.changeQuan({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True}, 1235)
-    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
-    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12})
+    # Create a shopping cart for a user, add some items to it, remove items from it, erase the user's cart completely
+    shop_cart = ShoppingCart({'username': 'bwalker', 'password' : 'random'})
+    shop_cart.createCart()
+    shop_cart.addCart({'item':'coke','quantity':1234,'available':True})
+    shop_cart.addCart({'item':'Sprite','quantity':12,'available':False})
+    shop_cart.addCart({'item':'Dr. Pepper','quantity':1,'available':True})
+    shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235)
+    shop_cart.removeCart({'item':'Dr. Pepper'})
+    shop_cart.removeCart({'item':'Sprite','quantity':12})
+    print("Gimme sec")
+    time.sleep(5)
+    shop_cart.eraseUser()
 
 
 
