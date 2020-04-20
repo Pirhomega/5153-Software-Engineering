@@ -31,50 +31,54 @@ class Ui_MainWindow(object):
         self.page_1 = QtWidgets.QWidget()
         self.page_1.setObjectName("page_1")
         self.stackedWidget.addWidget(self.page_1)
-        self.username_textbox = QtWidgets.QTextEdit(self.page_1)
+        self.groupBoxLI = QtWidgets.QGroupBox(self.page_1)
+        self.groupBoxLI.setGeometry(QtCore.QRect(10,10,381,581))
+        self.groupBoxLI.setObjectName("groupBoxLI")
+        self.username_textbox = QtWidgets.QLineEdit(self.groupBoxLI)
         self.username_textbox.setGeometry(QtCore.QRect(130, 180, 151, 31))
         self.username_textbox.setObjectName("username_textbox")
-        self.password_textbox = QtWidgets.QTextEdit(self.page_1)
+        self.password_textbox = QtWidgets.QLineEdit(self.groupBoxLI)
         self.password_textbox.setGeometry(QtCore.QRect(130, 260, 151, 31))
         self.password_textbox.setObjectName("password_textbox")
-        self.username_label = QtWidgets.QLabel(self.page_1)
+        self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.username_label = QtWidgets.QLabel(self.groupBoxLI)
         self.username_label.setGeometry(QtCore.QRect(130, 130, 151, 41))
         self.username_label.setFont(font)
         self.username_label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.username_label.setAlignment(QtCore.Qt.AlignCenter)
         self.username_label.setObjectName("username_label")
-        self.password_label = QtWidgets.QLabel(self.page_1)
+        self.password_label = QtWidgets.QLabel(self.groupBoxLI)
         self.password_label.setGeometry(QtCore.QRect(130, 210, 151, 41))
         self.password_label.setFont(font)
         self.password_label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.password_label.setAlignment(QtCore.Qt.AlignCenter)
         self.password_label.setObjectName("password_label")
-        self.login_button = QtWidgets.QPushButton(self.page_1)
+        self.login_button = QtWidgets.QPushButton(self.groupBoxLI)
         self.login_button.setGeometry(QtCore.QRect(154, 310, 101, 23))
         self.login_button.setObjectName("login_button")
-        self.label = QtWidgets.QLabel(self.page_1)
+        self.create_account_button = QtWidgets.QPushButton(self.groupBoxLI)
+        self.create_account_button.setGeometry(QtCore.QRect(154, 350, 101, 23))
+        self.create_account_button.setObjectName("create_account_button")
+        self.label = QtWidgets.QLabel(self.groupBoxLI)
         self.label.setGeometry(QtCore.QRect(60, 440, 291, 151))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("../images/login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
-        self.failure_notif = QtWidgets.QLabel(self.page_1)
+        self.failure_notif = QtWidgets.QLabel(self.groupBoxLI)
         self.failure_notif.setGeometry(QtCore.QRect(130, 390, 151, 31))
         self.failure_notif.setText("")
         self.failure_notif.setAlignment(QtCore.Qt.AlignCenter)
         self.failure_notif.setObjectName("failure_notif")
-        self.create_account_button = QtWidgets.QPushButton(self.page_1)
-        self.create_account_button.setGeometry(QtCore.QRect(154, 350, 101, 23))
-        self.create_account_button.setObjectName("create_account_button")
 
         # create account code (page 1.5)
         self.page_1_5 = QtWidgets.QWidget()
         self.page_1_5.setObjectName("page_1_5")
-        self.stackedWidget.addWidget(self.page_1_5)      
-        self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(10,190,381,381))
-        self.groupBox.setObjectName("groupBox")
-        self.Username = QtWidgets.QLabel(self.groupBox)
+        self.stackedWidget.addWidget(self.page_1_5)
+        self.groupBoxCA = QtWidgets.QGroupBox(self.page_1_5)
+        self.groupBoxCA.setGeometry(QtCore.QRect(10,190,381,381))
+        self.groupBoxCA.setObjectName("groupBoxCA")
+        self.Username = QtWidgets.QLabel(self.groupBoxCA)
         self.Username.setGeometry(QtCore.QRect(30,40,91,16))
         font = QtGui.QFont()
         font.setPointSize(9)
@@ -82,10 +86,10 @@ class Ui_MainWindow(object):
         font.setWeight(75)     
         self.Username.setFont(font)
         self.Username.setObjectName("Username")
-        self.UserInput = QtWidgets.QLineEdit(self.groupBox)
+        self.UserInput = QtWidgets.QLineEdit(self.groupBoxCA)
         self.UserInput.setGeometry(QtCore.QRect(160,40,211,31))
         self.UserInput.setObjectName("UserInput")
-        self.Password = QtWidgets.QLabel(self.groupBox)
+        self.Password = QtWidgets.QLabel(self.groupBoxCA)
         self.Password.setGeometry(QtCore.QRect(30,150,91,16))
         font = QtGui.QFont()
         font.setPointSize(9)
@@ -93,17 +97,17 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.Password.setFont(font)
         self.Password.setObjectName("Password")
-        self.Passinput = QtWidgets.QLineEdit(self.groupBox)
+        self.Passinput = QtWidgets.QLineEdit(self.groupBoxCA)
         self.Passinput.setGeometry(QtCore.QRect(160,150,211,31))
         self.Passinput.setObjectName("Passinput")
         self.Passinput.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.CancelButton = QtWidgets.QPushButton(self.groupBox)
+        self.CancelButton = QtWidgets.QPushButton(self.groupBoxCA)
         self.CancelButton.setGeometry(QtCore.QRect(10,260,121,31))
         self.CancelButton.setObjectName("CancelButton")
-        self.CreateButton = QtWidgets.QPushButton(self.groupBox)
+        self.CreateButton = QtWidgets.QPushButton(self.groupBoxCA)
         self.CreateButton.setGeometry(QtCore.QRect(250,260,121,31))
         self.CreateButton.setObjectName("CreateButton")
-        self.Instructions = QtWidgets.QLabel(self.groupBox)
+        self.Instructions = QtWidgets.QLabel(self.groupBoxCA)
         self.Instructions.setGeometry(QtCore.QRect(10,200,331,41))
         font = QtGui.QFont()
         font.setPointSize(7)
@@ -111,10 +115,10 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.Instructions.setFont(font)
         self.Instructions.setObjectName("Instructions")
-        self.photo = QtWidgets.QLabel(self.centralwidget)
+        self.photo = QtWidgets.QLabel(self.page_1_5)
         self.photo.setGeometry(QtCore.QRect(110,10,181,171))
         self.photo.setText("")
-        self.photo.setPixmap(QtGui.QPixmap("Charles_Barkley.jpg"))
+        self.photo.setPixmap(QtGui.QPixmap("../images/Charles_Barkley.jpg"))
         self.photo.setScaledContents(True)
         self.photo.setObjectName("photo")
 
@@ -124,6 +128,9 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page_2)
         self.search_prompt_label = QtWidgets.QLabel(self.page_2)
         self.search_prompt_label.setGeometry(QtCore.QRect(90, 200, 211, 41))
+        font = QtGui.QFont()
+        font.setFamily("Onyx")
+        font.setPointSize(16)
         self.search_prompt_label.setFont(font)
         self.search_prompt_label.setAlignment(QtCore.Qt.AlignCenter)
         self.search_prompt_label.setObjectName("search_prompt_label")
@@ -135,7 +142,10 @@ class Ui_MainWindow(object):
         self.search_button = QtWidgets.QPushButton(self.page_2)
         self.search_button.setGeometry(QtCore.QRect(150, 310, 91, 23))
         self.search_button.setObjectName("search_button")
-        self.search_box = QtWidgets.QTextEdit(self.page_2)
+        self.logout_button = QtWidgets.QPushButton(self.page_2)
+        self.logout_button.setGeometry(QtCore.QRect(10, 540, 101, 31))
+        self.logout_button.setObjectName("logout_button")
+        self.search_box = QtWidgets.QLineEdit(self.page_2)
         self.search_box.setGeometry(QtCore.QRect(60, 250, 271, 41))
         self.search_box.setObjectName("search_box")
 
@@ -146,9 +156,9 @@ class Ui_MainWindow(object):
         self.listWidget = QtWidgets.QListWidget(self.page_3)
         self.listWidget.setGeometry(QtCore.QRect(10, 10, 381, 521))
         self.listWidget.setObjectName("listWidget")
-        self.backButton1 = QtWidgets.QPushButton(self.page_3)
-        self.backButton1.setGeometry(QtCore.QRect(10, 540, 101, 31))
-        self.backButton1.setObjectName("backButton1")
+        self.searchbackbutton = QtWidgets.QPushButton(self.page_3)
+        self.searchbackbutton.setGeometry(QtCore.QRect(10, 540, 101, 31))
+        self.searchbackbutton.setObjectName("searchbackbutton")
 
         # item page code (page 4)
         self.page_4 = QtWidgets.QWidget()
@@ -236,7 +246,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when login button is pressed, call login method
@@ -245,11 +255,17 @@ class Ui_MainWindow(object):
         # when the user clicks the 'create account' button from the main page
         self.create_account_button.clicked.connect(lambda: self.switch_page(1))
 
-        # Connect the createuser button with the checkinput function
-        self.CreateButton.clicked.connect(self.checkinput)
+        # Connect the createuser button with the createAcc function
+        self.CreateButton.clicked.connect(self.createAcc)
+
+        # Return user to login screen
+        self.CancelButton.clicked.connect(lambda: self.switch_page(0))
                 
         # when button is pressed, call search method
         self.search_button.clicked.connect(self.search_products)
+
+        # logs a user out
+        self.logout_button.clicked.connect(lambda: self.switch_page(0))
 
         # if an item is clicked, go to item's page
         self.listWidget.itemClicked.connect(self.display_item_page)
@@ -257,25 +273,28 @@ class Ui_MainWindow(object):
         # # when back buttons are pressed, call switch to previous page
         # self.backButton.clicked.connect(lambda: self.switch_page(self.page_3))
         self.backButton.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
-        self.backButton1.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
+        self.searchbackbutton.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
+
+#######################################################################################################
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.search_prompt_label.setText(_translate("MainWindow", "What are you looking for?"))
         self.search_button.setText(_translate("MainWindow", "Search"))
+        self.logout_button.setText(_translate("MainWindow", "Logout"))
         self.username_label.setText(_translate("MainWindow", "Username"))
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.login_button.setText(_translate("MainWindow", "Login"))
         self.create_account_button.setText(_translate("MainWindow", "Create Account"))
-        self.groupBox.setTitle(_translate("MainWindow", "Input field"))
+        # self.groupBoxCA.setTitle(_translate("MainWindow", "Input field"))
         self.Username.setText(_translate("MainWindow", "Username"))
         self.Password.setText(_translate("MainWindow", "Password"))
-        self.CancelButton.setText(_translate("MainWindow", "Back"))
+        self.CancelButton.setText(_translate("MainWindow", "Cancel"))
         self.CreateButton.setText(_translate("MainWindow", "Create User"))
         self.Instructions.setText(_translate("MainWindow", "Please enter the username and password for your new account."))
         self.backButton.setText(_translate("MainWindow", "Back"))
-        self.backButton1.setText(_translate("MainWindow", "Back"))
+        self.searchbackbutton.setText(_translate("MainWindow", "Back"))
         self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
         self.name.setText(_translate("MainWindow", "Name:"))
         self.item_name.setText(_translate("MainWindow", ""))
@@ -284,10 +303,12 @@ class Ui_MainWindow(object):
         self.quantity.setText(_translate("MainWindow", "Quantity: "))
         self.numitems.setText(_translate("MainWindow", ""))
 
+###################################################################################################################################
+
     # attempt to log in to Innoventory with username and password offered
     def login(self, MainWindow):
-        username_password = {   'username': self.username_textbox.toPlainText(), 
-                                "password": self.password_textbox.toPlainText()}
+        username_password = {   'username': self.username_textbox.text(), 
+                                "password": self.password_textbox.text()}
         log_in_attempt = Login()
         _, login_success = log_in_attempt.login(username_password)
         self.login_result(login_success)
@@ -296,7 +317,7 @@ class Ui_MainWindow(object):
     def login_result(self, login_success):
         self.login_success = login_success
         if self.login_success == True:
-            self.switch_page(1)
+            self.switch_page(2)
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
     
@@ -315,28 +336,32 @@ class Ui_MainWindow(object):
     # Once the user has filled in the input fields, check to see if they are
     # compatible. If everything works out, then upload their information into the
     # "users" collection.
-    def checkinput(self):
+    def createAcc(self):
         username = self.UserInput.text()
         password = self.Passinput.text()
 
         # If the user is lazy
         if username == '' or password == '':
             self.error(1)
-
-        # Make sure there are not any other accounts with this name
-        elif collection.count_documents({"username": username}) > 0:
-            self.error(2)
         
         # Upload the requested info into our database
         else:
-            collection.insert_one({"username": username, "password": password})
-            self.Instructions.setText("Success! Your account has been created!")
-            self.Instructions.adjustSize()
+            creation = UserManager()
+            if creation.createUser({'username': username, 'password': password}):
+                self.Instructions.setText("Success! Your account has been created!")
+                self.Instructions.adjustSize()
 
-            self.gif = QMovie('../images/Success.gif')
-            self.photo.setMovie(self.gif)
-            self.gif.start()
+                self.gif = QMovie('../images/Success.gif')
+                self.photo.setMovie(self.gif)
+                self.gif.start()
+
+                self.CancelButton.setText("Login")
+            else:
+                self.error(2)
         
+    # checks inputs for invalid characters (security measure)
+    def secure_input(self,input):
+        print("This function will check all inputs for invalid characters!")
 
     # readjusts label sizes so text inside will not overflow
     def update(self, widget):
@@ -344,12 +369,12 @@ class Ui_MainWindow(object):
 
     # run an item search using the API
     def search_products(self):
-        if not self.search_box.document().isEmpty():
-            search_string = self.search_box.toPlainText()
+        if self.search_box.text() != "":
+            search_string = self.search_box.text()
             search_attempt = Api()
             self.search_result = search_attempt.search({"item": search_string})
             if self.search_result != [[]]:
-                self.switch_page(2)
+                self.switch_page(3)
                 self.display_results()
             else:
                 self.no_results_notif.setText("No results found")
@@ -377,18 +402,25 @@ class Ui_MainWindow(object):
     def display_item_page(self, item):
         # print("Item in row", self.listWidget.row(item), "was clicked!")
         detail_string = ""
-        self.switch_page(3)
+        self.switch_page(4)
         # print(self.search_result[0][0])
         self.item_name.setText(self.search_result[0][self.listWidget.row(item)]["item"])
         if "details" in self.search_result[0][self.listWidget.row(item)]:
             for num in range(0,len(self.search_result[0][self.listWidget.row(item)]["details"])):
                 detail_string += str(self.search_result[0][self.listWidget.row(item)]["details"]["name" + str(num)]) + "\n"
+        else:
+            self.description_text.setText("-")
         self.description_text.setText(detail_string)
-        self.numitems.setText(str(self.search_result[0][self.listWidget.row(item)]["quantity"]))
+        if "quantity" in self.search_result[0][self.listWidget.row(item)]:
+            self.numitems.setText(str(self.search_result[0][self.listWidget.row(item)]["quantity"]))
+        else:
+            self.numitems.setText("-")
         self.update(self.item_name)
         self.update(self.description_text)
         # print(item.text())
-        
+
+###########################################################################################################################
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
