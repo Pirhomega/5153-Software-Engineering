@@ -463,7 +463,7 @@
 
             SelectableRecycleGridLayout:
                 cols: 1
-                default_size: None, dp(20)
+                default_size: None, dp(60)
                 default_size_hint: 1, None
                 size_hint_y: None
                 height: self.minimum_height
@@ -513,43 +513,50 @@
             pos_hint: {"center_x":0.5,"top":0.98}    
             font_size: (30)  
 
-        Button: 
+        Label: 
             text: 'Product ID'
-            size_hint: 0.45, 0.075
+            size_hint: 0.3, 0.13
             pos_hint: {"x":0.05,"top":0.905}    
-            font_size: (30)  
+            font_size: (20)  
 
-        Button: 
+        Label: 
             text: 'Name'
-            size_hint: 0.45, 0.075
-            pos_hint: {"x":0.05,"top":0.83}    
-            font_size: (30)  
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.775}    
+            font_size: (20)  
 
-        Button: 
+        Label: 
             text: 'Qty in stock'
-            size_hint: 0.45, 0.075
-            pos_hint: {"x":0.05,"top":0.755}    
-            font_size: (30)  
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.645}    
+            font_size: (20)  
 
-        Button: 
+        Label: 
             text: 'Available'
-            size_hint: 0.45, 0.075
-            pos_hint: {"x":0.05,"top":0.68}    
-            font_size: (30)  
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.515}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Details'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.385}    
+            font_size: (20)  
 
         RecycleView:
-            size_hint:0.45,0.735
-            pos_hint:{"right":0.95,"y":0.17}
+            size_hint:0.6,0.65
+            pos_hint:{"right":0.95,"y":0.255}
             viewclass: 'ProdView'       
             data: root.product
             
 
             SelectableRecycleGridLayout:
                 cols: 1
-                default_size: None, dp(45)
-                default_size_hint: 1, None
-                size_hint_y: None
-                height: self.minimum_height
+                # default_size: None, None#dp(78)
+                default_size_hint: 1, 1
+                # size_hint: 0.45, 0.075
+                # size_hint_y: .2
+                #height: self.minimum_height
                 orientation: 'vertical'
                 multiselect: False
                 touch_multiselect: False
@@ -566,7 +573,7 @@
 
 
         Button:
-            text: "Homepage"
+            text:"Home"
             font_size: (20)
             pos_hint:{"right":0.95,"y":0.05}
             size_hint: 0.2, 0.1

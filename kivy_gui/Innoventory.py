@@ -15,6 +15,7 @@ from kivy.properties import ObjectProperty, ListProperty, BooleanProperty, Strin
 from kivy.uix.behaviors import ButtonBehavior, FocusBehavior
 from kivy.uix.boxlayout import BoxLayout ######
 from kivy.uix.button import Button
+from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
@@ -28,7 +29,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 
-
+Window.size = (450, 800)
 pp = pprint.PrettyPrinter(indent=4)
 username = ""
 
@@ -378,7 +379,7 @@ class SearchView(Screen,BoxLayout,GridLayout):
 
     def __init__(self, **kwargs):
         super(SearchView, self).__init__(**kwargs)
-        self.test()
+        #self.test()
 
     # Do a test search to show the recycleview functionality
     def test(self):
@@ -469,19 +470,30 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
 
     # get the dict of the item the user clicked on
     def getProduct(self):
-        print(self.item)
+        # print(self.full_data)
+        # full_data is a list that contains a single entry which is a list
         for lis in self.full_data:
             #pp.pprint(lis)
+            # The innermost list contains all the dicts
             for dic in lis:
                 #pp.pprint(dic) 
-                print(f'{dic["item"]}, {self.item}')
+                #print(f'{dic["item"]}, {self.item}')
 
                 # if the "item" entry in the dict matched the item the user
                 # clicked on, assign the entire dict to product
                 if dic["item"] == self.item:
+                    # If the dict has more the "details" key
+                    if "details" in dic.keys():
+                        # Move extra info to the end of the dict
+                        dic["alt names"] = f"{dic['details']['name0']}\n{dic['details']['name1']}\n{dic['details']['name2']}"
+                        # delete the old dict in the middle
+                        del dic["details"]
+                    else:
+                        dic["alt names"] = f"None"
                     print(type(dic))
                     self.product = [{"text": str(dic[key])} for key in dic.keys()] 
                     print(self.product)
+
     
 
 """
@@ -574,7 +586,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "searchView"
+wm.current = "homepage"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched
