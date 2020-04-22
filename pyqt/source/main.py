@@ -15,6 +15,8 @@ from api import Api, Login, UserManager, ShoppingCart
 import sys
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.shopping_cart_list = []
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(400, 600)
@@ -236,6 +238,11 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.numitems.setFont(font)
         self.numitems.setObjectName("numitems")
+        self.info_label = QtWidgets.QLabel(self.page_4)
+        self.info_label.setGeometry(QtCore.QRect(130, 540, 131, 31))
+        self.info_label.setText("")
+        self.info_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.info_label.setObjectName("info_label")
 
         # shopping cart page code (page 5)
         self.page_5 = QtWidgets.QWidget()
@@ -507,9 +514,12 @@ class Ui_MainWindow(object):
         # print(item.text())
     
     def add_to_shoppingcart(self):
-        asdf = self.search_result[0][self.listWidget.row(self.item)]
-        print(type(asdf))
-        ShoppingCart(self.username_password).addCart(self.search_result[0][self.listWidget.row(self.item)])
+        if self.search_result[0][self.listWidget.row(self.item)] not in self.shopping_cart_list:
+            self.shopping_cart_list.append(self.search_result[0][self.listWidget.row(self.item)])
+            ShoppingCart({'username': self.username_password['username']}).addCart(self.search_result[0][self.listWidget.row(self.item)])
+            self.info_label.setText("Added to cart!")
+        else:
+            self.info_label.setText("Already in cart!")
 
 ###########################################################################################################################
 

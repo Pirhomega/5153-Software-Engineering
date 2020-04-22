@@ -172,7 +172,7 @@ class UserManager(Api):
             status = True
 
             # create the user's shopping cart in the 'Shopping_Cart' collection
-            ShoppingCart(self.data).createCart()
+            ShoppingCart({'username': self.data['username']}).createCart()
         
         # Return true for successful user creation, false for user creation failure
         return status
