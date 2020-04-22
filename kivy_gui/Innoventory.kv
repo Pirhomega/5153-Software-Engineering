@@ -113,7 +113,7 @@
             hint_text: "Enter an item to search for"
             font_size: 20
             pos_hint: {"x": 0.05, "top":0.63}
-            size_hint: .90, 0.08
+            size_hint: .90, 0.05
             multiline: False
 
         # ImgButton:
@@ -172,6 +172,16 @@
             on_release:
                 root.manager.transition.direction = "down"
                 root.settingsMenu()
+
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
 
                     
 
@@ -233,6 +243,8 @@
             on_release:
                 root.manager.transition.direction = "right"
                 root.manager.current = "login"
+
+
 
 
 
@@ -313,6 +325,16 @@
                 root.manager.transition.direction = "up"
                 root.manager.current = "homepage"
 
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
 
 
 #  $$$$$$\  $$\                                               $$$$$$$\                                                                       $$\ 
@@ -387,49 +409,15 @@
                 root.manager.transition.direction = "left"
                 root.manager.current = "homepage"
 
-                
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
 
-# # $$\   $$\           $$\ $$\ 
-# # $$ |  $$ |          $$ |$$ |
-# # $$ |  $$ | $$$$$$\  $$ |$$ |
-# # $$$$$$$$ |$$  __$$\ $$ |$$ |
-# # $$  __$$ |$$$$$$$$ |$$ |$$ |
-# # $$ |  $$ |$$   ____|$$ |$$ |
-# # $$ |  $$ |\$$$$$$$\ $$ |$$ |
-# # \__|  \__| \_______|\__|\__|
-
-# <Hell>:
-#     name:"hell"
-#     FloatLay:
-#         Img:
-#             source:"Inno.png"
-#             size_hint: 0.2,0.2
-#             pos_hint: {"center_x":0.5,"y":0.85}
-#         Img:
-#             source: "nuke.gif"
-#             size_hint:1,1
-#             anim_delay: 0.05
-
-#         Button:
-#             text: "Live with yourself"
-#             font_size: (20)
-#             pos_hint:{"x":0.05,"y":0.01}
-#             size_hint: 0.2, 0.1
-
-#             on_release:
-#                 root.manager.transition.direction = "down"
-#                 root.manager.current = "homepage"
-
-#         Button:
-#             text: "End it all"
-#             font_size: (20)
-#             pos_hint:{"right":0.95,"y":0.01}
-#             size_hint: 0.2, 0.1
-
-#             on_release:
-#                 root.manager.transition.direction = "up"
-#                 root.manager.current = "login"
-
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
 
 
 # 
@@ -481,6 +469,16 @@
                 root.manager.transition.direction = "right"
                 root.manager.current = "homepage"
 
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
 # 
 #  $$$$$$\                                          $$\       $$$$$$$\              $$\     $$\                         
 # $$  __$$\                                         $$ |      $$  __$$\             $$ |    $$ |                        
@@ -505,6 +503,7 @@
 
 <ProdInfo>:
     name: "prodInfo"
+    qtyBuy: qtyBuy
     FloatLay:
 
         Label: 
@@ -581,6 +580,34 @@
             on_release:
                 root.manager.transition.direction = "down"
                 root.manager.current = "homepage"
+        
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
+        TextInput:
+            id: qtyBuy
+            hint_text:"Qty to add"
+            font_size: (20) 
+            pos_hint: {"right": 0.5 , "y":0.18}
+            size_hint: 0.45, 0.05
+            multiline: False
+            password: False
+
+        Button:
+            text:"Add to cart"
+            font_size: (20)
+            pos_hint:{"x":0.55,"y":0.18}
+            size_hint: .4, 0.05
+
+            on_release:
+                root.addToCart()
 
 #  $$$$$$$\                            $$\                       $$\   $$\    $$\ $$\                         
 # $$  __$$\                           $$ |                      $$ |  $$ |   $$ |\__|                        
@@ -591,6 +618,78 @@
 # $$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
 # \__|      \__|       \______/  \_______| \______/  \_______|   \____/   \_/    \__| \_______| \_____\____/                
 <ProdView>:
+
+
+#  $$$$$$\  $$\                                     $$\                      $$$$$$\                       $$\     
+# $$  __$$\ $$ |                                    \__|                    $$  __$$\                      $$ |    
+# $$ /  \__|$$$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  $$\ $$$$$$$\   $$$$$$\  $$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
+# \$$$$$$\  $$  __$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$ |$$  __$$\ $$  __$$\ $$ |       \____$$\ $$  __$$\\_$$  _|  
+#  \____$$\ $$ |  $$ |$$ /  $$ |$$ /  $$ |$$ /  $$ |$$ |$$ |  $$ |$$ /  $$ |$$ |       $$$$$$$ |$$ |  \__| $$ |    
+# $$\   $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ 
+# \$$$$$$  |$$ |  $$ |\$$$$$$  |$$$$$$$  |$$$$$$$  |$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |
+#  \______/ \__|  \__| \______/ $$  ____/ $$  ____/ \__|\__|  \__| \____$$ | \______/  \_______|\__|        \____/ 
+#                               $$ |      $$ |                    $$\   $$ |                                       
+#                               $$ |      $$ |                    \$$$$$$  |                                       
+#                               \__|      \__|                     \______/                                       
+<ShoppingCart>:
+    name:"shoppingCart"
+    FloatLay:
+        Label: 
+            text: 'Shopping Cart'
+            size_hint: 0.2, 0.05
+            pos_hint: {"center_x":0.5,"top":0.98}    
+            font_size: (30)  
+
+        RecycleView:
+            size_hint:0.9,0.75
+            pos_hint:{"right":0.95,"y":0.17}
+            viewclass: 'CartView'       
+            data: root.items
+            
+
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+                size_hint_y: None
+                text_size: self.width, None
+
+        Button:
+            text:"Home"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "homepage"
+
+        Button:
+            text: "Checkout"
+            font_size: (20)
+            pos_hint:{"right":0.95,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.getItems()
+            
+
+#  $$$$$$\                       $$\   $$\    $$\ $$\                         
+# $$  __$$\                      $$ |  $$ |   $$ |\__|                        
+# $$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+# $$ |       \____$$\ $$  __$$\\_$$  _|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+# $$ |       $$$$$$$ |$$ |  \__| $$ |   \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+# $$ |  $$\ $$  __$$ |$$ |       $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+# \$$$$$$  |\$$$$$$$ |$$ |       \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+#  \______/  \_______|\__|        \____/   \_/    \__| \_______| \_____\____/ 
+
+<CartView>:
 
 
 # $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         

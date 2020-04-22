@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import api
+import copy
 import pymongo
 import urllib.parse
 import pprint
@@ -32,6 +33,8 @@ from kivy.uix.widget import Widget
 Window.size = (450, 800)
 pp = pprint.PrettyPrinter(indent=4)
 username = ""
+
+
 
 ############################### UNCOMMENT TO SKIP LOGIN ########################
 
@@ -65,6 +68,21 @@ class ImgButton(ButtonBehavior,Image):
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     pass
 
+"""
+ $$$$$$\                       $$\     
+$$  __$$\                      $$ |    
+$$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
+$$ |       \____$$\ $$  __$$\\_$$  _|  
+$$ |       $$$$$$$ |$$ |  \__| $$ |    
+$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ 
+\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |
+ \______/  \_______|\__|        \____/
+"""
+
+class Cart():
+    items = []
+    dbStuff = []
+cart = Cart()
 
 '''
 $$\                           $$\           
@@ -106,7 +124,7 @@ class Login(Screen):
             else:
                 # Create a popup window to display the authentication failure
                 invalidLoginPopup = Popup(title="Authentication Failure", title_align="center", 
-                    content=Label(text="Login Failed"), size_hint=(None, None), size=(250,250))
+                    content=Label(text="Login Failed"), size_hint=(.75,.5))
                 
                 # Show the authentication failure popup
                 invalidLoginPopup.open()
@@ -182,7 +200,7 @@ class Homepage(Screen):
             # Create a popup
             noResults = Popup(title="No results", title_align="center", 
                 content=Label(text="No matches for your query"), 
-                size_hint=(None, None), size=(250,250))
+                size_hint=(.75,.5))
             # Show the authentication failure popup
             noResults.open()
             return False
@@ -192,7 +210,7 @@ class Homepage(Screen):
     #     else:
     #         # Create a popup window to display the authentication failure
     #         emptySearchPopup = Popup(title="Invalid Search", title_align="center", 
-    #             content=Label(text="Search cannot be empty"), size_hint=(None, None), size=(250,250))
+    #             content=Label(text="Search cannot be empty"), size_hint=(.75,.5))
     #         emptySearchPopup.open()
 
     #     results = []
@@ -245,7 +263,7 @@ class CreateAccount(Screen):
         else:
             # Create a popup window to display the authentication failure
             failedUserCreationPopup = Popup(title="User Creation Failure", title_align="center", 
-                content=Label(text="User Creation Failed\n Username Taken"), size_hint=(None, None), size=(250,250))
+                content=Label(text="User Creation Failed\n Username Taken"), size_hint=(.75,.5))
                 
             # Show the authentication failure popup
             failedUserCreationPopup.open()
@@ -318,7 +336,7 @@ class ChangePassword(Screen):
         if result == True:
             # Password change succesful popup
             passChangePopup = Popup(title="Success", title_align="center", 
-                content=Label(text="Password Changed!"), size_hint=(None, None), size=(250,250))
+                content=Label(text="Password Changed!"), size_hint=(.75,.5))
             passChangePopup.open()
         
         else:
@@ -454,10 +472,12 @@ $$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  |$$$$$$\ $$
  """
 class ProdInfo(Screen, BoxLayout, GridLayout):
 
+    qtyBuy = ObjectProperty(None) # The quantity of an item the user adds to cart
     item = None # what the user clicked on in the results list
     product = ListProperty([]) # the dicitonary of the item the user clicked
     full_data = ListProperty([])
     my_label = ListProperty([])
+    productInfo = {}
 
     # get the list of all results
     def send_query_results(self, full_data=None, labels=None):
@@ -466,6 +486,7 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
     # get the item the user clicked on
     def sendItem(self, item=None):
         self.item = item
+        # print(item)
         self.getProduct()
 
     # get the dict of the item the user clicked on
@@ -478,10 +499,11 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
             for dic in lis:
                 #pp.pprint(dic) 
                 #print(f'{dic["item"]}, {self.item}')
-
                 # if the "item" entry in the dict matched the item the user
                 # clicked on, assign the entire dict to product
                 if dic["item"] == self.item:
+                    #make the product dict available to other functions
+                    self.productInfo = dic
                     # If the dict has more the "details" key
                     if "details" in dic.keys():
                         # Move extra info to the end of the dict
@@ -490,9 +512,65 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
                         del dic["details"]
                     else:
                         dic["alt names"] = f"None"
-                    print(type(dic))
+                    #print(type(dic))
                     self.product = [{"text": str(dic[key])} for key in dic.keys()] 
-                    print(self.product)
+                    #print(self.product)
+
+    def addToCart(self):
+
+        if self.productInfo["availability"] == False:
+            # Create a popup window 
+            unavailablePopup = Popup(title="Unavailable item", title_align="center", 
+                content=Label(text="This item is currently unavailable for purchase"), 
+                size_hint=(.75,.5))
+            
+            # Show the popup
+            unavailablePopup.open()
+
+            self.qtyBuy.text = ""
+        
+        elif int(self.qtyBuy.text) > int(self.productInfo["quantity"]):
+            # Create a popup window 
+            stockPopup = Popup(title="Not enough in stock", title_align="center", 
+                content=Label(text=f"There is not enough product in stock.\
+                    \n{self.productInfo['quantity']} is the maximum limit."), 
+                size_hint=(.75,.5))
+            # Show the popup
+            stockPopup.open()
+
+            self.qtyBuy.text = f"{self.productInfo['quantity']}"
+
+        elif self.qtyBuy.text == "" or int(self.qtyBuy.text) <= 0 or self.qtyBuy.text.isnumeric() == False:
+             # Create a popup window 
+            amountPopup = Popup(title="Invalid Amount", title_align="center", 
+                content=Label(text="Please enter a valid amount"), 
+                size_hint=(.75,.5))
+            # Show the popup
+            amountPopup.open()
+
+            self.qtyBuy.text = ""
+    
+        else:
+            # Make dict for the shopping cart screen and append it to the items 
+            # list in cart.
+            # This info is for the customer and checkout
+            shopCartInfo = {"Item": self.productInfo['item'], "Quantity in Cart":int(self.qtyBuy.text)} ############################################ ADD PRICE TO THIS LATER
+            cart.items.append(shopCartInfo)
+            # Make dict for the DB and append it to the dbInfo list in cart.
+            # This info is for updating the database
+            dbInfo = {"id": self.productInfo['_id'], "qty":int(self.qtyBuy.text)}
+            cart.dbStuff.append(dbInfo)
+
+             # Create a popup window 
+            amountPopup = Popup(title="Added to cart", title_align="center", 
+                content=Label(text=f"{self.qtyBuy.text} {self.productInfo['item']} added to your cart"), size_hint=(.75,.5))
+            # Show the popup
+            amountPopup.open()
+
+            self.qtyBuy.text = ""
+        
+
+
 
     
 
@@ -515,6 +593,48 @@ class ProdView(RecycleDataViewBehavior, Button):
 
     def apply_selection(self, rec_view, my_index, am_selected): 
         self.selected = am_selected
+
+"""
+ $$$$$$\  $$\                                     $$\                      $$$$$$\                       $$\     
+$$  __$$\ $$ |                                    \__|                    $$  __$$\                      $$ |    
+$$ /  \__|$$$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  $$\ $$$$$$$\   $$$$$$\  $$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
+\$$$$$$\  $$  __$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$ |$$  __$$\ $$  __$$\ $$ |       \____$$\ $$  __$$\\_$$  _|  
+ \____$$\ $$ |  $$ |$$ /  $$ |$$ /  $$ |$$ /  $$ |$$ |$$ |  $$ |$$ /  $$ |$$ |       $$$$$$$ |$$ |  \__| $$ |    
+$$\   $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ 
+\$$$$$$  |$$ |  $$ |\$$$$$$  |$$$$$$$  |$$$$$$$  |$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |
+ \______/ \__|  \__| \______/ $$  ____/ $$  ____/ \__|\__|  \__| \____$$ | \______/  \_______|\__|        \____/ 
+                              $$ |      $$ |                    $$\   $$ |                                       
+                              $$ |      $$ |                    \$$$$$$  |                                       
+                              \__|      \__|                     \______/                                       
+"""
+class ShoppingCart(Screen,BoxLayout,GridLayout):
+    items = ListProperty()
+    
+    def on_pre_enter(self):
+        itemList = cart.items
+        self.items = [{'text': str(item)} for item in itemList]
+
+
+    
+"""
+ $$$$$$\                       $$\   $$\    $$\ $$\                         
+$$  __$$\                      $$ |  $$ |   $$ |\__|                        
+$$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+$$ |       \____$$\ $$  __$$\\_$$  _|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+$$ |       $$$$$$$ |$$ |  \__| $$ |   \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+ \______/  \_______|\__|        \____/   \_/    \__| \_______| \_____\____/ 
+ """
+class CartView(RecycleDataViewBehavior, Button):
+    def refresh_view_attrs(self, rec_view, my_index, data):
+        self.my_index = my_index
+        return super(CartView, self).refresh_view_attrs(rec_view, my_index, data)
+
+    def apply_selection(self, rec_view, my_index, am_selected): 
+        self.selected = am_selected
+
+
 
 
 #  $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\   
@@ -578,7 +698,8 @@ wm = WindowManager()
 # A list of screens - each is a class that inherits from the Screen class in kivy.uix.screenmanager
 screens = [Login(name="login"), CreateAccount(name="createAcct"), Homepage(name="homepage"), 
             SettingsMenu(name="settingsMenu"), ChangePassword(name="changePassword"),
-             TestButton(name='testButton'), ProdInfo(name="prodInfo"), SearchView(name="searchView")]
+             TestButton(name='testButton'), ProdInfo(name="prodInfo"), SearchView(name="searchView"),
+             ShoppingCart(name="shoppingCart")]
 
 # Add each screen widget to the window manager
 for screen in screens:
