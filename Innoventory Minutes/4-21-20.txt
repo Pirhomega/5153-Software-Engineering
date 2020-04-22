@@ -1,0 +1,8 @@
+Modifications to 4-16-20 meeting deliverables
+---------------------------------------------
+- Make a basic presentation for Thursday's progress meeting and each individual add their part
+- NOTE: make the database accessible from all IP's
+- Ben, Matt, and Corbin write their version of the project paper
+	- Each write documentation on their part
+- After presentation, focus on writing project paper and documentation
+- Finish pyqt / desktop version by adding checkout, prices to database, manager functionality

@@ -91,7 +91,7 @@
     <property name="geometry">
      <rect>
       <x>154</x>
-      <y>320</y>
+      <y>310</y>
       <width>101</width>
       <height>23</height>
      </rect>
@@ -103,17 +103,17 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>400</y>
-      <width>361</width>
-      <height>181</height>
+      <x>60</x>
+      <y>440</y>
+      <width>291</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>login_shaq.png</pixmap>
+     <pixmap>../images/login_shaq.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -122,9 +122,9 @@
    <widget class="QLabel" name="failure_notif">
     <property name="geometry">
      <rect>
-      <x>136</x>
-      <y>360</y>
-      <width>141</width>
+      <x>130</x>
+      <y>390</y>
+      <width>151</width>
       <height>31</height>
      </rect>
     </property>
@@ -135,16 +135,19 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>403</width>
-     <height>21</height>
-    </rect>
-   </property>
+   <widget class="QPushButton" name="create_account_button">
+    <property name="geometry">
+     <rect>
+      <x>154</x>
+      <y>350</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create Account</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
