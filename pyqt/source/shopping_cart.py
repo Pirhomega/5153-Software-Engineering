@@ -1,0 +1,116 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'checkout_mod.ui'
+#
+# Created by: PyQt5 UI code generator 5.13.0
+#
+# WARNING! All changes made in this file will be lost!
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_CheckoutWindow(object):
+    def setupUi(self, CheckoutWindow):
+        CheckoutWindow.setObjectName("CheckoutWindow")
+        CheckoutWindow.resize(400, 600)
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        CheckoutWindow.setFont(font)
+        self.centralwidget = QtWidgets.QWidget(CheckoutWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.remove_button = QtWidgets.QPushButton(self.centralwidget)
+        self.remove_button.setGeometry(QtCore.QRect(270, 430, 101, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.remove_button.setFont(font)
+        self.remove_button.setObjectName("remove_button")
+        self.back_button = QtWidgets.QPushButton(self.centralwidget)
+        self.back_button.setGeometry(QtCore.QRect(20, 530, 101, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.back_button.setFont(font)
+        self.back_button.setObjectName("back_button")
+        self.shopping_cart = QtWidgets.QListWidget(self.centralwidget)
+        self.shopping_cart.setGeometry(QtCore.QRect(20, 69, 360, 241))
+        self.shopping_cart.setObjectName("shopping_cart")
+        self.users_sc = QtWidgets.QLabel(self.centralwidget)
+        self.users_sc.setGeometry(QtCore.QRect(20, 15, 360, 40))
+        font = QtGui.QFont()
+        font.setFamily("Onyx")
+        font.setPointSize(26)
+        self.users_sc.setFont(font)
+        self.users_sc.setAlignment(QtCore.Qt.AlignCenter)
+        self.users_sc.setObjectName("users_sc")
+        self.total_label = QtWidgets.QLabel(self.centralwidget)
+        self.total_label.setGeometry(QtCore.QRect(30, 320, 41, 31))
+        self.total_label.setObjectName("total_label")
+        self.line = QtWidgets.QFrame(self.centralwidget)
+        self.line.setGeometry(QtCore.QRect(0, 355, 400, 16))
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.cost_label = QtWidgets.QLabel(self.centralwidget)
+        self.cost_label.setGeometry(QtCore.QRect(150, 320, 100, 31))
+        self.cost_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.cost_label.setObjectName("cost_label")
+        self.item_prompt = QtWidgets.QLabel(self.centralwidget)
+        self.item_prompt.setGeometry(QtCore.QRect(0, 380, 400, 20))
+        self.item_prompt.setAlignment(QtCore.Qt.AlignCenter)
+        self.item_prompt.setObjectName("item_prompt")
+        self.item_page_button = QtWidgets.QPushButton(self.centralwidget)
+        self.item_page_button.setGeometry(QtCore.QRect(140, 430, 111, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.item_page_button.setFont(font)
+        self.item_page_button.setObjectName("item_page_button")
+        self.chng_quan_button = QtWidgets.QPushButton(self.centralwidget)
+        self.chng_quan_button.setGeometry(QtCore.QRect(20, 430, 101, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.chng_quan_button.setFont(font)
+        self.chng_quan_button.setObjectName("chng_quan_button")
+        self.checkout_button = QtWidgets.QPushButton(self.centralwidget)
+        self.checkout_button.setGeometry(QtCore.QRect(270, 530, 101, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.checkout_button.setFont(font)
+        self.checkout_button.setObjectName("checkout_button")
+        self.quantity = QtWidgets.QSpinBox(self.centralwidget)
+        self.quantity.setGeometry(QtCore.QRect(50, 470, 42, 22))
+        self.quantity.setObjectName("quantity")
+        self.line_2 = QtWidgets.QFrame(self.centralwidget)
+        self.line_2.setGeometry(QtCore.QRect(0, 500, 400, 16))
+        self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        CheckoutWindow.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(CheckoutWindow)
+        self.statusbar.setObjectName("statusbar")
+        CheckoutWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(CheckoutWindow)
+        QtCore.QMetaObject.connectSlotsByName(CheckoutWindow)
+
+    def retranslateUi(self, CheckoutWindow):
+        _translate = QtCore.QCoreApplication.translate
+        CheckoutWindow.setWindowTitle(_translate("CheckoutWindow", "MainWindow"))
+        self.remove_button.setText(_translate("CheckoutWindow", "Remove Item"))
+        self.back_button.setText(_translate("CheckoutWindow", "Back"))
+        self.users_sc.setText(_translate("CheckoutWindow", "Your Shopping Cart"))
+        self.total_label.setText(_translate("CheckoutWindow", "Total: "))
+        self.cost_label.setText(_translate("CheckoutWindow", "cost"))
+        self.item_prompt.setText(_translate("CheckoutWindow", "Click an item to iteract"))
+        self.item_page_button.setText(_translate("CheckoutWindow", "Go to item page"))
+        self.chng_quan_button.setText(_translate("CheckoutWindow", "Update Quantity"))
+        self.checkout_button.setText(_translate("CheckoutWindow", "Checkout"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    CheckoutWindow = QtWidgets.QMainWindow()
+    ui = Ui_CheckoutWindow()
+    ui.setupUi(CheckoutWindow)
+    CheckoutWindow.show()
+    sys.exit(app.exec_())
