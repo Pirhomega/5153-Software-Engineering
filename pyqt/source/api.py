@@ -240,6 +240,10 @@ class ShoppingCart(Api):
             update={'$set': {f"cart.$[element].quantity": self.quantity}},
             array_filters=[{'element': self.item}]
         )
+    
+    # copies all shopping cart contents to a list
+    def readShoppingcart(self):
+        return dict(self.collection.find_one(filter=self.user))['cart']
 
     # erase user's cart
     def eraseUser(self):
@@ -301,7 +305,7 @@ if __name__ == "__main__":
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
     # Create a shopping cart for a user, add some items to it, remove items from it, erase the user's cart completely
-    shop_cart = ShoppingCart({'username': 'bwalker', 'password' : 'random'})
+    shop_cart = ShoppingCart({'username': 'cmat'})
     shop_cart.createCart()
     shop_cart.addCart({'item':'coke','quantity':1234,'available':True})
     shop_cart.addCart({'item':'Sprite','quantity':12,'available':False})
@@ -309,6 +313,7 @@ if __name__ == "__main__":
     shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235)
     shop_cart.removeCart({'item':'Dr. Pepper'})
     shop_cart.removeCart({'item':'Sprite','quantity':12})
+    print(shop_cart.readShoppingcart())
     print("Gimme sec")
     time.sleep(5)
     shop_cart.eraseUser()
