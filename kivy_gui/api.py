@@ -196,7 +196,7 @@ class UserManager(Api):
 
         return status
     
-    # 
+    # Modifies a user password.
     def changePassword(self, oldData = {}, newData = {}):
         self.data = oldData
         self.data2 = newData
@@ -207,7 +207,44 @@ class UserManager(Api):
         return True
 
 
+# This class represents all the shopping cart functionality
+# See __main__ for example code
+class ShoppingCart(Api):
+    # only call this when a user is creating an account
+    def createCart(self, user={'username': ''}):
+        self.user = user
+        # Get connection to MongoDB instance as the authen user
+        client = self.connect(Api.authenConnectionString)
+        # Connect to Authen db
+        db = client.Authen
+        # Switch to Users collection
+        self.collection = db.Shopping_Cart
+        # ooga = {self.user['username']: []}
+        # print(type({self.user['username']: []}))
+        
+        # create an empty array for cart items
+        self.collection.insert_one({'username': self.user['username'], 'cart': []})
 
+    # appends a dictionary to the 'cart' list (adds an item to the cart)
+    # Example:
+    #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    def addCart(self,user={'username': ''}, item={}):
+        self.user = user
+        self.item = item
+        self.collection.update_one(
+                {'username': self.user['username']}, 
+                {'$push': {'cart': {'$each' :[ self.item ]}}}
+        )
+
+    # removes an item from the user's cart
+    # Example:
+    #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
+    def removeCart(self,user={'username': ''}, item={}):
+        self.user = user
+        self.item = item
+        self.collection.update_one(
+                {'username': self.user['username']}, 
+                {'$pull': {'cart': self.item }})
 
 
 
@@ -265,7 +302,14 @@ if __name__ == "__main__":
     result = userTest.removeUser({'username': 'test'})
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
-
+    # Create a shopping cart for a user, add some items to it, then remove items from it
+    shop_cart = ShoppingCart()
+    shop_cart.createCart({'username': 'bwalker'})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12,'available':False})
+    shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
+    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12})
 
 
 
