@@ -385,9 +385,9 @@ class Ui_MainWindow(object):
         # removes an item from the user's cart
         self.remove_button.clicked.connect(self.remove_item)
 
-        # displays an item's page by performing a query on the database,
-        # that way, the item page displays current info
-        self.item_page_button.clicked.connect(self.cart_display_page)
+        # # displays an item's page by performing a query on the database,
+        # # that way, the item page displays current info
+        # self.item_page_button.clicked.connect(self.cart_display_page)
 
         # # when back buttons are pressed, call switch to previous page
         self.item_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
@@ -571,7 +571,6 @@ class Ui_MainWindow(object):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         detail_string = ""
         self.switch_page(4)
-        # print(self.search_result[0][0])
         self.item_name.setText(product["item"])
         if "details" in product:
             for num in range(0,len(product["details"])):
@@ -614,30 +613,27 @@ class Ui_MainWindow(object):
         self.shopping_cart_list.pop(item)
         # get rid of the item from the list widget
         self.cart_listWidget.takeItem(item)
-    
+
     def cart_display_page(self):
-        print(self.shopping_cart_list[self.cart_listWidget.currentRow()])
-        result = self.search_attempt.search(self.shopping_cart_list[self.cart_listWidget.currentRow()])
-        # print(len(result))
-        # print(result)
+        # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
+        # add a function to API called quick search that lets you search for one document
+        product = {}
         detail_string = ""
         self.switch_page(4)
-        # print(self.search_result[0][0])
-        self.item_name.setText(result[0][0]["item"])
-        if "details" in result[0][0]:
-            for num in range(0,len(result[0][0]["details"])):
-                detail_string += str(result[0][0]["details"]["name" + str(num)]) + "\n"
+        self.item_name.setText(product["item"])
+        if "details" in product:
+            for num in range(0,len(product["details"])):
+                detail_string += str(product["details"]["name" + str(num)]) + "\n"
         else:
             self.description_text.setText("-")
         self.description_text.setText(detail_string)
-        if "quantity" in result[0][0]:
-            self.numitems.setText(str(result[0][0]["quantity"]))
+        if "quantity" in product:
+            self.numitems.setText(str(product["quantity"]))
         else:
             self.numitems.setText("-")
         self.update(self.item_name)
-        self.update(self.description_text)       
-
-
+        self.update(self.description_text)
+        # print(item.text())
 
 ###########################################################################################################################
 
