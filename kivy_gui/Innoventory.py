@@ -68,21 +68,11 @@ class ImgButton(ButtonBehavior,Image):
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     pass
 
-"""
- $$$$$$\                       $$\     
-$$  __$$\                      $$ |    
-$$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
-$$ |       \____$$\ $$  __$$\\_$$  _|  
-$$ |       $$$$$$$ |$$ |  \__| $$ |    
-$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ 
-\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |
- \______/  \_______|\__|        \____/
-"""
+class CheckoutPopup(FloatLayout):
+    pass 
 
-class Cart():
-    items = []
-    dbStuff = []
-cart = Cart()
+shopCartInfo = []
+dbInfo = []
 
 '''
 $$\                           $$\           
@@ -528,6 +518,16 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
             unavailablePopup.open()
 
             self.qtyBuy.text = ""
+
+        elif self.qtyBuy.text == "" or int(self.qtyBuy.text) <= 0 or self.qtyBuy.text.isnumeric() == False:
+             # Create a popup window 
+            amountPopup = Popup(title="Invalid Amount", title_align="center", 
+                content=Label(text="Please enter a valid amount"), 
+                size_hint=(.75,.5))
+            # Show the popup
+            amountPopup.open()
+
+            self.qtyBuy.text = ""
         
         elif int(self.qtyBuy.text) > int(self.productInfo["quantity"]):
             # Create a popup window 
@@ -540,26 +540,15 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
 
             self.qtyBuy.text = f"{self.productInfo['quantity']}"
 
-        elif self.qtyBuy.text == "" or int(self.qtyBuy.text) <= 0 or self.qtyBuy.text.isnumeric() == False:
-             # Create a popup window 
-            amountPopup = Popup(title="Invalid Amount", title_align="center", 
-                content=Label(text="Please enter a valid amount"), 
-                size_hint=(.75,.5))
-            # Show the popup
-            amountPopup.open()
 
-            self.qtyBuy.text = ""
     
         else:
-            # Make dict for the shopping cart screen and append it to the items 
-            # list in cart.
             # This info is for the customer and checkout
-            shopCartInfo = {"Item": self.productInfo['item'], "Quantity in Cart":int(self.qtyBuy.text)} ############################################ ADD PRICE TO THIS LATER
-            cart.items.append(shopCartInfo)
-            # Make dict for the DB and append it to the dbInfo list in cart.
+            global shopCartInfo 
+            shopCartInfo.append({"item": self.productInfo['item'], "qty":int(self.qtyBuy.text), "price":round((int(self.qtyBuy.text) * self.productInfo["price"]),2)}) ############################################ ADD PRICE TO THIS LATER
+
             # This info is for updating the database
-            dbInfo = {"id": self.productInfo['_id'], "qty":int(self.qtyBuy.text)}
-            cart.dbStuff.append(dbInfo)
+            dbInfo.append({"id": self.productInfo['_id'], "qty":int(self.qtyBuy.text)})
 
              # Create a popup window 
             amountPopup = Popup(title="Added to cart", title_align="center", 
@@ -609,11 +598,61 @@ $$\   $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  
 """
 class ShoppingCart(Screen,BoxLayout,GridLayout):
     items = ListProperty()
-    
-    def on_pre_enter(self):
-        itemList = cart.items
-        self.items = [{'text': str(item)} for item in itemList]
+    qty = ListProperty()
+    price = ListProperty()
+    totalPrint = StringProperty("0.00")
 
+    # The screen updates itself as soon as the user enters
+    def on_pre_enter(self):
+        total = 0.00
+        global shopCartInfo
+        itemList = shopCartInfo
+        print(itemList)
+        for item in itemList:
+            print(item)
+            print(type(item))
+            self.items.append({'text': str(item['item'])})
+            self.qty.append({'text': str(item['qty'])})
+            self.price.append({'text':str(item['price'])})
+        shopCartInfo.clear()
+
+        # Adds up all prices in the list
+        for dic in self.price:
+            total += (float(dic['text']))
+        self.totalPrint = f"{total}"
+
+    def exitInno(self, instance):
+        global shopCartInfo
+        self.items.clear()
+        self.qty.clear()
+        self.price.clear()
+        self.totalPrint = "0.00"
+        shopCartInfo.clear()
+        wm.current = "homepage"
+
+    def checkout(self,):
+        window = BoxLayout(orientation="vertical")
+        window.add_widget(Label(text = "Are you sure you want to checkout?"))
+        popup = Popup(title="Check out?", size_hint = (.75,.5), content = window)
+        window.add_widget(Button(text = "Yes", on_press = popup.dismiss, on_release = self.exitInno))
+        window.add_widget(Button(text = "No", on_press = popup.dismiss))
+        popup.open()
+
+
+    # def on_pre_enter(self):
+    #     itemList = cart.items
+    #     for item in itemList:
+    #         print(item)
+    #         print(type(item))
+    #         self.items.append({'text': str(item['item'])})
+    #         self.qty.append({'text': str(item['qty'])})
+    #         self.price.append({'text': f"${item['price']}"})
+    # def on_pre_enter(self):
+    #     itemList = cart.items
+    #     for item in itemList:
+    #         print(item)
+    #         print(type(item))
+    #         self.items = [{'text': str(item[key])} for key in item.keys()]
 
     
 """
@@ -633,7 +672,6 @@ class CartView(RecycleDataViewBehavior, Button):
 
     def apply_selection(self, rec_view, my_index, am_selected): 
         self.selected = am_selected
-
 
 
 
