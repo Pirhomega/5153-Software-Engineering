@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>600</height>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,11 +20,11 @@
       <x>0</x>
       <y>0</y>
       <width>401</width>
-      <height>601</height>
+      <height>581</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="search_prompt_label">
@@ -113,7 +113,55 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuYour_Shopping_Cart">
+    <property name="title">
+     <string>Your Account</string>
+    </property>
+    <widget class="QMenu" name="menuUpdate_Credentials">
+     <property name="title">
+      <string>Update Credentials</string>
+     </property>
+     <addaction name="actionChange_Username"/>
+     <addaction name="actionChange_Password"/>
+    </widget>
+    <addaction name="actionShopping_Cart"/>
+    <addaction name="menuUpdate_Credentials"/>
+    <addaction name="actionLogout"/>
+   </widget>
+   <addaction name="menuYour_Shopping_Cart"/>
+  </widget>
+  <action name="actionShopping_Cart">
+   <property name="text">
+    <string>Shopping Cart</string>
+   </property>
+  </action>
+  <action name="actionChange_Username">
+   <property name="text">
+    <string>Change Username</string>
+   </property>
+  </action>
+  <action name="actionChange_Password">
+   <property name="text">
+    <string>Change Password</string>
+   </property>
+  </action>
+  <action name="actionLogout">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Logout</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

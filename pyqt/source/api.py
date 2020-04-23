@@ -49,17 +49,19 @@ class Api:
         # Switch to Innoventory database
         db = client.Innoventory
         # Search the Grocery collection
-        result = db.Grocery.find_one(self.term)
+        result = db.Products.find_one(self.term)
 
         return result
     
     # search the product collection for a specific item
     def search(self, term):
         self.term = term
+        pprint(self.term)
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
-        # will hold all cursors from queries
+        # will hold all documents from queries
         result = []
+        result.append([db.Products.find_one(self.term)])
         # split the search term by whitespace
         new_search = self.term["item"].split()
         # search database by each word in term
@@ -67,6 +69,7 @@ class Api:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
             # result.append(mini_result)
             result.append(list(db.Products.find({ "item": {'$regex': word }})))
+        print(result)
         return result
     # a simple print function for item names
     def display_results(self, search_result):
@@ -197,6 +200,8 @@ class UserManager(Api):
 
 # This class represents all the shopping cart functionality
 # See __main__ for example code
+# For security reasons, do not pass passwords in the 'user' dictionary,
+# only the username
 class ShoppingCart(Api):
     def __init__(self, user={'username': ''}):
         client = self.connect(Api.authenConnectionString)
@@ -251,72 +256,74 @@ class ShoppingCart(Api):
 
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
-    import time
-    validTestUser = {'username':'bwalker', 'password':'GC2020'}
-    invalidPassword = {'username':'bwalker', 'password':'wrong'}
-    invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
+    # import time
+    # validTestUser = {'username':'bwalker', 'password':'GC2020'}
+    # invalidPassword = {'username':'bwalker', 'password':'wrong'}
+    # invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
 
-    # Login tests
-    print("*****LOGIN TESTS*****")
-    loginTest = Login()
+    # # Login tests
+    # print("*****LOGIN TESTS*****")
+    # loginTest = Login()
     
-    # Valid username and password test
-    user, login_success = loginTest.login(validTestUser)
-    pprint(user)
+    # # Valid username and password test
+    # user, login_success = loginTest.login(validTestUser)
+    # pprint(user)
 
-    # Valid username, invalid password test
-    user, login_success = loginTest.login(invalidPassword)
-    pprint(user)
+    # # Valid username, invalid password test
+    # user, login_success = loginTest.login(invalidPassword)
+    # pprint(user)
 
-    # Invalid username, Invalid password
-    user, login_success = loginTest.login(invalidUsername)
-    pprint(user)
+    # # Invalid username, Invalid password
+    # user, login_success = loginTest.login(invalidUsername)
+    # pprint(user)
 
-    # No login information given
-    user, login_success = loginTest.login()
-    pprint(user)
+    # # No login information given
+    # user, login_success = loginTest.login()
+    # pprint(user)
 
-    print("*****CONNECTION TESTS*****")
-    # Connection tests
+    # print("*****CONNECTION TESTS*****")
+    # # Connection tests
     api = Api()
     connect1 = api.connect(api.customerConnectionString)
-    testSearch = api.searchGrocery({'item':'Clam Nectar'})
-    pprint(testSearch)
-    print("*****CREATE USER TEST*****")
-    userTest = UserManager()
+    # testSearch = api.search({'item':'Red Pepper Paste'})
+    # pprint(testSearch)
+    testSearch = api.search({'item': 'Red Pepper Paste'})
+    test = set(testSearch)
+    # print("*****CREATE USER TEST*****")
+    # userTest = UserManager()
 
-    # Create a user that doesn't exist
-    result = userTest.createUser({'username': 'test', 'password': 'test'})
-    print(f"Create user account (should be True): {result}")
-    time.sleep(5)
+    # # Create a user that doesn't exist
+    # result = userTest.createUser({'username': 'test', 'password': 'test'})
+    # print(f"Create user account (should be True): {result}")
+    # time.sleep(5)
 
-    # Remove the user that was just created
-    result = userTest.removeUser({'username': 'test'})
-    print(f"Delete a user account (should be 1): {result}")
-    time.sleep(5)
+    # # Remove the user that was just created
+    # result = userTest.removeUser({'username': 'test'})
+    # print(f"Delete a user account (should be 1): {result}")
+    # time.sleep(5)
 
-    # Try to create a user using a username that is taken already
-    result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
-    print(f"Try to create a user with a username that's taken (should be False): {result}")
-    time.sleep(5)
+    # # Try to create a user using a username that is taken already
+    # result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
+    # print(f"Try to create a user with a username that's taken (should be False): {result}")
+    # time.sleep(5)
 
-    # Try to delete a user that doesn't exist
-    result = userTest.removeUser({'username': 'test'})
-    print(f"Try to delete an account that doesn't exist (should be 0): {result}")
+    # # Try to delete a user that doesn't exist
+    # result = userTest.removeUser({'username': 'test'})
+    # print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
     # Create a shopping cart for a user, add some items to it, remove items from it, erase the user's cart completely
-    shop_cart = ShoppingCart({'username': 'cmat'})
-    shop_cart.createCart()
-    shop_cart.addCart({'item':'coke','quantity':1234,'available':True})
-    shop_cart.addCart({'item':'Sprite','quantity':12,'available':False})
-    shop_cart.addCart({'item':'Dr. Pepper','quantity':1,'available':True})
-    shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235)
-    shop_cart.removeCart({'item':'Dr. Pepper'})
-    shop_cart.removeCart({'item':'Sprite','quantity':12})
-    print(shop_cart.readShoppingcart())
-    print("Gimme sec")
-    time.sleep(5)
-    shop_cart.eraseUser()
+    # shop_cart = ShoppingCart({'username': 'cmat'})
+    # shop_cart.createCart()
+    # shop_cart.addCart({'item':'coke','quantity':1234,'available':True})
+    # shop_cart.addCart({'item':'Sprite','quantity':12,'available':False})
+    # shop_cart.addCart({'item':'Dr. Pepper','quantity':1,'available':True})
+    # shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235)
+    # shop_cart.removeCart({'item':'Dr. Pepper'})
+    # shop_cart.removeCart({'item':'Sprite','quantity':12})
+    # print(shop_cart.readShoppingcart())
+    # print("Gimme sec")
+    # time.sleep(5)
+    # shop_cart.eraseUser()
 
 
 
