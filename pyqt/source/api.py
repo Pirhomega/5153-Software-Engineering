@@ -56,7 +56,6 @@ class Api:
     # search the product collection for a specific item
     def search(self, term):
         self.term = term
-        pprint(self.term)
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
         # will hold all documents from queries
@@ -69,7 +68,6 @@ class Api:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
             # result.append(mini_result)
             result.append(list(db.Products.find({ "item": {'$regex': word }})))
-        print(result)
         return result
     # a simple print function for item names
     def display_results(self, search_result):

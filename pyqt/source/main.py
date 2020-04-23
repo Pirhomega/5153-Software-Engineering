@@ -15,6 +15,8 @@ from api import Api, Login, UserManager, ShoppingCart
 import sys
 
 class Ui_MainWindow(object):
+    def __init__(self, start):
+        self.start = start
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(400, 621)
@@ -347,7 +349,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(self.start)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when login button is pressed, call login method
@@ -524,7 +526,7 @@ class Ui_MainWindow(object):
             self.search_attempt = Api()
             # 'self.search_result' is now an unordered set of all the search results
             self.search_result = self.parse_results(self.search_attempt.search({'item': search_string}))
-            if self.search_result != [[]]:
+            if self.search_result != []:
                 self.switch_page(3)
                 self.display_results()
             else:
@@ -533,17 +535,20 @@ class Ui_MainWindow(object):
     # Returns an unordered set of item names from a search
     def parse_results(self, result):
         # Use a set to avoid duplicate results
-        items = set()
+        items = {}
+        counter = 0
         for doc in result:
             for item in doc:
-                items.add(item)
+                if item != None:
+                    items[str(counter)] = item
+                    counter += 1
         return items
 
     # print search results to a list widget
     def display_results(self):
         self.search_listWidget.clear()
-        for result in self.search_result:
-            item_string = result["item"] + " "
+        for count in range(0,len(self.search_result)):
+            item_string = self.search_result[str(count)]["item"] + " "
             # if "details" in result:
             #     for num in range(0,len(result["details"])):
             #         item_string += str(result["details"]["name" + str(num)]) + " "
@@ -562,18 +567,20 @@ class Ui_MainWindow(object):
     def display_item_page(self, item):
         # print("Item in row", self.search_listWidget.row(item), "was clicked!")
         self.item = item
+        # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
         detail_string = ""
         self.switch_page(4)
         # print(self.search_result[0][0])
-        self.item_name.setText(self.search_result)
-        if "details" in self.search_result[0][self.search_listWidget.row(self.item)]:
-            for num in range(0,len(self.search_result[0][self.search_listWidget.row(self.item)]["details"])):
-                detail_string += str(self.search_result[0][self.search_listWidget.row(self.item)]["details"]["name" + str(num)]) + "\n"
+        self.item_name.setText(product["item"])
+        if "details" in product:
+            for num in range(0,len(product["details"])):
+                detail_string += str(product["details"]["name" + str(num)]) + "\n"
         else:
             self.description_text.setText("-")
         self.description_text.setText(detail_string)
-        if "quantity" in self.search_result[0][self.search_listWidget.row(self.item)]:
-            self.numitems.setText(str(self.search_result[0][self.search_listWidget.row(self.item)]["quantity"]))
+        if "quantity" in product:
+            self.numitems.setText(str(product["quantity"]))
         else:
             self.numitems.setText("-")
         self.update(self.item_name)
@@ -581,7 +588,7 @@ class Ui_MainWindow(object):
         # print(item.text())
     
     def add_to_shoppingcart(self):
-        product = self.search_result[0][self.search_listWidget.row(self.item)]
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
         if product not in self.shopping_cart_list:
             product['quantity'] = 1
             self.shopping_cart_object.addCart(product)
@@ -637,7 +644,7 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Ui_MainWindow(0)
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
