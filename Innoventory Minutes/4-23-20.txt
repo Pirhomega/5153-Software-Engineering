@@ -1,0 +1,22 @@
+- Made timeline chart
+- Made flow chart for both apps
+- Made presentation for 4-23 app demonstration
+- Kivy app 
+	- has functional shopping cart
+	- product page works
+	- search error message pops up if no search results returned from search query
+	- bug: shopping cart doesn't clear after checkout
+- pyqt app
+	- shopping cart page designed and half-way coded
+	- user can access shopping cart and logout from any page after logging in
+	- user can remove and add items from and to the shopping cart
+- database now has price field for each item (prices still need to be added in though)
+- iteration 8 begins
+---------------------------------------------------------------------------------------
+Deliverables:
+- testing, documentation, and polishing (bug testing and adding security measures to a certain degree)
+- start encrypting passwords and storing them encrypted in the database. To log a user in, we return the encrypted password and username from the database,
+	then decrypt and compare
+- write paper
+- make executables from pyqt and kivy
+- port kivy app to andriod
