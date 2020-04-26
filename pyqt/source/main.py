@@ -285,7 +285,7 @@ class Ui_MainWindow(object):
         self.cost_label.setAlignment(QtCore.Qt.AlignCenter)
         self.cost_label.setObjectName("cost_label")
         self.item_prompt = QtWidgets.QLabel(self.page_5)
-        self.item_prompt.setGeometry(QtCore.QRect(0, 380, 400, 20))
+        self.item_prompt.setGeometry(QtCore.QRect(0, 360, 400, 70))
         self.item_prompt.setAlignment(QtCore.Qt.AlignCenter)
         self.item_prompt.setObjectName("item_prompt")
         # self.item_page_button = QtWidgets.QPushButton(self.page_5)
