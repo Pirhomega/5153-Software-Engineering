@@ -17,6 +17,7 @@ import sys
 class Ui_MainWindow(object):
     def __init__(self, start):
         self.start = start
+        self.prompt_confirm = False
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(400, 621)
@@ -287,12 +288,12 @@ class Ui_MainWindow(object):
         self.item_prompt.setGeometry(QtCore.QRect(0, 380, 400, 20))
         self.item_prompt.setAlignment(QtCore.Qt.AlignCenter)
         self.item_prompt.setObjectName("item_prompt")
-        self.item_page_button = QtWidgets.QPushButton(self.page_5)
-        self.item_page_button.setGeometry(QtCore.QRect(140, 430, 111, 31))
+        # self.item_page_button = QtWidgets.QPushButton(self.page_5)
+        # self.item_page_button.setGeometry(QtCore.QRect(140, 430, 111, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
-        self.item_page_button.setFont(font)
-        self.item_page_button.setObjectName("item_page_button")
+        # self.item_page_button.setFont(font)
+        # self.item_page_button.setObjectName("item_page_button")
         self.chng_quan_button = QtWidgets.QPushButton(self.page_5)
         self.chng_quan_button.setGeometry(QtCore.QRect(20, 430, 101, 31))
         font = QtGui.QFont()
@@ -308,6 +309,8 @@ class Ui_MainWindow(object):
         self.quantity_spin = QtWidgets.QSpinBox(self.page_5)
         self.quantity_spin.setGeometry(QtCore.QRect(50, 470, 42, 22))
         self.quantity_spin.setObjectName("quantity_spin")
+        self.quantity_spin.setMinimum(1)
+        self.quantity_spin.setValue(1)
         self.sc_line_2 = QtWidgets.QFrame(self.page_5)
         self.sc_line_2.setGeometry(QtCore.QRect(0, 500, 400, 16))
         self.sc_line_2.setFrameShape(QtWidgets.QFrame.HLine)
@@ -385,6 +388,12 @@ class Ui_MainWindow(object):
         # removes an item from the user's cart
         self.remove_button.clicked.connect(self.remove_item)
 
+        # updates an item's quantity to what is designated in quantity box
+        self.chng_quan_button.clicked.connect(self.change_quantity)
+
+        # asks the user if they want to purchase items
+        self.checkout_button.clicked.connect(self.checkout)
+
         # # displays an item's page by performing a query on the database,
         # # that way, the item page displays current info
         # self.item_page_button.clicked.connect(self.cart_display_page)
@@ -425,7 +434,7 @@ class Ui_MainWindow(object):
         self.total_label.setText(_translate("MainWindow", "Total: "))
         self.cost_label.setText(_translate("MainWindow", "cost"))
         self.item_prompt.setText(_translate("MainWindow", "Click an item to iteract"))
-        self.item_page_button.setText(_translate("MainWindow", "Go to item page"))
+        # self.item_page_button.setText(_translate("MainWindow", "Go to item page"))
         self.chng_quan_button.setText(_translate("MainWindow", "Update Quantity"))
         self.checkout_button.setText(_translate("MainWindow", "Checkout"))
         self.menuYour_Shopping_Cart.setTitle(_translate("MainWindow", "Your Account"))
@@ -510,10 +519,6 @@ class Ui_MainWindow(object):
                 self.CancelButton.setText("Login")
             else:
                 self.error(2)
-        
-    # checks inputs for invalid characters (security measure)
-    def secure_input(self,input):
-        print("This function will check all inputs for invalid characters!")
 
     # readjusts label sizes so text inside will not overflow
     def update(self, widget):
@@ -584,15 +589,17 @@ class Ui_MainWindow(object):
             self.numitems.setText("-")
         self.update(self.item_name)
         self.update(self.description_text)
+        self.info_label.setText("")
         # print(item.text())
     
     def add_to_shoppingcart(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
-        if product not in self.shopping_cart_list:
+        if product['item'] not in self.shopping_cart_list:
             product['quantity'] = 1
             self.shopping_cart_object.addCart(product)
             self.shopping_cart_list.append(product)
             self.info_label.setText("Added to cart!")
+            self.findPrice()
         else:
             self.info_label.setText("Already in cart!")
     
@@ -601,9 +608,17 @@ class Ui_MainWindow(object):
     def initialize_shoppingcart(self):
         self.cart_listWidget.clear()
         for product in self.shopping_cart_list:
-            item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: $69.69")
+            item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str(product['price']))
             self.cart_listWidget.addItem(item)
+        self.findPrice()
+        self.item_prompt.setText("Click an item to interact")
         self.switch_page(5)
+    
+    def findPrice(self):
+        total_price = 0
+        for item in self.shopping_cart_list:
+            total_price += item['price'] * item['quantity']
+        self.cost_label.setText(str(total_price))
 
     def remove_item(self):
         item = self.cart_listWidget.currentRow()
@@ -613,27 +628,45 @@ class Ui_MainWindow(object):
         self.shopping_cart_list.pop(item)
         # get rid of the item from the list widget
         self.cart_listWidget.takeItem(item)
+        self.findPrice()
 
-    def cart_display_page(self):
-        # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
-        # add a function to API called quick search that lets you search for one document
-        product = {}
-        detail_string = ""
-        self.switch_page(4)
-        self.item_name.setText(product["item"])
-        if "details" in product:
-            for num in range(0,len(product["details"])):
-                detail_string += str(product["details"]["name" + str(num)]) + "\n"
+    def change_quantity(self):
+        self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
+        self.findPrice()
+        # item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
+        # item['quantity'] = self.quantity_spin.value()
+
+    def checkout(self):
+        if self.prompt_confirm == False:
+            self.checkout_button.setText("Are you sure?")
+            self.prompt_confirm = True
         else:
-            self.description_text.setText("-")
-        self.description_text.setText(detail_string)
-        if "quantity" in product:
-            self.numitems.setText(str(product["quantity"]))
-        else:
-            self.numitems.setText("-")
-        self.update(self.item_name)
-        self.update(self.description_text)
-        # print(item.text())
+            self.prompt_confirm = False
+            self.item_prompt.setText("Thank you for your purchase!\nPress \"Back\" to return to search")
+            self.cart_listWidget.clear()
+            self.shopping_cart_list = []
+            self.shopping_cart_object.emptyCart()
+
+    # def cart_display_page(self):
+    #     # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
+    #     # add a function to API called quick search that lets you search for one document
+    #     product = {}
+    #     detail_string = ""
+    #     self.switch_page(4)
+    #     self.item_name.setText(product["item"])
+    #     if "details" in product:
+    #         for num in range(0,len(product["details"])):
+    #             detail_string += str(product["details"]["name" + str(num)]) + "\n"
+    #     else:
+    #         self.description_text.setText("-")
+    #     self.description_text.setText(detail_string)
+    #     if "quantity" in product:
+    #         self.numitems.setText(str(product["quantity"]))
+    #     else:
+    #         self.numitems.setText("-")
+    #     self.update(self.item_name)
+    #     self.update(self.description_text)
+    #     # print(item.text())
 
 ###########################################################################################################################
 
