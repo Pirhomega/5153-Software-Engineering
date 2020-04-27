@@ -49,7 +49,7 @@ class Api:
         # Switch to Innoventory database
         db = client.Innoventory
         # Search the Grocery collection
-        result = db.Grocery.find_one(self.term)
+        result = db.Products.find_one(self.term)
 
         return result
     
@@ -58,8 +58,9 @@ class Api:
         self.term = term
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
-        # will hold all cursors from queries
+        # will hold all documents from queries
         result = []
+        result.append([db.Products.find_one(self.term)])
         # split the search term by whitespace
         new_search = self.term["item"].split()
         # search database by each word in term
@@ -172,7 +173,7 @@ class UserManager(Api):
             status = True
 
             # create the user's shopping cart in the 'Shopping_Cart' collection
-            ShoppingCart(self.data).createCart()
+            ShoppingCart({'username': self.data['username']}).createCart()
         
         # Return true for successful user creation, false for user creation failure
         return status
@@ -197,6 +198,8 @@ class UserManager(Api):
 
 # This class represents all the shopping cart functionality
 # See __main__ for example code
+# For security reasons, do not pass passwords in the 'user' dictionary,
+# only the username
 class ShoppingCart(Api):
     def __init__(self, user={'username': ''}):
         client = self.connect(Api.authenConnectionString)
@@ -244,6 +247,9 @@ class ShoppingCart(Api):
     # copies all shopping cart contents to a list
     def readShoppingcart(self):
         return dict(self.collection.find_one(filter=self.user))['cart']
+    
+    def emptyCart(self):
+        self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
     # erase user's cart
     def eraseUser(self):
@@ -280,8 +286,10 @@ if __name__ == "__main__":
     # Connection tests
     api = Api()
     connect1 = api.connect(api.customerConnectionString)
-    testSearch = api.searchGrocery({'item':'Clam Nectar'})
+    testSearch = api.search({'item':'Red Pepper Paste'})
     pprint(testSearch)
+    testSearch = api.search({'item': 'Red Pepper Paste'})
+    test = set(testSearch)
     print("*****CREATE USER TEST*****")
     userTest = UserManager()
 
@@ -314,10 +322,7 @@ if __name__ == "__main__":
     shop_cart.removeCart({'item':'Dr. Pepper'})
     shop_cart.removeCart({'item':'Sprite','quantity':12})
     print(shop_cart.readShoppingcart())
+    shop_cart.emptyCart()
     print("Gimme sec")
     time.sleep(5)
     shop_cart.eraseUser()
-
-
-
-

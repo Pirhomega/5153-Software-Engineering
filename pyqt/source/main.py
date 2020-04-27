@@ -15,11 +15,12 @@ from api import Api, Login, UserManager, ShoppingCart
 import sys
 
 class Ui_MainWindow(object):
-    def __init__(self):
-        self.shopping_cart_list = []
+    def __init__(self, start):
+        self.start = start
+        self.prompt_confirm = False
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(400, 600)
+        MainWindow.resize(400, 621)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
@@ -37,38 +38,38 @@ class Ui_MainWindow(object):
         self.groupBoxLI.setGeometry(QtCore.QRect(10,10,381,581))
         self.groupBoxLI.setObjectName("groupBoxLI")
         self.username_textbox = QtWidgets.QLineEdit(self.groupBoxLI)
-        self.username_textbox.setGeometry(QtCore.QRect(130, 180, 151, 31))
+        self.username_textbox.setGeometry(QtCore.QRect(120, 180, 141, 31))
         self.username_textbox.setObjectName("username_textbox")
         self.password_textbox = QtWidgets.QLineEdit(self.groupBoxLI)
-        self.password_textbox.setGeometry(QtCore.QRect(130, 260, 151, 31))
+        self.password_textbox.setGeometry(QtCore.QRect(120, 260, 141, 31))
         self.password_textbox.setObjectName("password_textbox")
         self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
         self.username_label = QtWidgets.QLabel(self.groupBoxLI)
-        self.username_label.setGeometry(QtCore.QRect(130, 130, 151, 41))
+        self.username_label.setGeometry(QtCore.QRect(120, 130, 141, 41))
         self.username_label.setFont(font)
         self.username_label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.username_label.setAlignment(QtCore.Qt.AlignCenter)
         self.username_label.setObjectName("username_label")
         self.password_label = QtWidgets.QLabel(self.groupBoxLI)
-        self.password_label.setGeometry(QtCore.QRect(130, 210, 151, 41))
+        self.password_label.setGeometry(QtCore.QRect(120, 210, 141, 41))
         self.password_label.setFont(font)
         self.password_label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.password_label.setAlignment(QtCore.Qt.AlignCenter)
         self.password_label.setObjectName("password_label")
         self.login_button = QtWidgets.QPushButton(self.groupBoxLI)
-        self.login_button.setGeometry(QtCore.QRect(154, 310, 101, 23))
+        self.login_button.setGeometry(QtCore.QRect(144, 310, 91, 23))
         self.login_button.setObjectName("login_button")
         self.create_account_button = QtWidgets.QPushButton(self.groupBoxLI)
-        self.create_account_button.setGeometry(QtCore.QRect(154, 350, 101, 23))
+        self.create_account_button.setGeometry(QtCore.QRect(144, 350, 91, 23))
         self.create_account_button.setObjectName("create_account_button")
         self.label = QtWidgets.QLabel(self.groupBoxLI)
-        self.label.setGeometry(QtCore.QRect(60, 440, 291, 151))
+        self.label.setGeometry(QtCore.QRect(50, 430, 281, 141))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("../images/login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.failure_notif = QtWidgets.QLabel(self.groupBoxLI)
-        self.failure_notif.setGeometry(QtCore.QRect(130, 390, 151, 31))
+        self.failure_notif.setGeometry(QtCore.QRect(120, 390, 141, 31))
         self.failure_notif.setText("")
         self.failure_notif.setAlignment(QtCore.Qt.AlignCenter)
         self.failure_notif.setObjectName("failure_notif")
@@ -144,9 +145,6 @@ class Ui_MainWindow(object):
         self.search_button = QtWidgets.QPushButton(self.page_2)
         self.search_button.setGeometry(QtCore.QRect(150, 310, 91, 23))
         self.search_button.setObjectName("search_button")
-        self.logout_button = QtWidgets.QPushButton(self.page_2)
-        self.logout_button.setGeometry(QtCore.QRect(10, 540, 101, 31))
-        self.logout_button.setObjectName("logout_button")
         self.search_box = QtWidgets.QLineEdit(self.page_2)
         self.search_box.setGeometry(QtCore.QRect(60, 250, 271, 41))
         self.search_box.setObjectName("search_box")
@@ -155,20 +153,20 @@ class Ui_MainWindow(object):
         self.page_3 = QtWidgets.QWidget()
         self.page_3.setObjectName("page_3")
         self.stackedWidget.addWidget(self.page_3)
-        self.listWidget = QtWidgets.QListWidget(self.page_3)
-        self.listWidget.setGeometry(QtCore.QRect(10, 10, 381, 521))
-        self.listWidget.setObjectName("listWidget")
-        self.searchbackbutton = QtWidgets.QPushButton(self.page_3)
-        self.searchbackbutton.setGeometry(QtCore.QRect(10, 540, 101, 31))
-        self.searchbackbutton.setObjectName("searchbackbutton")
+        self.search_listWidget = QtWidgets.QListWidget(self.page_3)
+        self.search_listWidget.setGeometry(QtCore.QRect(10, 10, 381, 521))
+        self.search_listWidget.setObjectName("search_listWidget")
+        self.search_back_button = QtWidgets.QPushButton(self.page_3)
+        self.search_back_button.setGeometry(QtCore.QRect(10, 540, 101, 31))
+        self.search_back_button.setObjectName("search_back_button")
 
         # item page code (page 4)
         self.page_4 = QtWidgets.QWidget()
         self.page_4.setObjectName("page_4")
         self.stackedWidget.addWidget(self.page_4)
-        self.backButton = QtWidgets.QPushButton(self.page_4)
-        self.backButton.setGeometry(QtCore.QRect(10, 540, 101, 31))
-        self.backButton.setObjectName("backButton")
+        self.item_back_button = QtWidgets.QPushButton(self.page_4)
+        self.item_back_button.setGeometry(QtCore.QRect(10, 540, 101, 31))
+        self.item_back_button.setObjectName("item_back_button")
         self.addbutton = QtWidgets.QPushButton(self.page_4)
         self.addbutton.setGeometry(QtCore.QRect(280, 540, 101, 31))
         self.addbutton.setObjectName("addbutton")
@@ -257,15 +255,15 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.remove_button.setFont(font)
         self.remove_button.setObjectName("remove_button")
-        self.back_button = QtWidgets.QPushButton(self.page_5)
-        self.back_button.setGeometry(QtCore.QRect(20, 530, 101, 41))
+        self.cart_back_button = QtWidgets.QPushButton(self.page_5)
+        self.cart_back_button.setGeometry(QtCore.QRect(20, 530, 101, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
-        self.back_button.setFont(font)
-        self.back_button.setObjectName("back_button")
-        self.shopping_cart = QtWidgets.QListWidget(self.page_5)
-        self.shopping_cart.setGeometry(QtCore.QRect(20, 69, 360, 241))
-        self.shopping_cart.setObjectName("shopping_cart")
+        self.cart_back_button.setFont(font)
+        self.cart_back_button.setObjectName("cart_back_button")
+        self.cart_listWidget = QtWidgets.QListWidget(self.page_5)
+        self.cart_listWidget.setGeometry(QtCore.QRect(20, 69, 360, 241))
+        self.cart_listWidget.setObjectName("cart_listWidget")
         self.users_sc = QtWidgets.QLabel(self.page_5)
         self.users_sc.setGeometry(QtCore.QRect(20, 15, 360, 40))
         font = QtGui.QFont()
@@ -287,15 +285,15 @@ class Ui_MainWindow(object):
         self.cost_label.setAlignment(QtCore.Qt.AlignCenter)
         self.cost_label.setObjectName("cost_label")
         self.item_prompt = QtWidgets.QLabel(self.page_5)
-        self.item_prompt.setGeometry(QtCore.QRect(0, 380, 400, 20))
+        self.item_prompt.setGeometry(QtCore.QRect(0, 360, 400, 70))
         self.item_prompt.setAlignment(QtCore.Qt.AlignCenter)
         self.item_prompt.setObjectName("item_prompt")
-        self.item_page_button = QtWidgets.QPushButton(self.page_5)
-        self.item_page_button.setGeometry(QtCore.QRect(140, 430, 111, 31))
+        # self.item_page_button = QtWidgets.QPushButton(self.page_5)
+        # self.item_page_button.setGeometry(QtCore.QRect(140, 430, 111, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
-        self.item_page_button.setFont(font)
-        self.item_page_button.setObjectName("item_page_button")
+        # self.item_page_button.setFont(font)
+        # self.item_page_button.setObjectName("item_page_button")
         self.chng_quan_button = QtWidgets.QPushButton(self.page_5)
         self.chng_quan_button.setGeometry(QtCore.QRect(20, 430, 101, 31))
         font = QtGui.QFont()
@@ -311,6 +309,8 @@ class Ui_MainWindow(object):
         self.quantity_spin = QtWidgets.QSpinBox(self.page_5)
         self.quantity_spin.setGeometry(QtCore.QRect(50, 470, 42, 22))
         self.quantity_spin.setObjectName("quantity_spin")
+        self.quantity_spin.setMinimum(1)
+        self.quantity_spin.setValue(1)
         self.sc_line_2 = QtWidgets.QFrame(self.page_5)
         self.sc_line_2.setGeometry(QtCore.QRect(0, 500, 400, 16))
         self.sc_line_2.setFrameShape(QtWidgets.QFrame.HLine)
@@ -320,13 +320,39 @@ class Ui_MainWindow(object):
 ####################################################################################################
 
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 400, 21))
+        self.menuBar.setObjectName("menuBar")
+        self.menuYour_Shopping_Cart = QtWidgets.QMenu(self.menuBar)
+        self.menuYour_Shopping_Cart.setObjectName("menuYour_Shopping_Cart")
+        self.menuUpdate_Credentials = QtWidgets.QMenu(self.menuYour_Shopping_Cart)
+        self.menuUpdate_Credentials.setObjectName("menuUpdate_Credentials")
+        MainWindow.setMenuBar(self.menuBar)
+        self.actionShopping_Cart = QtWidgets.QAction(MainWindow)
+        self.actionShopping_Cart.setObjectName("actionShopping_Cart")
+        self.actionChange_Username = QtWidgets.QAction(MainWindow)
+        self.actionChange_Username.setObjectName("actionChange_Username")
+        self.actionChange_Password = QtWidgets.QAction(MainWindow)
+        self.actionChange_Password.setObjectName("actionChange_Password")
+        self.actionLogout = QtWidgets.QAction(MainWindow)
+        self.actionLogout.setObjectName("actionLogout")
+        self.menuUpdate_Credentials.addAction(self.actionChange_Username)
+        self.menuUpdate_Credentials.addAction(self.actionChange_Password)
+        self.menuYour_Shopping_Cart.addAction(self.actionShopping_Cart)
+        self.menuYour_Shopping_Cart.addAction(self.menuUpdate_Credentials.menuAction())
+        self.menuYour_Shopping_Cart.addAction(self.actionLogout)
+        self.menuBar.addAction(self.menuYour_Shopping_Cart.menuAction())
+
+        # set all the menu buttons to disabled until a user logs in
+        self.actionShopping_Cart.setEnabled(False)
+        self.actionChange_Username.setEnabled(False)
+        self.actionChange_Password.setEnabled(False)
+        self.actionLogout.setEnabled(False)
 
         self.retranslateUi(MainWindow)
+
         # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(self.start)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # when login button is pressed, call login method
@@ -345,27 +371,44 @@ class Ui_MainWindow(object):
         self.search_button.clicked.connect(self.search_products)
 
         # logs a user out
-        self.logout_button.clicked.connect(lambda: self.switch_page(0))
+        self.actionLogout.triggered.connect(self.logout)
 
         # if an item is clicked, go to item's page
-        self.listWidget.itemClicked.connect(self.display_item_page)
+        self.search_listWidget.itemClicked.connect(self.display_item_page)
 
         # adds an item the user's shopping cart
         self.addbutton.clicked.connect(self.add_to_shoppingcart)
 
+        # navigate to the user's shopping cart
+        self.actionShopping_Cart.triggered.connect(self.initialize_shoppingcart)
+
+        # go back to the search results page from the shopping cart
+        self.cart_back_button.clicked.connect(lambda: self.switch_page(2))
+
+        # removes an item from the user's cart
+        self.remove_button.clicked.connect(self.remove_item)
+
+        # updates an item's quantity to what is designated in quantity box
+        self.chng_quan_button.clicked.connect(self.change_quantity)
+
+        # asks the user if they want to purchase items
+        self.checkout_button.clicked.connect(self.checkout)
+
+        # # displays an item's page by performing a query on the database,
+        # # that way, the item page displays current info
+        # self.item_page_button.clicked.connect(self.cart_display_page)
+
         # # when back buttons are pressed, call switch to previous page
-        # self.backButton.clicked.connect(lambda: self.switch_page(self.page_3))
-        self.backButton.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
-        self.searchbackbutton.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
+        self.item_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
+        self.search_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
 
 #######################################################################################################
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Innoventory"))
         self.search_prompt_label.setText(_translate("MainWindow", "What are you looking for?"))
         self.search_button.setText(_translate("MainWindow", "Search"))
-        self.logout_button.setText(_translate("MainWindow", "Logout"))
         self.username_label.setText(_translate("MainWindow", "Username"))
         self.password_label.setText(_translate("MainWindow", "Password"))
         self.login_button.setText(_translate("MainWindow", "Login"))
@@ -376,8 +419,8 @@ class Ui_MainWindow(object):
         self.CancelButton.setText(_translate("MainWindow", "Cancel"))
         self.CreateButton.setText(_translate("MainWindow", "Create User"))
         self.Instructions.setText(_translate("MainWindow", "Please enter the username and password for your new account."))
-        self.backButton.setText(_translate("MainWindow", "Back"))
-        self.searchbackbutton.setText(_translate("MainWindow", "Back"))
+        self.item_back_button.setText(_translate("MainWindow", "Back"))
+        self.search_back_button.setText(_translate("MainWindow", "Back"))
         self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
         self.name.setText(_translate("MainWindow", "Name:"))
         self.item_name.setText(_translate("MainWindow", ""))
@@ -386,34 +429,59 @@ class Ui_MainWindow(object):
         self.quantity.setText(_translate("MainWindow", "Quantity: "))
         self.numitems.setText(_translate("MainWindow", ""))
         self.remove_button.setText(_translate("MainWindow", "Remove Item"))
-        self.back_button.setText(_translate("MainWindow", "Back"))
+        self.cart_back_button.setText(_translate("MainWindow", "Back"))
         self.users_sc.setText(_translate("MainWindow", "Your Shopping Cart"))
         self.total_label.setText(_translate("MainWindow", "Total: "))
         self.cost_label.setText(_translate("MainWindow", "cost"))
         self.item_prompt.setText(_translate("MainWindow", "Click an item to iteract"))
-        self.item_page_button.setText(_translate("MainWindow", "Go to item page"))
+        # self.item_page_button.setText(_translate("MainWindow", "Go to item page"))
         self.chng_quan_button.setText(_translate("MainWindow", "Update Quantity"))
         self.checkout_button.setText(_translate("MainWindow", "Checkout"))
+        self.menuYour_Shopping_Cart.setTitle(_translate("MainWindow", "Your Account"))
+        self.menuUpdate_Credentials.setTitle(_translate("MainWindow", "Update Credentials"))
+        self.actionShopping_Cart.setText(_translate("MainWindow", "Shopping Cart"))
+        self.actionChange_Username.setText(_translate("MainWindow", "Change Username"))
+        self.actionChange_Password.setText(_translate("MainWindow", "Change Password"))
+        self.actionLogout.setText(_translate("MainWindow", "Logout"))
 
 ###################################################################################################################################
 
     # attempt to log in to Innoventory with username and password offered
     def login(self, MainWindow):
-        self.username_password = {  'username': self.username_textbox.text(), 
-                                    'password': self.password_textbox.text()
-                                }
-        log_in_attempt = Login()
-        _, login_success = log_in_attempt.login(self.username_password)
-        self.login_result(login_success)
+        if self.username_textbox.text() != "" and self.password_textbox.text() != "":
+            self.username_password = {  'username': self.username_textbox.text(), 
+                                        'password': self.password_textbox.text()
+                                    }
+            user = Login()
+            _, login_success = user.login(self.username_password)
+            # create the shopping cart object for shopping cart additions, removals, and modifications
+            self.shopping_cart_object = ShoppingCart({'username': self.username_password['username']})
+            self.login_result(login_success)
 
     # allow user in if credentials are verified; block otherwise
     def login_result(self, login_success):
-        self.login_success = login_success
-        if self.login_success == True:
+        if login_success == True:
+            # create a shopping cart copy to prevent multiple database queries (like when checking if an item is already in the cart before adding it)
+            self.shopping_cart_list = self.shopping_cart_object.readShoppingcart()
+            # re-enable menu bar buttons
+            self.actionShopping_Cart.setEnabled(True)
+            self.actionChange_Username.setEnabled(True)
+            self.actionChange_Password.setEnabled(True)
+            self.actionLogout.setEnabled(True)
+            self.username_textbox.setText("")
+            self.password_textbox.setText("")
             self.switch_page(2)
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
-    
+
+    # log the user out and return them to the login page       
+    def logout(self):
+        self.actionShopping_Cart.setEnabled(False)
+        self.actionChange_Username.setEnabled(False)
+        self.actionChange_Password.setEnabled(False)
+        self.actionLogout.setEnabled(False)
+        self.switch_page(0)
+
     # If the user does something weird, tell them off.
     def error(self, cause):
         self.photo.setPixmap(QtGui.QPixmap("../images/Mad_Charlie.jpg"))
@@ -451,10 +519,6 @@ class Ui_MainWindow(object):
                 self.CancelButton.setText("Login")
             else:
                 self.error(2)
-        
-    # checks inputs for invalid characters (security measure)
-    def secure_input(self,input):
-        print("This function will check all inputs for invalid characters!")
 
     # readjusts label sizes so text inside will not overflow
     def update(self, widget):
@@ -464,24 +528,37 @@ class Ui_MainWindow(object):
     def search_products(self):
         if self.search_box.text() != "":
             search_string = self.search_box.text()
-            search_attempt = Api()
-            self.search_result = search_attempt.search({"item": search_string})
-            if self.search_result != [[]]:
+            self.search_attempt = Api()
+            # 'self.search_result' is now an unordered set of all the search results
+            self.search_result = self.parse_results(self.search_attempt.search({'item': search_string}))
+            if self.search_result != []:
                 self.switch_page(3)
                 self.display_results()
             else:
                 self.no_results_notif.setText("No results found")
 
+    # Returns an unordered set of item names from a search
+    def parse_results(self, result):
+        # Use a set to avoid duplicate results
+        items = {}
+        counter = 0
+        for doc in result:
+            for item in doc:
+                if item != None:
+                    items[str(counter)] = item
+                    counter += 1
+        return items
+
     # print search results to a list widget
     def display_results(self):
-        self.listWidget.clear()
-        for result in self.search_result[0]:
-            item_string = result["item"] + " "
+        self.search_listWidget.clear()
+        for count in range(0,len(self.search_result)):
+            item_string = self.search_result[str(count)]["item"] + " "
             # if "details" in result:
             #     for num in range(0,len(result["details"])):
             #         item_string += str(result["details"]["name" + str(num)]) + " "
             item = QtWidgets.QListWidgetItem(item_string)
-            self.listWidget.addItem(item)
+            self.search_listWidget.addItem(item)
 
     # will switch to widget representing page 'next_page'
     def switch_page(self, next_page):
@@ -493,40 +570,110 @@ class Ui_MainWindow(object):
             self.stackedWidget.setCurrentWidget(self.next_page)
     
     def display_item_page(self, item):
-        # print("Item in row", self.listWidget.row(item), "was clicked!")
+        # print("Item in row", self.search_listWidget.row(item), "was clicked!")
         self.item = item
+        # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
         detail_string = ""
         self.switch_page(4)
-        # print(self.search_result[0][0])
-        self.item_name.setText(self.search_result[0][self.listWidget.row(self.item)]["item"])
-        if "details" in self.search_result[0][self.listWidget.row(self.item)]:
-            for num in range(0,len(self.search_result[0][self.listWidget.row(self.item)]["details"])):
-                detail_string += str(self.search_result[0][self.listWidget.row(self.item)]["details"]["name" + str(num)]) + "\n"
+        self.item_name.setText(product["item"])
+        if "details" in product:
+            for num in range(0,len(product["details"])):
+                detail_string += str(product["details"]["name" + str(num)]) + "\n"
         else:
             self.description_text.setText("-")
         self.description_text.setText(detail_string)
-        if "quantity" in self.search_result[0][self.listWidget.row(self.item)]:
-            self.numitems.setText(str(self.search_result[0][self.listWidget.row(self.item)]["quantity"]))
+        if "quantity" in product:
+            self.numitems.setText(str(product["quantity"]))
         else:
             self.numitems.setText("-")
         self.update(self.item_name)
         self.update(self.description_text)
+        self.info_label.setText("")
         # print(item.text())
     
     def add_to_shoppingcart(self):
-        if self.search_result[0][self.listWidget.row(self.item)] not in self.shopping_cart_list:
-            self.shopping_cart_list.append(self.search_result[0][self.listWidget.row(self.item)])
-            ShoppingCart({'username': self.username_password['username']}).addCart(self.search_result[0][self.listWidget.row(self.item)])
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
+        if product['item'] not in self.shopping_cart_list:
+            product['quantity'] = 1
+            self.shopping_cart_object.addCart(product)
+            self.shopping_cart_list.append(product)
             self.info_label.setText("Added to cart!")
+            self.findPrice()
         else:
             self.info_label.setText("Already in cart!")
+    
+    # will fill the list widget on the shopping cart page with all the items in the 
+    # user's shopping cart
+    def initialize_shoppingcart(self):
+        self.cart_listWidget.clear()
+        for product in self.shopping_cart_list:
+            item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str(product['price']))
+            self.cart_listWidget.addItem(item)
+        self.findPrice()
+        self.item_prompt.setText("Click an item to interact")
+        self.switch_page(5)
+    
+    def findPrice(self):
+        total_price = 0
+        for item in self.shopping_cart_list:
+            total_price += item['price'] * item['quantity']
+        self.cost_label.setText(str(total_price))
+
+    def remove_item(self):
+        item = self.cart_listWidget.currentRow()
+        # remove the item from the database shopping cart
+        self.shopping_cart_object.removeCart(self.shopping_cart_list[item])
+        # remove the item from the local shopping cart variable (database shopping cart copy)
+        self.shopping_cart_list.pop(item)
+        # get rid of the item from the list widget
+        self.cart_listWidget.takeItem(item)
+        self.findPrice()
+
+    def change_quantity(self):
+        self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
+        self.findPrice()
+        # item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
+        # item['quantity'] = self.quantity_spin.value()
+
+    def checkout(self):
+        if self.prompt_confirm == False:
+            self.checkout_button.setText("Are you sure?")
+            self.prompt_confirm = True
+        else:
+            self.prompt_confirm = False
+            self.item_prompt.setText("Thank you for your purchase!\nPress \"Back\" to return to search")
+            self.cart_listWidget.clear()
+            self.shopping_cart_list = []
+            self.shopping_cart_object.emptyCart()
+
+    # def cart_display_page(self):
+    #     # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
+    #     # add a function to API called quick search that lets you search for one document
+    #     product = {}
+    #     detail_string = ""
+    #     self.switch_page(4)
+    #     self.item_name.setText(product["item"])
+    #     if "details" in product:
+    #         for num in range(0,len(product["details"])):
+    #             detail_string += str(product["details"]["name" + str(num)]) + "\n"
+    #     else:
+    #         self.description_text.setText("-")
+    #     self.description_text.setText(detail_string)
+    #     if "quantity" in product:
+    #         self.numitems.setText(str(product["quantity"]))
+    #     else:
+    #         self.numitems.setText("-")
+    #     self.update(self.item_name)
+    #     self.update(self.description_text)
+    #     # print(item.text())
 
 ###########################################################################################################################
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Ui_MainWindow(0)
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

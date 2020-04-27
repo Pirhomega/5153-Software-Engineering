@@ -223,6 +223,22 @@
      <string>Number</string>
     </property>
    </widget>
+   <widget class="QLabel" name="info_label">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>540</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
