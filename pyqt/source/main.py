@@ -633,8 +633,8 @@ class Ui_MainWindow(object):
     def change_quantity(self):
         self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
         self.findPrice()
-        # item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
-        # item['quantity'] = self.quantity_spin.value()
+        item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
+        item['quantity'] = self.quantity_spin.value()
 
     def checkout(self):
         if self.prompt_confirm == False:
