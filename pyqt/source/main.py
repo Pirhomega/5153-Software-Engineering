@@ -11,7 +11,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
-from api import Api, Login, UserManager, ShoppingCart
+from api import Api, Login, Employee, UserManager, ShoppingCart
 import sys
 
 class Ui_MainWindow(object):
@@ -170,16 +170,33 @@ class Ui_MainWindow(object):
         self.addbutton = QtWidgets.QPushButton(self.page_4)
         self.addbutton.setGeometry(QtCore.QRect(280, 540, 101, 31))
         self.addbutton.setObjectName("addbutton")
+        self.addbutton.setEnabled(True)
         self.name = QtWidgets.QLabel(self.page_4)
         self.name.setGeometry(QtCore.QRect(10, 190, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
+        self.quantity = QtWidgets.QLabel(self.page_4)
+        self.quantity.setGeometry(QtCore.QRect(10, 370, 121, 31))
+        self.quantity.setFont(font)
+        self.quantity.setObjectName("quantity")
+        self.numitems = QtWidgets.QLabel(self.page_4)
+        self.numitems.setGeometry(QtCore.QRect(140, 370, 81, 31))
+        self.available_label = QtWidgets.QLabel(self.page_4)
+        self.available_label.setGeometry(QtCore.QRect(10, 410, 121, 31))
+        self.available_label.setFont(font)
+        self.available_label.setObjectName("available_label")
+        self.itemdescription = QtWidgets.QLabel(self.page_4)
+        self.itemdescription.setGeometry(QtCore.QRect(10, 250, 121, 41))
+        self.itemdescription.setFont(font)
+        self.itemdescription.setObjectName("itemdescription")
+        self.description_text = QtWidgets.QLabel(self.page_4)
+        self.description_text.setGeometry(QtCore.QRect(140, 260, 251, 101))
         self.name.setFont(font)
         self.name.setObjectName("name")
         self.item_name = QtWidgets.QLabel(self.page_4)
-        self.item_name.setGeometry(QtCore.QRect(140, 200, 251, 111))
+        self.item_name.setGeometry(QtCore.QRect(140, 200, 251, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.item_name.setFont(font)
@@ -187,18 +204,10 @@ class Ui_MainWindow(object):
         self.item_name.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.item_name.setWordWrap(True)
         self.item_name.setObjectName("item_name")
-        self.itemdescription = QtWidgets.QLabel(self.page_4)
-        self.itemdescription.setGeometry(QtCore.QRect(10, 300, 121, 41))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.itemdescription.setFont(font)
-        self.itemdescription.setObjectName("itemdescription")
-        self.description_text = QtWidgets.QLabel(self.page_4)
-        self.description_text.setGeometry(QtCore.QRect(140, 310, 251, 131))
-        font = QtGui.QFont()
-        font.setPointSize(12)
+        self.available_status = QtWidgets.QLabel(self.page_4)
+        self.available_status.setGeometry(QtCore.QRect(140, 410, 81, 31))
+        self.available_status.setFont(font)
+        self.available_status.setObjectName("available_status")
         self.description_text.setFont(font)
         self.description_text.setScaledContents(True)
         self.description_text.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
@@ -210,7 +219,7 @@ class Ui_MainWindow(object):
         self.item_line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.item_line.setObjectName("item_line")
         self.item_line_2 = QtWidgets.QFrame(self.page_4)
-        self.item_line_2.setGeometry(QtCore.QRect(0, 510, 401, 16))
+        self.item_line_2.setGeometry(QtCore.QRect(0, 450, 401, 16))
         self.item_line_2.setFrameShape(QtWidgets.QFrame.HLine)
         self.item_line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.item_line_2.setObjectName("item_line_2")
@@ -222,18 +231,6 @@ class Ui_MainWindow(object):
         self.photo.setPixmap(QtGui.QPixmap("../images/surprise_shaq.jpg"))
         self.photo.setScaledContents(True)
         self.photo.setObjectName("photo")
-        self.quantity = QtWidgets.QLabel(self.page_4)
-        self.quantity.setGeometry(QtCore.QRect(10, 450, 121, 31))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.quantity.setFont(font)
-        self.quantity.setObjectName("quantity")
-        self.numitems = QtWidgets.QLabel(self.page_4)
-        self.numitems.setGeometry(QtCore.QRect(140, 450, 171, 31))
-        font = QtGui.QFont()
-        font.setPointSize(12)
         self.numitems.setFont(font)
         self.numitems.setObjectName("numitems")
         self.info_label = QtWidgets.QLabel(self.page_4)
@@ -402,7 +399,33 @@ class Ui_MainWindow(object):
         self.item_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
         self.search_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
 
+        self.prepEmployee()
 #######################################################################################################
+
+    def prepEmployee(self):
+        # add the Change Quantity buttons and spin box and the Make Available button
+        self.item_quan_spinBox = QtWidgets.QSpinBox(self.page_4)
+        self.item_quan_spinBox.setGeometry(QtCore.QRect(11,470,101,22))
+        self.item_quan_spinBox.setObjectName("item_quan_spinBox")
+        self.item_quan_spinBox.setMinimum(0)
+        self.item_quan_spinBox.setMaximum(999999)
+        self.item_chng_quan = QtWidgets.QPushButton(self.page_4)
+        self.item_chng_quan.setGeometry(QtCore.QRect(10, 500, 101, 31))
+        self.item_chng_quan.setObjectName("item_chng_quan")
+        self.item_mk_avail_button = QtWidgets.QPushButton(self.page_4)
+        self.item_mk_avail_button.setGeometry(QtCore.QRect(280, 500, 101, 31))
+        self.item_mk_avail_button.setObjectName("item_mk_avail_button")
+        # put text into the buttons
+        _translate = QtCore.QCoreApplication.translate
+        self.item_chng_quan.setText(_translate("MainWindow", "Change Quantity"))
+        self.item_mk_avail_button.setText(_translate("MainWindow", "Make Available"))
+        # employees do not add items to their carts since they don't have any
+        self.addbutton.setEnabled(False)
+        # create the employee object
+        self.employee_object = Employee()
+        # add functionality to employee buttons
+        self.item_chng_quan.clicked.connect(self.employee_change_quan)
+        self.item_mk_avail_button.clicked.connect(self.employee_change_avail)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -443,6 +466,8 @@ class Ui_MainWindow(object):
         self.actionChange_Username.setText(_translate("MainWindow", "Change Username"))
         self.actionChange_Password.setText(_translate("MainWindow", "Change Password"))
         self.actionLogout.setText(_translate("MainWindow", "Logout"))
+        self.available_label.setText(_translate("MainWindow", "Available?"))
+        self.available_status.setText(_translate("MainWindow", "Yes/No"))
 
 ###################################################################################################################################
 
@@ -453,14 +478,15 @@ class Ui_MainWindow(object):
                                         'password': self.password_textbox.text()
                                     }
             user = Login()
-            _, login_success = user.login(self.username_password)
-            # create the shopping cart object for shopping cart additions, removals, and modifications
-            self.shopping_cart_object = ShoppingCart({'username': self.username_password['username']})
+            _, login_success, self.userType = user.login(self.username_password)
             self.login_result(login_success)
 
     # allow user in if credentials are verified; block otherwise
     def login_result(self, login_success):
-        if login_success == True:
+        # if the user logged in successfully and they are a customer
+        if login_success and self.userType:
+            # create the shopping cart object for shopping cart additions, removals, and modifications
+            self.shopping_cart_object = ShoppingCart({'username': self.username_password['username']})
             # create a shopping cart copy to prevent multiple database queries (like when checking if an item is already in the cart before adding it)
             self.shopping_cart_list = self.shopping_cart_object.readShoppingcart()
             # re-enable menu bar buttons
@@ -471,14 +497,23 @@ class Ui_MainWindow(object):
             self.username_textbox.setText("")
             self.password_textbox.setText("")
             self.switch_page(2)
+        # if the login was successful and the user is not a customer (i.e. an employee)
+        elif login_success and not self.userType:
+            # prepares the app for viewing by a employee
+            self.prepEmployee()
+            self.username_textbox.setText("")
+            self.password_textbox.setText("")
+            self.actionLogout.setEnabled(True)
+            self.switch_page(2)
         else:
             self.failure_notif.setText("Failed attempt.\nPlease try again.")
 
     # log the user out and return them to the login page       
     def logout(self):
-        self.actionShopping_Cart.setEnabled(False)
-        self.actionChange_Username.setEnabled(False)
-        self.actionChange_Password.setEnabled(False)
+        if self.userType:
+            self.actionShopping_Cart.setEnabled(False)
+            self.actionChange_Username.setEnabled(False)
+            self.actionChange_Password.setEnabled(False)
         self.actionLogout.setEnabled(False)
         self.switch_page(0)
 
@@ -575,7 +610,6 @@ class Ui_MainWindow(object):
         # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         detail_string = ""
-        self.switch_page(4)
         self.item_name.setText(product["item"])
         if "details" in product:
             for num in range(0,len(product["details"])):
@@ -590,8 +624,34 @@ class Ui_MainWindow(object):
         self.update(self.item_name)
         self.update(self.description_text)
         self.info_label.setText("")
+        if not self.userType:
+            if product['availability']:
+                self.item_mk_avail_button.setText("Make Unavailable")
+            else:
+                self.item_mk_avail_button.setText("Make Available")
+        self.switch_page(4)
         # print(item.text())
-    
+
+    # change the quantity of an item
+    def employee_change_quan(self):
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
+        # changes the quantity of the product, returns the updated quantity, and updates quantity on item page
+        self.numitems.setText(self.employee_object.change_quantity(product,self.item_quan_spinBox.value())['quantity'])
+
+    # change the quantity of an item
+    def employee_change_avail(self):
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
+        # if product is available, make it not
+        if product['availability']:
+            # change availability of product to false
+            self.employee_object.change_availability(product,False)
+            self.available_status.setText("No")
+        # if product is not available, make it available
+        else:
+            # change availability of product to true
+            self.employee_object.change_availability(product,True)
+            self.available_status.setText("Yes")
+
     def add_to_shoppingcart(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         if product['item'] not in self.shopping_cart_list:
@@ -673,7 +733,7 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow(0)
+    ui = Ui_MainWindow(4)
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

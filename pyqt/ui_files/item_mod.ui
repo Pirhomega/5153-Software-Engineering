@@ -28,6 +28,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="addbutton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -66,7 +69,7 @@
       <x>140</x>
       <y>200</y>
       <width>251</width>
-      <height>111</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
@@ -91,7 +94,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>300</y>
+      <y>250</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -111,9 +114,9 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>310</y>
+      <y>260</y>
       <width>251</width>
-      <height>131</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="font">
@@ -151,7 +154,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>510</y>
+      <y>450</y>
       <width>401</width>
       <height>16</height>
      </rect>
@@ -189,7 +192,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>450</y>
+      <y>370</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -209,8 +212,8 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>450</y>
-      <width>171</width>
+      <y>370</y>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
@@ -237,6 +240,80 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="available_label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>410</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Available?</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="available_status">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>410</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Yes/No</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="item_quan_spinBox">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>470</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="item_chng_quan">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>500</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Quantity</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="item_mk_avail_button">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>500</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Make Available</string>
     </property>
    </widget>
   </widget>
