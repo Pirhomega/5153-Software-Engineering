@@ -179,9 +179,6 @@ class UserManager(Api):
     # The createUser method creates a new user if the given username is not already in use
     def createUser(self, data={}):
         self.data = data
-        # all users who create an account from the app are customers (type = False)
-        # Employees are only added by database admins directly through the Mongo Atlas (type = True)
-        self.data['type'] = False
         status = False
 
         collection = self.connectToAuthen()
@@ -191,6 +188,9 @@ class UserManager(Api):
         userExists = collection.find_one({'username': self.data['username']})
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
+            # all users who create an account from the app are customers (isCustomer = True)
+            # Employees are only added by database admins directly through the Mongo Atlas (isCustomer = False)
+            self.data['isCustomer'] = True
             collection.insert_one(self.data)
             status = True
 

@@ -10,7 +10,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QMovie, QPalette
+from PyQt5.QtCore import Qt
 from api import Api, Login, Employee, UserManager, ShoppingCart
 import sys
 
@@ -68,6 +69,12 @@ class Ui_MainWindow(object):
         self.label.setPixmap(QtGui.QPixmap("../images/login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
+        self.logo = QtWidgets.QLabel(self.page_1)
+        self.logo.setGeometry(QtCore.QRect(90, 20, 220, 120))
+        self.logo.setText("")
+        self.logo.setPixmap(QtGui.QPixmap("../images/Inno.png"))
+        self.logo.setScaledContents(True)
+        self.logo.setObjectName("logo")
         self.failure_notif = QtWidgets.QLabel(self.groupBoxLI)
         self.failure_notif.setGeometry(QtCore.QRect(120, 390, 141, 31))
         self.failure_notif.setText("")
@@ -172,33 +179,41 @@ class Ui_MainWindow(object):
         self.addbutton.setObjectName("addbutton")
         self.addbutton.setEnabled(True)
         self.name = QtWidgets.QLabel(self.page_4)
-        self.name.setGeometry(QtCore.QRect(10, 190, 121, 31))
+        self.name.setGeometry(QtCore.QRect(10, 150, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
+        self.price = QtWidgets.QLabel(self.page_4)
+        self.price.setGeometry(QtCore.QRect(140, 370, 81, 31))
+        self.price_label = QtWidgets.QLabel(self.page_4)
+        self.price_label.setGeometry(QtCore.QRect(10, 370, 121, 31))
+        self.price_label.setFont(font)
+        self.price_label.setObjectName("price_label")
         self.quantity = QtWidgets.QLabel(self.page_4)
-        self.quantity.setGeometry(QtCore.QRect(10, 370, 121, 31))
+        self.quantity.setGeometry(QtCore.QRect(10, 330, 121, 31))
         self.quantity.setFont(font)
         self.quantity.setObjectName("quantity")
         self.numitems = QtWidgets.QLabel(self.page_4)
-        self.numitems.setGeometry(QtCore.QRect(140, 370, 81, 31))
+        self.numitems.setGeometry(QtCore.QRect(140, 330, 81, 31))
         self.available_label = QtWidgets.QLabel(self.page_4)
         self.available_label.setGeometry(QtCore.QRect(10, 410, 121, 31))
         self.available_label.setFont(font)
         self.available_label.setObjectName("available_label")
         self.itemdescription = QtWidgets.QLabel(self.page_4)
-        self.itemdescription.setGeometry(QtCore.QRect(10, 250, 121, 41))
+        self.itemdescription.setGeometry(QtCore.QRect(10, 210, 121, 41))
         self.itemdescription.setFont(font)
         self.itemdescription.setObjectName("itemdescription")
         self.description_text = QtWidgets.QLabel(self.page_4)
-        self.description_text.setGeometry(QtCore.QRect(140, 260, 251, 101))
+        self.description_text.setGeometry(QtCore.QRect(140, 220, 251, 101))
         self.name.setFont(font)
         self.name.setObjectName("name")
         self.item_name = QtWidgets.QLabel(self.page_4)
-        self.item_name.setGeometry(QtCore.QRect(140, 200, 251, 51))
+        self.item_name.setGeometry(QtCore.QRect(140, 160, 251, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
+        self.price.setFont(font)
+        self.price.setObjectName("price")
         self.item_name.setFont(font)
         self.item_name.setScaledContents(True)
         self.item_name.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
@@ -214,7 +229,7 @@ class Ui_MainWindow(object):
         self.description_text.setWordWrap(True)
         self.description_text.setObjectName("description_text")
         self.item_line = QtWidgets.QFrame(self.page_4)
-        self.item_line.setGeometry(QtCore.QRect(0, 170, 401, 16))
+        self.item_line.setGeometry(QtCore.QRect(0, 130, 401, 16))
         self.item_line.setFrameShape(QtWidgets.QFrame.HLine)
         self.item_line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.item_line.setObjectName("item_line")
@@ -224,7 +239,7 @@ class Ui_MainWindow(object):
         self.item_line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.item_line_2.setObjectName("item_line_2")
         self.photo = QtWidgets.QLabel(self.page_4)
-        self.photo.setGeometry(QtCore.QRect(10, 10, 381, 151))
+        self.photo.setGeometry(QtCore.QRect(90,10,220,120))
         self.photo.setFrameShape(QtWidgets.QFrame.Box)
         self.photo.setLineWidth(2)
         self.photo.setText("")
@@ -356,7 +371,7 @@ class Ui_MainWindow(object):
         self.login_button.clicked.connect(self.login)
 
         # when the user clicks the 'create account' button from the main page
-        self.create_account_button.clicked.connect(lambda: self.switch_page(1))
+        self.create_account_button.clicked.connect(self.switch_to_create_acc)
 
         # Connect the createuser button with the createAcc function
         self.CreateButton.clicked.connect(self.createAcc)
@@ -386,7 +401,7 @@ class Ui_MainWindow(object):
         self.remove_button.clicked.connect(self.remove_item)
 
         # updates an item's quantity to what is designated in quantity box
-        self.chng_quan_button.clicked.connect(self.change_quantity)
+        self.chng_quan_button.clicked.connect(self.change_quan)
 
         # asks the user if they want to purchase items
         self.checkout_button.clicked.connect(self.checkout)
@@ -399,7 +414,7 @@ class Ui_MainWindow(object):
         self.item_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
         self.search_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
 
-        self.prepEmployee()
+        # self.prepEmployee()
 #######################################################################################################
 
     def prepEmployee(self):
@@ -407,7 +422,7 @@ class Ui_MainWindow(object):
         self.item_quan_spinBox = QtWidgets.QSpinBox(self.page_4)
         self.item_quan_spinBox.setGeometry(QtCore.QRect(11,470,101,22))
         self.item_quan_spinBox.setObjectName("item_quan_spinBox")
-        self.item_quan_spinBox.setMinimum(0)
+        self.item_quan_spinBox.setMinimum(1)
         self.item_quan_spinBox.setMaximum(999999)
         self.item_chng_quan = QtWidgets.QPushButton(self.page_4)
         self.item_chng_quan.setGeometry(QtCore.QRect(10, 500, 101, 31))
@@ -426,6 +441,22 @@ class Ui_MainWindow(object):
         # add functionality to employee buttons
         self.item_chng_quan.clicked.connect(self.employee_change_quan)
         self.item_mk_avail_button.clicked.connect(self.employee_change_avail)
+
+        # change the color of the background
+        self.page_2.setAutoFillBackground(True)
+        self.page_3.setAutoFillBackground(True)
+        self.page_4.setAutoFillBackground(True)
+        p2 = self.page_2.palette()
+        p3 = self.page_3.palette()
+        p4 = self.page_4.palette()
+        p2.setColor(self.page_2.backgroundRole(), Qt.darkRed)
+        p3.setColor(self.page_3.backgroundRole(), Qt.darkRed)
+        p4.setColor(self.page_4.backgroundRole(), Qt.darkRed)
+        self.page_2.setPalette(p2)
+        self.page_3.setPalette(p3)
+        self.page_4.setPalette(p4)
+
+        print("Fully prepped for employee")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -466,6 +497,8 @@ class Ui_MainWindow(object):
         self.actionChange_Username.setText(_translate("MainWindow", "Change Username"))
         self.actionChange_Password.setText(_translate("MainWindow", "Change Password"))
         self.actionLogout.setText(_translate("MainWindow", "Logout"))
+        self.price_label.setText(_translate("MainWindow", "Price:"))
+        self.price.setText(_translate("MainWindow", "$"))
         self.available_label.setText(_translate("MainWindow", "Available?"))
         self.available_status.setText(_translate("MainWindow", "Yes/No"))
 
@@ -491,8 +524,8 @@ class Ui_MainWindow(object):
             self.shopping_cart_list = self.shopping_cart_object.readShoppingcart()
             # re-enable menu bar buttons
             self.actionShopping_Cart.setEnabled(True)
-            self.actionChange_Username.setEnabled(True)
-            self.actionChange_Password.setEnabled(True)
+            # self.actionChange_Username.setEnabled(True)
+            # self.actionChange_Password.setEnabled(True)
             self.actionLogout.setEnabled(True)
             self.username_textbox.setText("")
             self.password_textbox.setText("")
@@ -528,6 +561,12 @@ class Ui_MainWindow(object):
         elif cause == 2:
             self.Instructions.setText("Error: That username has already been taken.")
             self.Instructions.adjustSize()
+
+    def switch_to_create_acc(self):
+        self.UserInput.setText("")
+        self.Passinput.setText("")
+        self.switch_page(1)
+
 
     # Once the user has filled in the input fields, check to see if they are
     # compatible. If everything works out, then upload their information into the
@@ -609,18 +648,28 @@ class Ui_MainWindow(object):
         self.item = item
         # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
         product = self.search_result[str(self.search_listWidget.row(self.item))]
-        detail_string = ""
+        # print item name
         self.item_name.setText(product["item"])
+        # print item details
+        detail_string = ""
         if "details" in product:
             for num in range(0,len(product["details"])):
                 detail_string += str(product["details"]["name" + str(num)]) + "\n"
         else:
-            self.description_text.setText("-")
+            detail_string = '-'
         self.description_text.setText(detail_string)
+        # print product quantity
         if "quantity" in product:
             self.numitems.setText(str(product["quantity"]))
         else:
             self.numitems.setText("-")
+        # print product availability
+        if product['availability']:
+            self.available_status.setText("Yes")
+        else:
+            self.available_status.setText("No")
+        # print product price
+        self.price.setText('$' + str(product['price']))
         self.update(self.item_name)
         self.update(self.description_text)
         self.info_label.setText("")
@@ -635,8 +684,12 @@ class Ui_MainWindow(object):
     # change the quantity of an item
     def employee_change_quan(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
-        # changes the quantity of the product, returns the updated quantity, and updates quantity on item page
-        self.numitems.setText(self.employee_object.change_quantity(product,self.item_quan_spinBox.value())['quantity'])
+        # some items don't have a quantity field
+        if 'quantity' in product:
+            # changes the quantity of the product, returns the updated quantity, and updates quantity on item page
+            new_quan = self.employee_object.change_quantity(product,self.item_quan_spinBox.value())
+            self.numitems.setText(str(new_quan))
+            self.search_result[str(self.search_listWidget.row(self.item))]['quantity'] = new_quan
 
     # change the quantity of an item
     def employee_change_avail(self):
@@ -645,11 +698,15 @@ class Ui_MainWindow(object):
         if product['availability']:
             # change availability of product to false
             self.employee_object.change_availability(product,False)
+            self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = False
             self.available_status.setText("No")
+            self.item_mk_avail_button.setText("Make Available")
         # if product is not available, make it available
         else:
             # change availability of product to true
             self.employee_object.change_availability(product,True)
+            self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = True
+            self.item_mk_avail_button.setText("Make Unavailable")
             self.available_status.setText("Yes")
 
     def add_to_shoppingcart(self):
@@ -681,31 +738,34 @@ class Ui_MainWindow(object):
         self.cost_label.setText(str(total_price))
 
     def remove_item(self):
-        item = self.cart_listWidget.currentRow()
-        # remove the item from the database shopping cart
-        self.shopping_cart_object.removeCart(self.shopping_cart_list[item])
-        # remove the item from the local shopping cart variable (database shopping cart copy)
-        self.shopping_cart_list.pop(item)
-        # get rid of the item from the list widget
-        self.cart_listWidget.takeItem(item)
-        self.findPrice()
+        if self.cart_listWidget.count():
+            item = self.cart_listWidget.currentRow()
+            # remove the item from the database shopping cart
+            self.shopping_cart_object.removeCart(self.shopping_cart_list[item])
+            # remove the item from the local shopping cart variable (database shopping cart copy)
+            self.shopping_cart_list.pop(item)
+            # get rid of the item from the list widget
+            self.cart_listWidget.takeItem(item)
+            self.findPrice()
 
-    def change_quantity(self):
-        self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
-        self.findPrice()
-        item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
-        item['quantity'] = self.quantity_spin.value()
+    def change_quan(self):
+        if self.cart_listWidget.count():
+            self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
+            self.findPrice()
+            item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
+            item['quantity'] = self.quantity_spin.value()
 
     def checkout(self):
-        if self.prompt_confirm == False:
-            self.checkout_button.setText("Are you sure?")
-            self.prompt_confirm = True
-        else:
-            self.prompt_confirm = False
-            self.item_prompt.setText("Thank you for your purchase!\nPress \"Back\" to return to search")
-            self.cart_listWidget.clear()
-            self.shopping_cart_list = []
-            self.shopping_cart_object.emptyCart()
+        if self.cart_listWidget.count():
+            if self.prompt_confirm == False:
+                self.checkout_button.setText("Are you sure?")
+                self.prompt_confirm = True
+            else:
+                self.prompt_confirm = False
+                self.item_prompt.setText("Thank you for your purchase!\nPress \"Back\" to return to search")
+                self.cart_listWidget.clear()
+                self.shopping_cart_list = []
+                self.shopping_cart_object.emptyCart()
 
     # def cart_display_page(self):
     #     # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
@@ -733,7 +793,7 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow(4)
+    ui = Ui_MainWindow(0)
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
