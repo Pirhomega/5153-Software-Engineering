@@ -14,18 +14,17 @@ from kivy.properties import ObjectProperty, ListProperty, BooleanProperty, Strin
 
 # Kivy uix imports
 from kivy.uix.behaviors import ButtonBehavior, FocusBehavior
-from kivy.uix.boxlayout import BoxLayout ######
+from kivy.uix.boxlayout import BoxLayout 
 from kivy.uix.button import Button
-from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivy.uix.recyclegridlayout import RecycleGridLayout #######
+from kivy.uix.recyclegridlayout import RecycleGridLayout 
 from kivy.uix.recycleview import RecycleView
-from kivy.uix.recycleview.layout import LayoutSelectionBehavior #######
-from kivy.uix.recycleview.views import RecycleDataViewBehavior #######
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior 
+from kivy.uix.recycleview.views import RecycleDataViewBehavior 
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
@@ -34,22 +33,9 @@ Window.size = (450, 800)
 pp = pprint.PrettyPrinter(indent=4)
 username = ""
 
-
-
-############################### UNCOMMENT TO SKIP LOGIN ########################
-
-# class Login(Screen):
-#     username = "passwordHell"
-#     password = r"XR9lYeOp036C%25%40%26%40cQn%2A8z3BU4%5C"
-#     global client, db, collections
-#     client = pymongo.MongoClient(f"mongodb+srv://{username}:{password}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority")
-#     db = client.Innoventory
-#     collections = db.list_collection_names()
-#     print("Connected")
-
-#     def login(self):
-#         wm.current="homepage"
-
+# These classes are for screens or screen behavior. Any class with the pass keyword
+# is defined and manipulated in the .kv file, but the prototype must be in this file
+# as well.
 class Img(Image):
     pass
 
@@ -623,11 +609,17 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
 
     def exitInno(self, instance):
         global shopCartInfo
-        self.items.clear()
-        self.qty.clear()
-        self.price.clear()
+        #self.items.clear()
+        #self.qty.clear()
+        #self.price.clear()
         self.totalPrint = "0.00"
         shopCartInfo.clear()
+
+        cartToClear = wm.get_screen("shoppingCart")
+        cartToClear.items = []
+        cartToClear.qty = []
+        cartToClear.price = []
+
         wm.current = "homepage"
 
     def checkout(self,):
@@ -745,7 +737,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "homepage"
+wm.current = "login"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched
