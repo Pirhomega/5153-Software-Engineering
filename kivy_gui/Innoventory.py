@@ -118,6 +118,7 @@ class Login(Screen):
     #Do we need to create accounts if only superuser can add people?
     #Can you even make an account without signing up on atlas?
     def createAcct(self):
+        self.reset()
         wm.current = "createAcct"
 
 '''
@@ -137,6 +138,11 @@ class Homepage(Screen):
     searchPhrase = ObjectProperty(None)
        
     def logout(self):
+        global shopCartInfo
+        # Clear user's shopping cart
+        shopCartInfo = []
+        # Remove any items left in the recycleview for the shopping cart screen
+        wm.get_screen("shoppingCart").clear_recview()
         wm.current = "login"
     
     def settingsMenu(self):
@@ -182,32 +188,6 @@ class Homepage(Screen):
             return False
         else:
             return True
-            
-    #     else:
-    #         # Create a popup window to display the authentication failure
-    #         emptySearchPopup = Popup(title="Invalid Search", title_align="center", 
-    #             content=Label(text="Search cannot be empty"), size_hint=(.75,.5))
-    #         emptySearchPopup.open()
-
-    #     results = []
-    #     #look in every collection in the db
-    #     for collection in collections:
-    #         print(collection)
-    #         #search each collection for a match
-
-    #     """https://docs.mongodb.com/manual/text-search/index.html"""
-    #     #     results.append(db.collection.find({$text: {$search: self.searchPhrase}}))
-    #     # print(results)
-    #     #     results.append(db.Vehicles.find({"$text": {"$search": "Honda"}}))
-    #     # print(results)
-
-    # def catSearch(self,cat): #cat is an index
-    #     collection = collections[cat]
-    #     items = db[collection].find({})
-    #     for item in items:
-    #         pp.pprint(item)
-        
-
 
 '''
  $$$$$$\                                  $$\                $$$$$$\                                                      $$\     
@@ -323,39 +303,6 @@ class ChangePassword(Screen):
         self.oldPasswordIn.text = ""
         self.newPasswordIn.text = ""
         self.newPasswordIn2.text = ""
-
-
-# '''
-#  $$$$$$\                                          $$\       
-# $$  __$$\                                         $$ |      
-# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
-# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
-#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
-# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
-# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
-#  \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-# '''
-# class Search():
-
-#     def search_test(self, phrase=None):
-#         self.phrase = str(phrase)
-
-#         if(self.phrase != None):
-#             print("Homepage data test:")
-#             print(phrase)
-
-#             # Get an instance of the api
-#             apiSearch = api.Api()
-#             testSearch = apiSearch.search({'item': self.phrase})
-#             apiSearch.display_results(testSearch)
-
-#             print("Parsed results")
-#             results = apiSearch.parse_results(testSearch)
-#             print(results)
-
-        
-        
-
 
 '''
  $$$$$$\                                          $$\      $$\    $$\ $$\                         
@@ -607,6 +554,12 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
             total += (float(dic['text']))
         self.totalPrint = f"{total}"
 
+    def clear_recview(self):
+        cartToClear = wm.get_screen("shoppingCart")
+        cartToClear.items = []
+        cartToClear.qty = []
+        cartToClear.price = []
+
     def exitInno(self, instance):
         global shopCartInfo
         #self.items.clear()
@@ -615,12 +568,10 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
         self.totalPrint = "0.00"
         shopCartInfo.clear()
 
-        cartToClear = wm.get_screen("shoppingCart")
-        cartToClear.items = []
-        cartToClear.qty = []
-        cartToClear.price = []
+        self.clear_recview()
 
         wm.current = "homepage"
+
 
     def checkout(self,):
         window = BoxLayout(orientation="vertical")
@@ -664,26 +615,6 @@ class CartView(RecycleDataViewBehavior, Button):
 
     def apply_selection(self, rec_view, my_index, am_selected): 
         self.selected = am_selected
-
-
-
-#  $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\   
-#   $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \  
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|
-#   $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |  
-#   \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|  
-#  $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\   
-#   $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \  
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|
-#   $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |  
-#   \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|  
-
 
 
 '''
