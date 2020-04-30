@@ -3,7 +3,7 @@
 import json
 import urllib.parse
 from pprint import pprint
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 
 class Api:
     '''
@@ -19,12 +19,8 @@ class Api:
     customerConnectionString = f"mongodb+srv://{customerUsername}:{customerPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
     
     employeeUsername = urllib.parse.quote("employee")
-    employeePassword = urllib.parse.quote("")
+    employeePassword = urllib.parse.quote("h57pnEeTXY299LDx")
     employeeConnectionString = f"mongodb+srv://{employeeUsername}:{employeePassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
-
-    managerUsername = urllib.parse.quote("manager")
-    managerPassword = urllib.parse.quote("")
-    managerConnectionString = f"mongodb+srv://{managerUsername}:{managerPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
 
     emptyUser = {'username': '', 'password': ''}
 
@@ -83,6 +79,27 @@ class Api:
                 items.add(result['item'])
         return items
 
+# Employee class offers the two operations an Innoventory employee can perform:
+# change any product's availability and quantity
+class Employee(Api):
+    def __init__(self):
+        client = self.connect(self.employeeConnectionString)
+        db = client.Innoventory
+        self.collection = db.Products
+    # changes item quantity and returns the updated quantity
+    def change_quantity(self, item={}, quantity=1):
+        return self.collection.find_one_and_update(
+            filter=item,
+            update={'$set': {'quantity': quantity}},
+            return_document=ReturnDocument.AFTER
+        )['quantity']
+    # changes item quantity and returns the updated availability
+    def change_availability(self, item={}, avail=bool):
+        return self.collection.find_one_and_update(
+            filter=item,
+            update={'$set': {'availability': avail}}
+        )
+
 class Login(Api):
     '''
     The Login class provides the functionality to query the MongoDB instance
@@ -95,7 +112,7 @@ class Login(Api):
     the user's information is returned as a dictionary. If the username and/or password
     are not correct, an Api.emptyUser dictionary is returned.
     '''
-    def authenticate(self, user={'username': '', 'password': ''}):
+    def authenticate(self, user={'username': '', 'password': '', 'isCustomer': ''}):
         self.user = user
         validPassword = False
         # Get connection to database
@@ -110,6 +127,7 @@ class Login(Api):
 
         #########################################################################
         login_success = False
+        customer = False
         #########################################################################
 
         # if found, check to see if password matches
@@ -120,16 +138,17 @@ class Login(Api):
 
             # Password tests
             if validPassword:
-                print("Valid username, valid password")
+                # print("Valid username, valid password")
                 login_success = True
+                customer = userInfo['isCustomer']
             else:
-                print("Valid username, invalid password")
+                # print("Valid username, invalid password")
                 userInfo = Api.emptyUser
         else:
             print("Username does not exist")
             userInfo = Api.emptyUser
 
-        return userInfo, login_success
+        return userInfo, login_success, customer
 
     '''
     The login method accepts a user dictionary containing the username and password.
@@ -169,6 +188,9 @@ class UserManager(Api):
         userExists = collection.find_one({'username': self.data['username']})
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
+            # all users who create an account from the app are customers (isCustomer = True)
+            # Employees are only added by database admins directly through the Mongo Atlas (isCustomer = False)
+            self.data['isCustomer'] = True
             collection.insert_one(self.data)
             status = True
 
@@ -258,7 +280,8 @@ class ShoppingCart(Api):
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
     import time
-    validTestUser = {'username':'bwalker', 'password':'GC2020'}
+    validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
+    validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
     invalidPassword = {'username':'bwalker', 'password':'wrong'}
     invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
 
@@ -266,20 +289,28 @@ if __name__ == "__main__":
     print("*****LOGIN TESTS*****")
     loginTest = Login()
     
-    # Valid username and password test
-    user, login_success = loginTest.login(validTestUser)
+    # Valid username and password test for customer
+    user, login_success, user_type = loginTest.login(validTestCustomer)
     pprint(user)
+    if user_type: 
+        print("User is a customer")
+    
+    # Valid username and password test for employee
+    user, login_success, user_type = loginTest.login(validTestEmployee)
+    pprint(user)
+    if not user_type: 
+        print("User is an employee")
 
     # Valid username, invalid password test
-    user, login_success = loginTest.login(invalidPassword)
+    user, login_success, user_type = loginTest.login(invalidPassword)
     pprint(user)
 
     # Invalid username, Invalid password
-    user, login_success = loginTest.login(invalidUsername)
+    user, login_success, user_type = loginTest.login(invalidUsername)
     pprint(user)
 
     # No login information given
-    user, login_success = loginTest.login()
+    user, login_success, _ = loginTest.login()
     pprint(user)
 
     print("*****CONNECTION TESTS*****")
@@ -288,8 +319,7 @@ if __name__ == "__main__":
     connect1 = api.connect(api.customerConnectionString)
     testSearch = api.search({'item':'Red Pepper Paste'})
     pprint(testSearch)
-    testSearch = api.search({'item': 'Red Pepper Paste'})
-    test = set(testSearch)
+
     print("*****CREATE USER TEST*****")
     userTest = UserManager()
 

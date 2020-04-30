@@ -28,6 +28,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="addbutton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -40,33 +43,103 @@
      <string>Add to Cart</string>
     </property>
    </widget>
-   <widget class="QLabel" name="itemname">
+   <widget class="Line" name="line_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>190</y>
-      <width>121</width>
+      <x>0</x>
+      <y>450</y>
+      <width>401</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="photo">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>10</y>
+      <width>221</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../Pictures/Saved Pictures/banana.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="info_label">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>540</y>
+      <width>131</width>
       <height>31</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
     <property name="text">
-     <string>Name:</string>
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labeltext">
+   <widget class="QSpinBox" name="item_quan_spinBox">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>470</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="item_chng_quan">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>500</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Quantity</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="item_mk_avail_button">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>500</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Make Available</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="name">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>200</y>
+      <y>160</y>
       <width>251</width>
-      <height>111</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
@@ -87,33 +160,49 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="itemdescription">
+   <widget class="QLabel" name="available_status">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>300</y>
-      <width>121</width>
-      <height>41</height>
+      <x>140</x>
+      <y>410</y>
+      <width>81</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>Description:</string>
+     <string>Yes/No</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="numitems">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>330</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>999999</string>
     </property>
    </widget>
    <widget class="QLabel" name="description_text">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>310</y>
+      <y>220</y>
       <width>251</width>
-      <height>131</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="font">
@@ -134,62 +223,11 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="Line" name="line">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>170</y>
-      <width>401</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>510</y>
-      <width>401</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QLabel" name="photo">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>381</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="lineWidth">
-     <number>2</number>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>../Pictures/Saved Pictures/banana.jpg</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="quantity">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>450</y>
+      <y>330</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -205,12 +243,12 @@
      <string>Quantity: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="numitems">
+   <widget class="QLabel" name="price">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>450</y>
-      <width>171</width>
+      <y>370</y>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
@@ -220,23 +258,100 @@
      </font>
     </property>
     <property name="text">
-     <string>Number</string>
+     <string>$</string>
     </property>
    </widget>
-   <widget class="QLabel" name="info_label">
+   <widget class="QLabel" name="itemname">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>540</y>
-      <width>131</width>
+      <x>10</x>
+      <y>150</y>
+      <width>121</width>
       <height>31</height>
      </rect>
     </property>
-    <property name="text">
-     <string/>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
+    <property name="text">
+     <string>Name:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="price_label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Price:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="itemdescription">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>210</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Description:</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>130</y>
+      <width>401</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="available_label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>410</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Available?</string>
     </property>
    </widget>
   </widget>
