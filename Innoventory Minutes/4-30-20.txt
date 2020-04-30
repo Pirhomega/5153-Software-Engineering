@@ -1,0 +1,13 @@
+- Kivy (still need to add if statement that prevents employees from accessing app mobiley) and Desktop apps done
+- Shopping cart clears when checkout performed on mobile
+- iteration 9 (final) begins
+- Papers are being worked on
+--------------------------------------------------------------------------
+Deliverables:
+- deploy mobile app to Google store
+- build apps (make desktop .exe and mobile .apk
+- combine the papers into a google doc, and as we work on our separate papers, add any additions to the combination paper
+- complete presentation with suggestions from earlier
+- start testing and bug fixing
+- create user manual, updated requirements, testing documentation (associate a test with a requirement). We're doing whitebox testing, primarily, if not soley
+- create UML diagrams for pyqt side
