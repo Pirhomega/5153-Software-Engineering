@@ -392,7 +392,7 @@ class Ui_MainWindow(object):
         self.addbutton.clicked.connect(self.add_to_shoppingcart)
 
         # navigate to the user's shopping cart
-        self.actionShopping_Cart.triggered.connect(self.initialize_shoppingcart)
+        self.actionShopping_Cart.triggered.connect(self.refresh_shoppingcart)
 
         # go back to the search results page from the shopping cart
         self.cart_back_button.clicked.connect(lambda: self.switch_page(2))
@@ -711,20 +711,24 @@ class Ui_MainWindow(object):
 
     def add_to_shoppingcart(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
-        if product['item'] not in self.shopping_cart_list:
-            product['quantity'] = 1
-            self.shopping_cart_object.addCart(product)
-            self.shopping_cart_list.append(product)
-            self.info_label.setText("Added to cart!")
-            self.findPrice()
+        if product['availability'] and product['quantity']:
+            if (product['item'] not in self.shopping_cart_list):
+                product['quantity'] = 1
+                self.shopping_cart_object.addCart(product)
+                self.shopping_cart_list.append(product)
+                self.info_label.setText("Added to cart!")
+                self.findPrice()
+            else:
+                self.info_label.setText("Already in cart!")
         else:
-            self.info_label.setText("Already in cart!")
+            self.info_label.setText("Product unavailable")
     
     # will fill the list widget on the shopping cart page with all the items in the 
     # user's shopping cart
-    def initialize_shoppingcart(self):
+    def refresh_shoppingcart(self):
         self.cart_listWidget.clear()
         for product in self.shopping_cart_list:
+            print(product)
             item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str(product['price']))
             self.cart_listWidget.addItem(item)
         self.findPrice()
@@ -754,6 +758,7 @@ class Ui_MainWindow(object):
             self.findPrice()
             item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
             item['quantity'] = self.quantity_spin.value()
+            self.refresh_shoppingcart()
 
     def checkout(self):
         if self.cart_listWidget.count():
