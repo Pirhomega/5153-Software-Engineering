@@ -92,9 +92,9 @@ class Login(Screen):
         try:
             # Will return a dictionary of user information. If the username and/or password
             # are wrong, an emtpy username and password are returned
-            result, _ = login.login({'username': self.username, 'password': self.password})
+            result, success, customer = login.login({'username': self.username, 'password': self.password})
             
-            if(result['username'] != "" and result['password'] != ""):
+            if(result['username'] != "" and result['password'] != "" and customer == True):
                 # If the login is successful, take the user to the homepage window
                 wm.current = "homepage"
             else:
