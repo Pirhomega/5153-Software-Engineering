@@ -1,6 +1,8 @@
 # Mine
 .vscode/
 *.json
+pyqt/source/build/
+pyqt/source/dist/
 
 
 # Byte-compiled / optimized / DLL files
@@ -132,3 +134,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+build1/main/base_library.zip

@@ -186,6 +186,8 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.price = QtWidgets.QLabel(self.page_4)
         self.price.setGeometry(QtCore.QRect(140, 370, 81, 31))
+        self.price.setFont(font)
+        self.price.setObjectName("price")
         self.price_label = QtWidgets.QLabel(self.page_4)
         self.price_label.setGeometry(QtCore.QRect(10, 370, 121, 31))
         self.price_label.setFont(font)
@@ -206,14 +208,17 @@ class Ui_MainWindow(object):
         self.itemdescription.setObjectName("itemdescription")
         self.description_text = QtWidgets.QLabel(self.page_4)
         self.description_text.setGeometry(QtCore.QRect(140, 220, 251, 101))
+        self.description_text.setFont(font)
+        self.description_text.setScaledContents(True)
+        self.description_text.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.description_text.setWordWrap(True)
+        self.description_text.setObjectName("description_text")
         self.name.setFont(font)
         self.name.setObjectName("name")
         self.item_name = QtWidgets.QLabel(self.page_4)
         self.item_name.setGeometry(QtCore.QRect(140, 160, 251, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.price.setFont(font)
-        self.price.setObjectName("price")
         self.item_name.setFont(font)
         self.item_name.setScaledContents(True)
         self.item_name.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
@@ -223,11 +228,6 @@ class Ui_MainWindow(object):
         self.available_status.setGeometry(QtCore.QRect(140, 410, 81, 31))
         self.available_status.setFont(font)
         self.available_status.setObjectName("available_status")
-        self.description_text.setFont(font)
-        self.description_text.setScaledContents(True)
-        self.description_text.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.description_text.setWordWrap(True)
-        self.description_text.setObjectName("description_text")
         self.item_line = QtWidgets.QFrame(self.page_4)
         self.item_line.setGeometry(QtCore.QRect(0, 130, 401, 16))
         self.item_line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -292,6 +292,11 @@ class Ui_MainWindow(object):
         self.sc_line.setFrameShape(QtWidgets.QFrame.HLine)
         self.sc_line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.sc_line.setObjectName("sc_line")
+        self.sc_line_2 = QtWidgets.QFrame(self.page_5)
+        self.sc_line_2.setGeometry(QtCore.QRect(0, 500, 400, 16))
+        self.sc_line_2.setFrameShape(QtWidgets.QFrame.HLine)
+        self.sc_line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.sc_line_2.setObjectName("sc_line_2")
         self.cost_label = QtWidgets.QLabel(self.page_5)
         self.cost_label.setGeometry(QtCore.QRect(150, 320, 100, 31))
         self.cost_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -323,11 +328,6 @@ class Ui_MainWindow(object):
         self.quantity_spin.setObjectName("quantity_spin")
         self.quantity_spin.setMinimum(1)
         self.quantity_spin.setValue(1)
-        self.sc_line_2 = QtWidgets.QFrame(self.page_5)
-        self.sc_line_2.setGeometry(QtCore.QRect(0, 500, 400, 16))
-        self.sc_line_2.setFrameShape(QtWidgets.QFrame.HLine)
-        self.sc_line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.sc_line_2.setObjectName("sc_line_2")
 
 ####################################################################################################
 
@@ -505,7 +505,7 @@ class Ui_MainWindow(object):
 ###################################################################################################################################
 
     # attempt to log in to Innoventory with username and password offered
-    def login(self, MainWindow):
+    def login(self):
         if self.username_textbox.text() != "" and self.password_textbox.text() != "":
             self.username_password = {  'username': self.username_textbox.text(), 
                                         'password': self.password_textbox.text()
@@ -567,7 +567,6 @@ class Ui_MainWindow(object):
         self.Passinput.setText("")
         self.switch_page(1)
 
-
     # Once the user has filled in the input fields, check to see if they are
     # compatible. If everything works out, then upload their information into the
     # "users" collection.
@@ -586,9 +585,9 @@ class Ui_MainWindow(object):
                 self.Instructions.setText("Success! Your account has been created!")
                 self.Instructions.adjustSize()
 
-                self.gif = QMovie('../images/Success.gif')
-                self.photo.setMovie(self.gif)
-                self.gif.start()
+                gif = QMovie('../images/Success.gif')
+                self.photo.setMovie(gif)
+                gif.start()
 
                 self.CancelButton.setText("Login")
             else:
@@ -636,12 +635,11 @@ class Ui_MainWindow(object):
 
     # will switch to widget representing page 'next_page'
     def switch_page(self, next_page):
-        self.next_page = next_page
         # if the argument 'next_page' is an integer, 
-        if isinstance(self.next_page, int):
-            self.stackedWidget.setCurrentIndex(self.next_page)
+        if isinstance(next_page, int):
+            self.stackedWidget.setCurrentIndex(next_page)
         else:
-            self.stackedWidget.setCurrentWidget(self.next_page)
+            self.stackedWidget.setCurrentWidget(next_page)
     
     def display_item_page(self, item):
         # print("Item in row", self.search_listWidget.row(item), "was clicked!")
