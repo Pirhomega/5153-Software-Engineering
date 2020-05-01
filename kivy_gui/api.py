@@ -3,7 +3,7 @@
 import json
 import urllib.parse
 from pprint import pprint
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 
 class Api:
     '''
@@ -19,12 +19,8 @@ class Api:
     customerConnectionString = f"mongodb+srv://{customerUsername}:{customerPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
     
     employeeUsername = urllib.parse.quote("employee")
-    employeePassword = urllib.parse.quote("")
+    employeePassword = urllib.parse.quote("h57pnEeTXY299LDx")
     employeeConnectionString = f"mongodb+srv://{employeeUsername}:{employeePassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
-
-    managerUsername = urllib.parse.quote("manager")
-    managerPassword = urllib.parse.quote("")
-    managerConnectionString = f"mongodb+srv://{managerUsername}:{managerPassword}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority"
 
     emptyUser = {'username': '', 'password': ''}
 
@@ -49,17 +45,18 @@ class Api:
         # Switch to Innoventory database
         db = client.Innoventory
         # Search the Grocery collection
-        result = db.Grocery.find_one(self.term)
+        result = db.Products.find_one(self.term)
 
         return result
-
+    
     # search the product collection for a specific item
     def search(self, term):
         self.term = term
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
-        # will hold all cursors from queries
+        # will hold all documents from queries
         result = []
+        result.append([db.Products.find_one(self.term)])
         # split the search term by whitespace
         new_search = self.term["item"].split()
         # search database by each word in term
@@ -67,28 +64,41 @@ class Api:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
             # result.append(mini_result)
             result.append(list(db.Products.find({ "item": {'$regex': word }})))
-            
         return result
-    
     # a simple print function for item names
     def display_results(self, search_result):
-
         for doc in search_result:
             for result in doc:
                 print(result['item'])
-
     # Returns an unordered set of item names from a search
     def parse_results(self, search_result):
         # Use a set to avoid duplicate results
         items = set()
-        
         for doc in search_result:
             for result in doc:
                 items.add(result['item'])
-
         return items
 
-
+# Employee class offers the two operations an Innoventory employee can perform:
+# change any product's availability and quantity
+class Employee(Api):
+    def __init__(self):
+        client = self.connect(self.employeeConnectionString)
+        db = client.Innoventory
+        self.collection = db.Products
+    # changes item quantity and returns the updated quantity
+    def change_quantity(self, item={}, quantity=1):
+        return self.collection.find_one_and_update(
+            filter=item,
+            update={'$set': {'quantity': quantity}},
+            return_document=ReturnDocument.AFTER
+        )['quantity']
+    # changes item quantity and returns the updated availability
+    def change_availability(self, item={}, avail=bool):
+        return self.collection.find_one_and_update(
+            filter=item,
+            update={'$set': {'availability': avail}}
+        )
 
 class Login(Api):
     '''
@@ -102,7 +112,7 @@ class Login(Api):
     the user's information is returned as a dictionary. If the username and/or password
     are not correct, an Api.emptyUser dictionary is returned.
     '''
-    def authenticate(self, user={'username': '', 'password': ''}):
+    def authenticate(self, user={'username': '', 'password': '', 'isCustomer': ''}):
         self.user = user
         validPassword = False
         # Get connection to database
@@ -117,6 +127,7 @@ class Login(Api):
 
         #########################################################################
         login_success = False
+        customer = False
         #########################################################################
 
         # if found, check to see if password matches
@@ -127,16 +138,17 @@ class Login(Api):
 
             # Password tests
             if validPassword:
-                print("Valid username, valid password")
+                # print("Valid username, valid password")
                 login_success = True
+                customer = userInfo['isCustomer']
             else:
-                print("Valid username, invalid password")
+                # print("Valid username, invalid password")
                 userInfo = Api.emptyUser
         else:
             print("Username does not exist")
             userInfo = Api.emptyUser
 
-        return userInfo, login_success
+        return userInfo, login_success, customer
 
     '''
     The login method accepts a user dictionary containing the username and password.
@@ -160,9 +172,9 @@ class UserManager(Api):
         # Connect to Authen db
         db = client.Authen
         # Switch to Users collection
-        collection = db.Users
+        collection = db.Users      
 
-        return collection
+        return collection 
 
     # The createUser method creates a new user if the given username is not already in use
     def createUser(self, data={}):
@@ -176,8 +188,14 @@ class UserManager(Api):
         userExists = collection.find_one({'username': self.data['username']})
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
-            result = collection.insert_one(self.data)
+            # all users who create an account from the app are customers (isCustomer = True)
+            # Employees are only added by database admins directly through the Mongo Atlas (isCustomer = False)
+            self.data['isCustomer'] = True
+            collection.insert_one(self.data)
             status = True
+
+            # create the user's shopping cart in the 'Shopping_Cart' collection
+            ShoppingCart({'username': self.data['username']}).createCart()
         
         # Return true for successful user creation, false for user creation failure
         return status
@@ -192,67 +210,78 @@ class UserManager(Api):
 
         # If the username exists, remove it from the Users collection
         result = collection.delete_one(self.data)
+
+        # remove user's shopping cart
+        ShoppingCart(self.data).eraseUser()
+
         status = result.deleted_count
 
         return status
-    
-    # Modifies a user password.
-    def changePassword(self, oldData = {}, newData = {}):
-        self.data = oldData
-        self.data2 = newData
-
-        # If the data authenticates, change the user's password 
-        collection = self.connectToAuthen()
-        collection.update_one(self.data, {'$set':self.data2})
-        return True
-
 
 # This class represents all the shopping cart functionality
 # See __main__ for example code
+# For security reasons, do not pass passwords in the 'user' dictionary,
+# only the username
 class ShoppingCart(Api):
-    # only call this when a user is creating an account
-    def createCart(self, user={'username': ''}):
-        self.user = user
-        # Get connection to MongoDB instance as the authen user
+    def __init__(self, user={'username': ''}):
         client = self.connect(Api.authenConnectionString)
         # Connect to Authen db
         db = client.Authen
         # Switch to Users collection
         self.collection = db.Shopping_Cart
-        # ooga = {self.user['username']: []}
-        # print(type({self.user['username']: []}))
-        
+        self.user = user
+
+    # only call this when a user is creating an account
+    def createCart(self):
         # create an empty array for cart items
         self.collection.insert_one({'username': self.user['username'], 'cart': []})
 
     # appends a dictionary to the 'cart' list (adds an item to the cart)
     # Example:
     #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
-    def addCart(self,user={'username': ''}, item={}):
-        self.user = user
+    def addCart(self, item={}):
         self.item = item
         self.collection.update_one(
-                {'username': self.user['username']}, 
-                {'$push': {'cart': {'$each' :[ self.item ]}}}
+                self.user, 
+                {'$push': {'cart': {'$each': [ self.item ]}}}
         )
 
     # removes an item from the user's cart
     # Example:
     #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
-    def removeCart(self,user={'username': ''}, item={}):
-        self.user = user
+    def removeCart(self, item={}):
         self.item = item
         self.collection.update_one(
-                {'username': self.user['username']}, 
-                {'$pull': {'cart': self.item }})
+            self.user, 
+            {'$pull': {'cart': self.item }}
+        )
+    
+    # modify an item quantity
+    def changeQuan(self, item={}, quantity=1):
+        self.item = item
+        self.quantity = quantity
+        self.collection.update_one(
+            filter=self.user,
+            update={'$set': {f"cart.$[element].quantity": self.quantity}},
+            array_filters=[{'element': self.item}]
+        )
+    
+    # copies all shopping cart contents to a list
+    def readShoppingcart(self):
+        return dict(self.collection.find_one(filter=self.user))['cart']
+    
+    def emptyCart(self):
+        self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
+    # erase user's cart
+    def eraseUser(self):
+        self.collection.delete_one(self.user)
 
-
-
-        
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
-    validTestUser = {'username':'bwalker', 'password':'GC2020'}
+    import time
+    validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
+    validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
     invalidPassword = {'username':'bwalker', 'password':'wrong'}
     invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
 
@@ -260,27 +289,35 @@ if __name__ == "__main__":
     print("*****LOGIN TESTS*****")
     loginTest = Login()
     
-    # Valid username and password test
-    user, login_success = loginTest.login(validTestUser)
+    # Valid username and password test for customer
+    user, login_success, user_type = loginTest.login(validTestCustomer)
     pprint(user)
+    if user_type: 
+        print("User is a customer")
+    
+    # Valid username and password test for employee
+    user, login_success, user_type = loginTest.login(validTestEmployee)
+    pprint(user)
+    if not user_type: 
+        print("User is an employee")
 
     # Valid username, invalid password test
-    user, login_success = loginTest.login(invalidPassword)
+    user, login_success, user_type = loginTest.login(invalidPassword)
     pprint(user)
 
     # Invalid username, Invalid password
-    user, login_success = loginTest.login(invalidUsername)
+    user, login_success, user_type = loginTest.login(invalidUsername)
     pprint(user)
 
     # No login information given
-    user, login_success = loginTest.login()
+    user, login_success, _ = loginTest.login()
     pprint(user)
 
     print("*****CONNECTION TESTS*****")
     # Connection tests
     api = Api()
     connect1 = api.connect(api.customerConnectionString)
-    testSearch = api.searchGrocery({'item':'Clam Nectar'})
+    testSearch = api.search({'item':'Red Pepper Paste'})
     pprint(testSearch)
 
     print("*****CREATE USER TEST*****")
@@ -289,28 +326,33 @@ if __name__ == "__main__":
     # Create a user that doesn't exist
     result = userTest.createUser({'username': 'test', 'password': 'test'})
     print(f"Create user account (should be True): {result}")
+    time.sleep(5)
 
     # Remove the user that was just created
     result = userTest.removeUser({'username': 'test'})
     print(f"Delete a user account (should be 1): {result}")
+    time.sleep(5)
 
     # Try to create a user using a username that is taken already
     result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
     print(f"Try to create a user with a username that's taken (should be False): {result}")
+    time.sleep(5)
 
     # Try to delete a user that doesn't exist
     result = userTest.removeUser({'username': 'test'})
     print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
-    # Create a shopping cart for a user, add some items to it, then remove items from it
-    shop_cart = ShoppingCart()
-    shop_cart.createCart({'username': 'bwalker'})
-    shop_cart.addCart({'username': 'bwalker'}, {'item':'coke','quantity':1234,'available':True})
-    shop_cart.addCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12,'available':False})
-    shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
-    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
-    shop_cart.removeCart({'username': 'bwalker'}, {'item':'Sprite','quantity':12})
-
-
-
-
+    # Create a shopping cart for a user, add some items to it, remove items from it, erase the user's cart completely
+    shop_cart = ShoppingCart({'username': 'cmat'})
+    shop_cart.createCart()
+    shop_cart.addCart({'item':'coke','quantity':1234,'available':True})
+    shop_cart.addCart({'item':'Sprite','quantity':12,'available':False})
+    shop_cart.addCart({'item':'Dr. Pepper','quantity':1,'available':True})
+    shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235)
+    shop_cart.removeCart({'item':'Dr. Pepper'})
+    shop_cart.removeCart({'item':'Sprite','quantity':12})
+    print(shop_cart.readShoppingcart())
+    shop_cart.emptyCart()
+    print("Gimme sec")
+    time.sleep(5)
+    shop_cart.eraseUser()
