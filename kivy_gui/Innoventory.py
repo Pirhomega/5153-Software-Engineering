@@ -14,42 +14,33 @@ from kivy.properties import ObjectProperty, ListProperty, BooleanProperty, Strin
 
 # Kivy uix imports
 from kivy.uix.behaviors import ButtonBehavior, FocusBehavior
-from kivy.uix.boxlayout import BoxLayout ######
+from kivy.uix.boxlayout import BoxLayout 
 from kivy.uix.button import Button
-from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivy.uix.recyclegridlayout import RecycleGridLayout #######
+from kivy.uix.recyclegridlayout import RecycleGridLayout 
 from kivy.uix.recycleview import RecycleView
-from kivy.uix.recycleview.layout import LayoutSelectionBehavior #######
-from kivy.uix.recycleview.views import RecycleDataViewBehavior #######
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior 
+from kivy.uix.recycleview.views import RecycleDataViewBehavior 
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 
+# Set the window size for the application
 Window.size = (450, 800)
+# PrettyPrinter for json
 pp = pprint.PrettyPrinter(indent=4)
+# Some global user information for the session
 username = ""
+shopCartInfo = []
+dbInfo = []
 
-
-
-############################### UNCOMMENT TO SKIP LOGIN ########################
-
-# class Login(Screen):
-#     username = "passwordHell"
-#     password = r"XR9lYeOp036C%25%40%26%40cQn%2A8z3BU4%5C"
-#     global client, db, collections
-#     client = pymongo.MongoClient(f"mongodb+srv://{username}:{password}@innoventory-vvoxp.azure.mongodb.net/test?retryWrites=true&w=majority")
-#     db = client.Innoventory
-#     collections = db.list_collection_names()
-#     print("Connected")
-
-#     def login(self):
-#         wm.current="homepage"
-
+# These classes are for screens or screen behavior. Any class with the pass keyword
+# is defined and manipulated in the .kv file, but the prototype must be in this file
+# as well.
 class Img(Image):
     pass
 
@@ -68,21 +59,9 @@ class ImgButton(ButtonBehavior,Image):
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     pass
 
-"""
- $$$$$$\                       $$\     
-$$  __$$\                      $$ |    
-$$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
-$$ |       \____$$\ $$  __$$\\_$$  _|  
-$$ |       $$$$$$$ |$$ |  \__| $$ |    
-$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ 
-\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |
- \______/  \_______|\__|        \____/
-"""
+class CheckoutPopup(FloatLayout):
+    pass 
 
-class Cart():
-    items = []
-    dbStuff = []
-cart = Cart()
 
 '''
 $$\                           $$\           
@@ -116,9 +95,9 @@ class Login(Screen):
         try:
             # Will return a dictionary of user information. If the username and/or password
             # are wrong, an emtpy username and password are returned
-            result, _ = login.login({'username': self.username, 'password': self.password})
+            result, success, customer = login.login({'username': self.username, 'password': self.password})
             
-            if(result['username'] != "" and result['password'] != ""):
+            if(result['username'] != "" and result['password'] != "" and customer == True):
                 # If the login is successful, take the user to the homepage window
                 wm.current = "homepage"
             else:
@@ -142,6 +121,7 @@ class Login(Screen):
     #Do we need to create accounts if only superuser can add people?
     #Can you even make an account without signing up on atlas?
     def createAcct(self):
+        self.reset()
         wm.current = "createAcct"
 
 '''
@@ -161,6 +141,11 @@ class Homepage(Screen):
     searchPhrase = ObjectProperty(None)
        
     def logout(self):
+        global shopCartInfo
+        # Clear user's shopping cart
+        shopCartInfo = []
+        # Remove any items left in the recycleview for the shopping cart screen
+        wm.get_screen("shoppingCart").clear_recview()
         wm.current = "login"
     
     def settingsMenu(self):
@@ -206,32 +191,6 @@ class Homepage(Screen):
             return False
         else:
             return True
-            
-    #     else:
-    #         # Create a popup window to display the authentication failure
-    #         emptySearchPopup = Popup(title="Invalid Search", title_align="center", 
-    #             content=Label(text="Search cannot be empty"), size_hint=(.75,.5))
-    #         emptySearchPopup.open()
-
-    #     results = []
-    #     #look in every collection in the db
-    #     for collection in collections:
-    #         print(collection)
-    #         #search each collection for a match
-
-    #     """https://docs.mongodb.com/manual/text-search/index.html"""
-    #     #     results.append(db.collection.find({$text: {$search: self.searchPhrase}}))
-    #     # print(results)
-    #     #     results.append(db.Vehicles.find({"$text": {"$search": "Honda"}}))
-    #     # print(results)
-
-    # def catSearch(self,cat): #cat is an index
-    #     collection = collections[cat]
-    #     items = db[collection].find({})
-    #     for item in items:
-    #         pp.pprint(item)
-        
-
 
 '''
  $$$$$$\                                  $$\                $$$$$$\                                                      $$\     
@@ -347,39 +306,6 @@ class ChangePassword(Screen):
         self.oldPasswordIn.text = ""
         self.newPasswordIn.text = ""
         self.newPasswordIn2.text = ""
-
-
-# '''
-#  $$$$$$\                                          $$\       
-# $$  __$$\                                         $$ |      
-# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
-# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
-#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
-# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
-# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
-#  \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-# '''
-# class Search():
-
-#     def search_test(self, phrase=None):
-#         self.phrase = str(phrase)
-
-#         if(self.phrase != None):
-#             print("Homepage data test:")
-#             print(phrase)
-
-#             # Get an instance of the api
-#             apiSearch = api.Api()
-#             testSearch = apiSearch.search({'item': self.phrase})
-#             apiSearch.display_results(testSearch)
-
-#             print("Parsed results")
-#             results = apiSearch.parse_results(testSearch)
-#             print(results)
-
-        
-        
-
 
 '''
  $$$$$$\                                          $$\      $$\    $$\ $$\                         
@@ -528,6 +454,16 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
             unavailablePopup.open()
 
             self.qtyBuy.text = ""
+
+        elif self.qtyBuy.text == "" or int(self.qtyBuy.text) <= 0 or self.qtyBuy.text.isnumeric() == False:
+             # Create a popup window 
+            amountPopup = Popup(title="Invalid Amount", title_align="center", 
+                content=Label(text="Please enter a valid amount"), 
+                size_hint=(.75,.5))
+            # Show the popup
+            amountPopup.open()
+
+            self.qtyBuy.text = ""
         
         elif int(self.qtyBuy.text) > int(self.productInfo["quantity"]):
             # Create a popup window 
@@ -540,26 +476,15 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
 
             self.qtyBuy.text = f"{self.productInfo['quantity']}"
 
-        elif self.qtyBuy.text == "" or int(self.qtyBuy.text) <= 0 or self.qtyBuy.text.isnumeric() == False:
-             # Create a popup window 
-            amountPopup = Popup(title="Invalid Amount", title_align="center", 
-                content=Label(text="Please enter a valid amount"), 
-                size_hint=(.75,.5))
-            # Show the popup
-            amountPopup.open()
 
-            self.qtyBuy.text = ""
     
         else:
-            # Make dict for the shopping cart screen and append it to the items 
-            # list in cart.
             # This info is for the customer and checkout
-            shopCartInfo = {"Item": self.productInfo['item'], "Quantity in Cart":int(self.qtyBuy.text)} ############################################ ADD PRICE TO THIS LATER
-            cart.items.append(shopCartInfo)
-            # Make dict for the DB and append it to the dbInfo list in cart.
+            global shopCartInfo 
+            shopCartInfo.append({"item": self.productInfo['item'], "qty":int(self.qtyBuy.text), "price":round((int(self.qtyBuy.text) * self.productInfo["price"]),2)}) ############################################ ADD PRICE TO THIS LATER
+
             # This info is for updating the database
-            dbInfo = {"id": self.productInfo['_id'], "qty":int(self.qtyBuy.text)}
-            cart.dbStuff.append(dbInfo)
+            dbInfo.append({"id": self.productInfo['_id'], "qty":int(self.qtyBuy.text)})
 
              # Create a popup window 
             amountPopup = Popup(title="Added to cart", title_align="center", 
@@ -609,11 +534,71 @@ $$\   $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  
 """
 class ShoppingCart(Screen,BoxLayout,GridLayout):
     items = ListProperty()
-    
-    def on_pre_enter(self):
-        itemList = cart.items
-        self.items = [{'text': str(item)} for item in itemList]
+    qty = ListProperty()
+    price = ListProperty()
+    totalPrint = StringProperty("0.00")
 
+    # The screen updates itself as soon as the user enters
+    def on_pre_enter(self):
+        total = 0.00
+        global shopCartInfo
+        itemList = shopCartInfo
+        print(itemList)
+        for item in itemList:
+            print(item)
+            print(type(item))
+            self.items.append({'text': str(item['item'])})
+            self.qty.append({'text': str(item['qty'])})
+            self.price.append({'text':str(item['price'])})
+        shopCartInfo.clear()
+
+        # Adds up all prices in the list
+        for dic in self.price:
+            total += (float(dic['text']))
+        self.totalPrint = f"{total}"
+
+    def clear_recview(self):
+        cartToClear = wm.get_screen("shoppingCart")
+        cartToClear.items = []
+        cartToClear.qty = []
+        cartToClear.price = []
+
+    def exitInno(self, instance):
+        global shopCartInfo
+        #self.items.clear()
+        #self.qty.clear()
+        #self.price.clear()
+        self.totalPrint = "0.00"
+        shopCartInfo.clear()
+
+        self.clear_recview()
+
+        wm.current = "homepage"
+
+
+    def checkout(self,):
+        window = BoxLayout(orientation="vertical")
+        window.add_widget(Label(text = "Are you sure you want to checkout?"))
+        popup = Popup(title="Check out?", size_hint = (.75,.5), content = window)
+        window.add_widget(Button(text = "Yes", on_press = popup.dismiss, on_release = self.exitInno))
+        window.add_widget(Button(text = "No", on_press = popup.dismiss))
+        popup.open()
+
+
+    # def on_pre_enter(self):
+    #     itemList = cart.items
+    #     for item in itemList:
+    #         print(item)
+    #         print(type(item))
+    #         self.items.append({'text': str(item['item'])})
+    #         self.qty.append({'text': str(item['qty'])})
+    #         self.price.append({'text': f"${item['price']}"})
+    # def on_pre_enter(self):
+    #     itemList = cart.items
+    #     for item in itemList:
+    #         print(item)
+    #         print(type(item))
+    #         self.items = [{'text': str(item[key])} for key in item.keys()]
 
     
 """
@@ -633,27 +618,6 @@ class CartView(RecycleDataViewBehavior, Button):
 
     def apply_selection(self, rec_view, my_index, am_selected): 
         self.selected = am_selected
-
-
-
-
-#  $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\   
-#   $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \  
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|
-#   $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |  
-#   \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|  
-#  $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\     $$\ $$\   
-#   $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \    $$ \$$ \  
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |\_$$  $$   |
-# $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ $$$$$$$$$$\ 
-# \_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|\_$$  $$  _|
-#   $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |    $$ |$$ |  
-#   \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|    \__|\__|  
-
 
 
 '''
@@ -707,7 +671,7 @@ for screen in screens:
 
 # Set the first screen the user will see when the app is launched
 # By default, the first screen is the login screen
-wm.current = "homepage"
+wm.current = "login"
 
 # Build the main app
 # If main().run() is called from main, the full app will be launched

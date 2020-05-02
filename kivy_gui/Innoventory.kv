@@ -433,8 +433,6 @@
 <SearchView>:
     name: "searchView"
     FloatLay:
-        Img:
-            source:"theBrodester.png"
 
         Label: 
             text: 'Results'
@@ -469,15 +467,6 @@
                 root.manager.transition.direction = "right"
                 root.manager.current = "homepage"
 
-        Button:
-            text:"Cart"
-            font_size: (20)
-            pos_hint:{"center_x":0.5,"y":0.05}
-            size_hint: 0.2, 0.1
-
-            on_release:
-                root.manager.transition.direction = "down"
-                root.manager.current = "shoppingCart"
 
 # 
 #  $$$$$$\                                          $$\       $$$$$$$\              $$\     $$\                         
@@ -514,33 +503,40 @@
 
         Label: 
             text: 'Product ID'
-            size_hint: 0.3, 0.13
-            pos_hint: {"x":0.05,"top":0.905}    
+            size_hint: 0.3, 0.11
+            pos_hint: {"x":0.05,"top":0.915}    
             font_size: (20)  
 
         Label: 
             text: 'Name'
             size_hint: 0.3, 0.13
-            pos_hint: {"x":0.05,"top":0.775}    
+            pos_hint: {"x":0.05,"top":0.805}    
             font_size: (20)  
 
         Label: 
             text: 'Qty in stock'
             size_hint: 0.3, 0.13
-            pos_hint: {"x":0.05,"top":0.645}    
+            pos_hint: {"x":0.05,"top":0.695}    
             font_size: (20)  
 
         Label: 
             text: 'Available'
             size_hint: 0.3, 0.13
-            pos_hint: {"x":0.05,"top":0.515}    
+            pos_hint: {"x":0.05,"top":0.585}    
+            font_size: (20)  
+
+        Label:
+            text: 'Price'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.475}    
             font_size: (20)  
 
         Label: 
             text: 'Details'
             size_hint: 0.3, 0.13
-            pos_hint: {"x":0.05,"top":0.385}    
+            pos_hint: {"x":0.05,"top":0.365}    
             font_size: (20)  
+
 
         RecycleView:
             size_hint:0.6,0.65
@@ -635,14 +631,29 @@
     name:"shoppingCart"
     FloatLay:
         Label: 
-            text: 'Shopping Cart'
-            size_hint: 0.2, 0.05
-            pos_hint: {"center_x":0.5,"top":0.98}    
-            font_size: (30)  
+            text: 'Item'
+            color: 0,0,0,1      
+            size_hint: 0.66, 0.05
+            pos_hint: {"x":0.05,"top":0.98}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Qty'
+            color: 0,0,0,1      
+            size_hint: 0.09, 0.05
+            pos_hint: {"x":0.71,"top":0.98}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Price'
+            color: 0,0,0,1      
+            size_hint: 0.15, 0.05
+            pos_hint: {"x":0.8,"top":0.98}    
+            font_size: (20)  
 
         RecycleView:
-            size_hint:0.9,0.75
-            pos_hint:{"right":0.95,"y":0.17}
+            size_hint:0.66,0.68
+            pos_hint:{"x":0.05,"y":0.24}
             viewclass: 'CartView'       
             data: root.items
             
@@ -659,6 +670,56 @@
 
                 size_hint_y: None
                 text_size: self.width, None
+
+        RecycleView:
+            size_hint:0.09,0.68  #0.9,0.75
+            pos_hint:{"x":0.71,"y":0.24} #{"right":0.95,"y":0.17}
+            viewclass: 'CartView'       
+            data: root.qty
+            
+
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+                size_hint_y: None
+                text_size: self.width, None
+
+        RecycleView:
+            size_hint:0.15,0.68  #0.9,0.75
+            pos_hint:{"x":0.80,"y":0.24} #{"right":0.95,"y":0.17}
+            viewclass: 'CartView'       
+            data: root.price
+            
+
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+                size_hint_y: None
+                text_size: self.width, None
+        
+
+
+        Label: 
+            text: 'Total: $' + root.totalPrint
+            color: 0,0,0,1 
+            size_hint: 0.9, 0.05
+            pos_hint: {"x":0.05,"y":0.17}    
+            font_size: (40) 
+
 
         Button:
             text:"Home"
@@ -677,7 +738,7 @@
             size_hint: 0.2, 0.1
 
             on_release:
-                root.getItems()
+                root.checkout()
             
 
 #  $$$$$$\                       $$\   $$\    $$\ $$\                         
@@ -690,6 +751,7 @@
 #  \______/  \_______|\__|        \____/   \_/    \__| \_______| \_____\____/ 
 
 <CartView>:
+
 
 
 # $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
