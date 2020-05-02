@@ -54,29 +54,42 @@ class Api:
         self.term = term
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
+
         # will hold all documents from queries
         result = []
-        result.append([db.Products.find_one(self.term)])
+
+        # Find best result
+        search_one = db.Products.find_one(self.term)
+
+        # Add the result if item was found
+        if search_one != None:
+            result.append([search_one])
+
+        # find more general results
         # split the search term by whitespace
         new_search = self.term["item"].split()
+
         # search database by each word in term
         for word in new_search:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
             # result.append(mini_result)
             result.append(list(db.Products.find({ "item": {'$regex': word }})))
         return result
+
     # a simple print function for item names
     def display_results(self, search_result):
         for doc in search_result:
             for result in doc:
                 print(result['item'])
+
     # Returns an unordered set of item names from a search
     def parse_results(self, search_result):
         # Use a set to avoid duplicate results
         items = set()
-        for doc in search_result:
-            for result in doc:
-                items.add(result['item'])
+        if search_result != None:
+            for doc in search_result:
+                for result in doc:
+                    items.add(result['item'])
         return items
 
 # Employee class offers the two operations an Innoventory employee can perform:
@@ -86,6 +99,7 @@ class Employee(Api):
         client = self.connect(self.employeeConnectionString)
         db = client.Innoventory
         self.collection = db.Products
+
     # changes item quantity and returns the updated quantity
     def change_quantity(self, item={}, quantity=1):
         return self.collection.find_one_and_update(
@@ -93,6 +107,7 @@ class Employee(Api):
             update={'$set': {'quantity': quantity}},
             return_document=ReturnDocument.AFTER
         )['quantity']
+
     # changes item quantity and returns the updated availability
     def change_availability(self, item={}, avail=bool):
         return self.collection.find_one_and_update(
@@ -186,6 +201,7 @@ class UserManager(Api):
         # Make sure username does not already exist
         # find_one returns None if the username is not in the Users collection
         userExists = collection.find_one({'username': self.data['username']})
+
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
             # all users who create an account from the app are customers (isCustomer = True)

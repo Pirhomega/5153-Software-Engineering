@@ -29,9 +29,14 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 
+# Set the window size for the application
 Window.size = (450, 800)
+# PrettyPrinter for json
 pp = pprint.PrettyPrinter(indent=4)
+# Some global user information for the session
 username = ""
+shopCartInfo = []
+dbInfo = []
 
 # These classes are for screens or screen behavior. Any class with the pass keyword
 # is defined and manipulated in the .kv file, but the prototype must be in this file
@@ -57,8 +62,6 @@ class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, Recycl
 class CheckoutPopup(FloatLayout):
     pass 
 
-shopCartInfo = []
-dbInfo = []
 
 '''
 $$\                           $$\           
