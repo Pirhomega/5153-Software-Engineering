@@ -78,6 +78,10 @@ $$$$$$$$\ \$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |
                      \______/               
 '''
 class Login(Screen):
+    '''
+    The Login class implements the login screen from which a user can login or
+    navigate to the create account screen.
+    '''
 
     username = ObjectProperty(None)
     password = ObjectProperty(None)
@@ -139,6 +143,11 @@ $$ |  $$ |\$$$$$$  |$$ | $$ | $$ |\$$$$$$$\ $$$$$$$  |\$$$$$$$ |\$$$$$$$ |\$$$$$
                                             \__|                 \______/           
 '''
 class Homepage(Screen):
+    '''
+    The Homepage class implements the homepage screen from which a user can search 
+    for items using the search bar, navigate to the shopping cart screen, the settings
+    screen, or logout and return to the login screen.
+    '''
     searchPhrase = ObjectProperty(None)
        
     def logout(self):
@@ -204,6 +213,11 @@ $$ |  $$\ $$ |      $$   ____|$$  __$$ |  $$ |$$\ $$   ____|$$ |  $$ |$$ |      
  \______/ \__|       \_______| \_______|   \____/  \_______|\__|  \__| \_______| \_______| \______/  \______/ \__|  \__|   \____/                                                                                                                                                                                                                                                                                                                                                                                                  
 '''
 class CreateAccount(Screen):
+    '''
+    The CreateAccount class implements the create account screen. This screen allows a user to input a desired username
+    and password combination. If the username is not take, a new account will be created. If the username is taken,
+    the user will be prompted to input a new username.
+    '''
     username = ObjectProperty(None)
     password = ObjectProperty(None)
 
@@ -251,6 +265,10 @@ $$\   $$ |$$   ____| $$ |$$\ $$ |$$\ $$ |$$ |  $$ |$$ |  $$ | \____$$\ $$ |\$  /
                                                     \______/                                                      
 '''
 class SettingsMenu(Screen):
+    '''
+    The SettingsMenu class implements the settings screen, which allows the user to modify
+    their account. This can be added to as user account functionality increases.
+    '''
     def changePassword(self):
         wm.current = "changePassword"
 
@@ -270,6 +288,9 @@ $$ |  $$\ $$ |  $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$   ____|      $$ |     $$  _
                                          \______/                                                                                                    
 '''
 class ChangePassword(Screen):
+    '''
+    The ChangePassword class implements the ChangePassword screen, which allows the user to change their password.
+    '''
     oldPassword = ObjectProperty(None)
     newPassword = ObjectProperty(None)
     newPassword2 = ObjectProperty(None)
@@ -319,6 +340,11 @@ $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ | \$$$  /  $$ |$$   _
  \______/  \_______| \_______|\__|       \_______|\__|  \__|   \_/    \__| \_______| \_____\____/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 '''
 class SearchView(Screen,BoxLayout,GridLayout):
+    '''
+    The SearchView class implements the screen functionality for displaying a list of items
+    returned from a search. This list of items is displayed using a Kivy recycleview with
+    clickable buttons from the SearchButton class.
+    '''
     full_data = ListProperty([])
     my_label = ListProperty([])
 
@@ -347,9 +373,7 @@ class SearchView(Screen,BoxLayout,GridLayout):
         self.full_data = full_data
         self.my_label = [{'text': str(item)} for item in labels]
 
-
-        
-    
+   
 '''
  $$$$$$\                                          $$\       $$$$$$$\              $$\     $$\                         
 $$  __$$\                                         $$ |      $$  __$$\             $$ |    $$ |                        
@@ -363,9 +387,9 @@ $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |
 class SearchButton(RecycleDataViewBehavior, Button):
     '''
     The SearchButton class is used for displaying search results as clickable buttons. Clicking or selecting a button
-    will take the user to a new page with a detailed breakdown of the item's information.
+    will take the user to a new page with a detailed breakdown of the item's information. These buttons are used
+    by the SearchView class to list all items returned from a search of the product database.
     '''
-
     # Extend recycle_view_attrs from the RecycleDataViewBehavior class
     def refresh_view_attrs(self, rec_view, my_index, data):
         self.my_index = my_index
@@ -386,19 +410,24 @@ class SearchButton(RecycleDataViewBehavior, Button):
         pass
 
 
-
 """
-$$$$$$$\                            $$\                       $$\     $$$$$$\            $$$$$$\           
-$$  __$$\                           $$ |                      $$ |    \_$$  _|          $$  __$$\          
-$$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$\   $$\  $$$$$$$\ $$$$$$\     $$ |  $$$$$$$\  $$ /  \__|$$$$$$\  
-$$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |$$ |  $$ |$$  _____|\_$$  _|    $$ |  $$  __$$\ $$$$\    $$  __$$\ 
-$$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |$$ |  $$ |$$ /        $$ |      $$ |  $$ |  $$ |$$  _|   $$ /  $$ |
-$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\   $$ |  $$ |  $$ |$$ |     $$ |  $$ |
-$$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  |$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
-\__|      \__|       \______/  \_______| \______/  \_______|   \____/ \______|\__|  \__|\__|      \______/ 
+$$$$$$$\                            $$\ $$$$$$\            $$$$$$\           
+$$  __$$\                           $$ |\_$$  _|          $$  __$$\          
+$$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |  $$ |  $$$$$$$\  $$ /  \__|$$$$$$\  
+$$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |  $$ |  $$  __$$\ $$$$\    $$  __$$\ 
+$$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |  $$ |  $$ |  $$ |$$  _|   $$ /  $$ |
+$$ |      $$ |      $$ |  $$ |$$ |  $$ |  $$ |  $$ |  $$ |$$ |     $$ |  $$ |
+$$ |      $$ |      \$$$$$$  |\$$$$$$$ |$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
+\__|      \__|       \______/  \_______|\______|\__|  \__|\__|      \______/ 
  """
 class ProdInfo(Screen, BoxLayout, GridLayout):
-
+    '''
+    The ProdInfo screen implements the detailed product information screen that shows
+    product details such as full product name, price, quantity available, availability, 
+    and any extra detail. The product information screen also allows the user to specify
+    a quantity of a product to add to their cart, to navigate back to the search screen,
+    to view their cart, and to go to the home screen.
+    '''
     qtyBuy = ObjectProperty(None) # The quantity of an item the user adds to cart
     item = None # what the user clicked on in the results list
     product = ListProperty([]) # the dicitonary of the item the user clicked
@@ -477,8 +506,6 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
 
             self.qtyBuy.text = f"{self.productInfo['quantity']}"
 
-
-    
         else:
             # This info is for the customer and checkout
             global shopCartInfo 
@@ -498,24 +525,23 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
     def clear_qty_box(self):
         self.qtyBuy.text = ""
         
-
-
-
-    
-
 """
-$$$$$$$\                            $$\                       $$\   $$\    $$\ $$\                         
-$$  __$$\                           $$ |                      $$ |  $$ |   $$ |\__|                        
-$$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$\   $$\  $$$$$$$\ $$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
-$$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |$$ |  $$ |$$  _____|\_$$  _|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
-$$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |$$ |  $$ |$$ /        $$ |   \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
-$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
-$$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
-\__|      \__|       \______/  \_______| \______/  \_______|   \____/   \_/    \__| \_______| \_____\____/ 
+$$$$$$$\                            $$\ $$\    $$\ $$\                         
+$$  __$$\                           $$ |$$ |   $$ |\__|                        
+$$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+$$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+$$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ | \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+$$ |      $$ |      $$ |  $$ |$$ |  $$ |  \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+$$ |      $$ |      \$$$$$$  |\$$$$$$$ |   \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+\__|      \__|       \______/  \_______|    \_/    \__| \_______| \_____\____/                                                                                                                                                                                                                                       
 """
 
 class ProdView(RecycleDataViewBehavior, Button):
-
+    '''
+    The ProdView class implements the recycleview used to display detailed product
+    information. All information is presented as non-clickable buttons. The majority
+    of the ProdView class behavior is defined in the ProdView class in the .kv file
+    '''
     def refresh_view_attrs(self, rec_view, my_index, data):
         self.my_index = my_index
         return super(ProdView, self).refresh_view_attrs(rec_view, my_index, data)
@@ -537,6 +563,11 @@ $$\   $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  
                               \__|      \__|                     \______/                                       
 """
 class ShoppingCart(Screen,BoxLayout,GridLayout):
+    '''
+    The ShoppingCart class implements the shopping cart screen, which shows all
+    items in a user's cart, along with quantity of that item in the cart and
+    the price. 
+    '''
     items = ListProperty()
     qty = ListProperty()
     price = ListProperty()
@@ -565,17 +596,18 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
         total = decimal.Decimal(total).quantize(TWO)
         self.totalPrint = f"{total}"
 
+    # The clear_recview method resets all items, quantity, and associated prices 
+    # in the recycleview for the shopping cart. This is called upon checkout and logout.
     def clear_recview(self):
         cartToClear = wm.get_screen("shoppingCart")
         cartToClear.items = []
         cartToClear.qty = []
         cartToClear.price = []
 
+    # exitInno resets all shopping cart information on the python side (not the .kv 
+    # recycleview implementation)
     def exitInno(self, instance):
         global shopCartInfo
-        #self.items.clear()
-        #self.qty.clear()
-        #self.price.clear()
         self.totalPrint = "0.00"
         shopCartInfo.clear()
 
@@ -583,7 +615,8 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
 
         wm.current = "homepage"
 
-
+    # The checkout method prompts the user to confirm they wish to checkout. If yes is selected,
+    # the purchase is made. If no is selected, the user is returned to their shopping cart.
     def checkout(self,):
         window = BoxLayout(orientation="vertical")
         window.add_widget(Label(text = "Are you sure you want to checkout?"))
@@ -591,22 +624,6 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
         window.add_widget(Button(text = "Yes", on_press = popup.dismiss, on_release = self.exitInno))
         window.add_widget(Button(text = "No", on_press = popup.dismiss))
         popup.open()
-
-
-    # def on_pre_enter(self):
-    #     itemList = cart.items
-    #     for item in itemList:
-    #         print(item)
-    #         print(type(item))
-    #         self.items.append({'text': str(item['item'])})
-    #         self.qty.append({'text': str(item['qty'])})
-    #         self.price.append({'text': f"${item['price']}"})
-    # def on_pre_enter(self):
-    #     itemList = cart.items
-    #     for item in itemList:
-    #         print(item)
-    #         print(type(item))
-    #         self.items = [{'text': str(item[key])} for key in item.keys()]
 
     
 """
@@ -620,6 +637,12 @@ $$ |  $$\ $$  __$$ |$$ |       $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
  \______/  \_______|\__|        \____/   \_/    \__| \_______| \_____\____/ 
  """
 class CartView(RecycleDataViewBehavior, Button):
+    '''
+    The CartView class implements the recycleview used by the ShoppingCart class.
+    The vast majority of CartView is implemented in the CartView class in the .kv file.
+    CartView utilizes three separate recycleviews to show item names, quantity, and price,
+    respectively.
+    '''
     def refresh_view_attrs(self, rec_view, my_index, data):
         self.my_index = my_index
         return super(CartView, self).refresh_view_attrs(rec_view, my_index, data)
@@ -650,16 +673,18 @@ class TestButton(Screen):
         wm.current = "searchView"
 
 '''
-$$\      $$\ $$\                     
-$$$\    $$$ |\__|                    
-$$$$\  $$$$ |$$\  $$$$$$$\  $$$$$$$\ 
-$$\$$\$$ $$ |$$ |$$  _____|$$  _____|
-$$ \$$$  $$ |$$ |\$$$$$$\  $$ /      
-$$ |\$  /$$ |$$ | \____$$\ $$ |      
-$$ | \_/ $$ |$$ |$$$$$$$  |\$$$$$$$\ 
-\__|     \__|\__|\_______/  \_______|
+ $$$$$$\             $$\                         
+$$  __$$\            $$ |                        
+$$ /  \__| $$$$$$\ $$$$$$\   $$\   $$\  $$$$$$\  
+\$$$$$$\  $$  __$$\\_$$  _|  $$ |  $$ |$$  __$$\ 
+ \____$$\ $$$$$$$$ | $$ |    $$ |  $$ |$$ /  $$ |
+$$\   $$ |$$   ____| $$ |$$\ $$ |  $$ |$$ |  $$ |
+\$$$$$$  |\$$$$$$$\  \$$$$  |\$$$$$$  |$$$$$$$  |
+ \______/  \_______|  \____/  \______/ $$  ____/ 
+                                       $$ |      
+                                       $$ |      
+                                       \__|      
 '''                                                                    
-
 # Load the kv language file that supplements this python script
 # Much of the functionality of this app is intertwined with the kv lang script                                    
 kv = Builder.load_file("Innoventory.kv")
