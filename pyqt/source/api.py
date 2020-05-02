@@ -218,9 +218,24 @@ class UserManager(Api):
 
 # This class represents all the shopping cart functionality
 # See __main__ for example code
-# For security reasons, do not pass passwords in the 'user' dictionary,
-# only the username
+
 class ShoppingCart(Api):
+    '''
+    The ShoppingCart class contains methods for creating, accessing, and modifying
+    a customer's shopping cart.
+    For security reasons, do not pass passwords in the ``user`` dictionary,
+    only the user's name.
+    Per-customer Schema: 
+    "_id": {
+        "$oid": #########
+    },
+    "username": <customer's username>,
+    "cart": [
+        {},
+        {},
+        ...
+    ]
+    '''
     def __init__(self, user={'username': ''}):
         client = self.connect(Api.authenConnectionString)
         # Connect to Authen db
@@ -229,14 +244,21 @@ class ShoppingCart(Api):
         self.collection = db.Shopping_Cart
         self.user = user
 
-    # only call this when a user is creating an account
+    '''
+    The createCart method inserts a document in the Shopping Cart collection
+    for the customer
+    '''
     def createCart(self):
         # create an empty array for cart items
         self.collection.insert_one({'username': self.user['username'], 'cart': []})
 
     # appends a dictionary to the 'cart' list (adds an item to the cart)
-    # Example:
-    #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    ''' 
+    The addCart method will add an item to the user's cart by appending the dictionary ``item``
+    to the ``cart`` list 
+    Example:
+          shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    '''
     def addCart(self, item={}):
         self.item = item
         self.collection.update_one(
@@ -245,8 +267,12 @@ class ShoppingCart(Api):
         )
 
     # removes an item from the user's cart
-    # Example:
-    #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
+    ''' 
+    The removeCart method will remove an item from the user's cart by dropping
+    the ``item`` document from the ``cart`` list. 
+    Example:
+          shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
+    '''  
     def removeCart(self, item={}):
         self.item = item
         self.collection.update_one(
@@ -255,6 +281,12 @@ class ShoppingCart(Api):
         )
     
     # modify an item quantity
+    ''' 
+    The changeQuan method will update ``item`` in the customer's shopping cart to 
+    have quantity ``quantity``
+    Example:
+          shop_cart.removeCart({'item':'Dr. Pepper'}, 5)
+    '''  
     def changeQuan(self, item={}, quantity=1):
         self.item = item
         self.quantity = quantity
@@ -265,13 +297,24 @@ class ShoppingCart(Api):
         )
     
     # copies all shopping cart contents to a list
+    ''' 
+    The readShoppingcart method will return the customer's shopping cart contents
+    as a list of dictionaries
+    '''  
     def readShoppingcart(self):
         return dict(self.collection.find_one(filter=self.user))['cart']
-    
+
+    ''' 
+    The emptyCart method will empty the ``cart`` list of a customer
+    '''      
     def emptyCart(self):
         self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
     # erase user's cart
+    ''' 
+    The eraseUser method will completely delete the user and their shopping cart
+    from the Shopping Cart collection
+    '''  
     def eraseUser(self):
         self.collection.delete_one(self.user)
 
