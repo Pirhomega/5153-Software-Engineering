@@ -27,14 +27,25 @@ class Ui_MainWindow(object):
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 401, 601))
         self.stackedWidget.setObjectName("stackedWidget")
+# 
+#  $$$$$$\  $$\                                     $$\    $$\                    $$\           $$\       $$\                     
+# $$  __$$\ $$ |                                    $$ |   $$ |                   \__|          $$ |      $$ |                    
+# $$ /  \__|$$ | $$$$$$\   $$$$$$$\  $$$$$$$\       $$ |   $$ |$$$$$$\   $$$$$$\  $$\  $$$$$$\  $$$$$$$\  $$ | $$$$$$\   $$$$$$$\ 
+# $$ |      $$ | \____$$\ $$  _____|$$  _____|      \$$\  $$  |\____$$\ $$  __$$\ $$ | \____$$\ $$  __$$\ $$ |$$  __$$\ $$  _____|
+# $$ |      $$ | $$$$$$$ |\$$$$$$\  \$$$$$$\         \$$\$$  / $$$$$$$ |$$ |  \__|$$ | $$$$$$$ |$$ |  $$ |$$ |$$$$$$$$ |\$$$$$$\  
+# $$ |  $$\ $$ |$$  __$$ | \____$$\  \____$$\         \$$$  / $$  __$$ |$$ |      $$ |$$  __$$ |$$ |  $$ |$$ |$$   ____| \____$$\ 
+# \$$$$$$  |$$ |\$$$$$$$ |$$$$$$$  |$$$$$$$  |         \$  /  \$$$$$$$ |$$ |      $$ |\$$$$$$$ |$$$$$$$  |$$ |\$$$$$$$\ $$$$$$$  |
+#  \______/ \__| \_______|\_______/ \_______/           \_/    \_______|\__|      \__| \_______|\_______/ \__| \_______|\_______/                                                                                                                            
+# 
 
-###############################################################################################################
+###################################################################################################################################
+#######################                             page 0 - login                                          #######################
+###################################################################################################################################
 
-        # login page code (page 0)
-        self.page_1 = QtWidgets.QWidget()
-        self.page_1.setObjectName("page_1")
-        self.stackedWidget.addWidget(self.page_1)
-        self.groupBoxLI = QtWidgets.QGroupBox(self.page_1)
+        self.page_0 = QtWidgets.QWidget()
+        self.page_0.setObjectName("page_1")
+        self.stackedWidget.addWidget(self.page_0)
+        self.groupBoxLI = QtWidgets.QGroupBox(self.page_0)
         self.groupBoxLI.setGeometry(QtCore.QRect(10,10,381,581))
         self.groupBoxLI.setObjectName("groupBoxLI")
         self.username_textbox = QtWidgets.QLineEdit(self.groupBoxLI)
@@ -66,7 +77,7 @@ class Ui_MainWindow(object):
         self.label.setPixmap(QtGui.QPixmap("../images/login_shaq.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
-        self.logo_login = QtWidgets.QLabel(self.page_1)
+        self.logo_login = QtWidgets.QLabel(self.page_0)
         self.logo_login.setGeometry(QtCore.QRect(90, 20, 220, 120))
         self.logo_login.setText("")
         self.logo_login.setPixmap(QtGui.QPixmap("../images/Inno.png"))
@@ -78,11 +89,14 @@ class Ui_MainWindow(object):
         self.failure_notif.setAlignment(QtCore.Qt.AlignCenter)
         self.failure_notif.setObjectName("failure_notif")
 
-        # create account code (page 1)
-        self.page_1_5 = QtWidgets.QWidget()
-        self.page_1_5.setObjectName("page_1_5")
-        self.stackedWidget.addWidget(self.page_1_5)
-        self.groupBoxCA = QtWidgets.QGroupBox(self.page_1_5)
+###################################################################################################################################
+#######################                             page 1 - create account                                 #######################
+###################################################################################################################################
+
+        self.page_1 = QtWidgets.QWidget()
+        self.page_1.setObjectName("page_1_5")
+        self.stackedWidget.addWidget(self.page_1)
+        self.groupBoxCA = QtWidgets.QGroupBox(self.page_1)
         self.groupBoxCA.setGeometry(QtCore.QRect(10,190,381,381))
         self.groupBoxCA.setObjectName("groupBoxCA")
         self.Username = QtWidgets.QLabel(self.groupBoxCA)
@@ -107,14 +121,17 @@ class Ui_MainWindow(object):
         self.Instructions = QtWidgets.QLabel(self.groupBoxCA)
         self.Instructions.setGeometry(QtCore.QRect(10,200,331,41))
         self.Instructions.setObjectName("Instructions")
-        self.photo = QtWidgets.QLabel(self.page_1_5)
+        self.photo = QtWidgets.QLabel(self.page_1)
         self.photo.setGeometry(QtCore.QRect(90, 20, 220, 120))
         self.photo.setText("")
         self.photo.setPixmap(QtGui.QPixmap("../images/Inno.png"))
         self.photo.setScaledContents(True)
         self.photo.setObjectName("photo")
 
-        # search page code (page 2)
+###################################################################################################################################
+#######################                             page 2 - search page                                    #######################
+###################################################################################################################################
+
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
         self.stackedWidget.addWidget(self.page_2)
@@ -140,7 +157,10 @@ class Ui_MainWindow(object):
         self.logo_search.setScaledContents(True)
         self.logo_search.setObjectName("logo_search")
 
-        # search results code (page 3)
+###################################################################################################################################
+#######################                             page 3 - search results                                 #######################
+###################################################################################################################################
+
         self.page_3 = QtWidgets.QWidget()
         self.page_3.setObjectName("page_3")
         self.stackedWidget.addWidget(self.page_3)
@@ -151,7 +171,10 @@ class Ui_MainWindow(object):
         self.search_back_button.setGeometry(QtCore.QRect(10, 540, 101, 31))
         self.search_back_button.setObjectName("search_back_button")
 
-        # item page code (page 4)
+###################################################################################################################################
+#######################                             page 4 - item page                                      #######################
+###################################################################################################################################
+
         self.page_4 = QtWidgets.QWidget()
         self.page_4.setObjectName("page_4")
         self.stackedWidget.addWidget(self.page_4)
@@ -220,7 +243,10 @@ class Ui_MainWindow(object):
         self.info_label.setAlignment(QtCore.Qt.AlignCenter)
         self.info_label.setObjectName("info_label")
 
-        # shopping cart page code (page 5)
+###################################################################################################################################
+#######################                             page 5 - shopping cart                                  #######################
+###################################################################################################################################
+
         self.page_5 = QtWidgets.QWidget()
         self.page_5.setObjectName("page_5")
         self.stackedWidget.addWidget(self.page_5)
@@ -258,10 +284,6 @@ class Ui_MainWindow(object):
         self.item_prompt.setGeometry(QtCore.QRect(0, 360, 400, 70))
         self.item_prompt.setAlignment(QtCore.Qt.AlignCenter)
         self.item_prompt.setObjectName("item_prompt")
-        # self.item_page_button = QtWidgets.QPushButton(self.page_5)
-        # self.item_page_button.setGeometry(QtCore.QRect(140, 430, 111, 31))
-        # self.item_page_button.setFont(self.font)
-        # self.item_page_button.setObjectName("item_page_button")
         self.chng_quan_button = QtWidgets.QPushButton(self.page_5)
         self.chng_quan_button.setGeometry(QtCore.QRect(20, 430, 101, 31))
         self.chng_quan_button.setObjectName("chng_quan_button")
@@ -273,6 +295,10 @@ class Ui_MainWindow(object):
         self.quantity_spin.setObjectName("quantity_spin")
         self.quantity_spin.setMinimum(1)
         self.quantity_spin.setValue(1)
+
+###################################################################################################################################
+#######################                             FONT SETTING                                            #######################
+###################################################################################################################################
 
         # set the fonts
         self.font = QtGui.QFont()
@@ -320,7 +346,9 @@ class Ui_MainWindow(object):
         self.chng_quan_button.setFont(self.font)
         self.checkout_button.setFont(self.font)
 
-####################################################################################################
+###################################################################################################################################
+#######################                             MENU BAR SETUP                                          #######################
+###################################################################################################################################
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
@@ -352,11 +380,9 @@ class Ui_MainWindow(object):
         self.actionChange_Password.setEnabled(False)
         self.actionLogout.setEnabled(False)
 
-        self.retranslateUi(MainWindow)
-
-        # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(self.start)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+###################################################################################################################################
+#######################                               Button SETUP                                          #######################
+###################################################################################################################################
 
         # when login button is pressed, call login method
         self.login_button.clicked.connect(self.login)
@@ -405,8 +431,27 @@ class Ui_MainWindow(object):
         self.item_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
         self.search_back_button.clicked.connect(lambda: self.switch_page(self.stackedWidget.currentIndex()-1))
 
-        # self.prepEmployee()
-#######################################################################################################
+        # call function that initializes all button and label text
+        self.retranslateUi(MainWindow)
+
+        # sets the starting page to index 0 when app is started
+        self.stackedWidget.setCurrentIndex(self.start)
+
+        # Searches recursively for all child objects of the given object, and connects matching signals from them to slots of object that follow the following form:
+        #       ``void on_<object name>_<signal name>(<signal parameters>)``;
+        # See https://doc.qt.io/qt-5/qmetaobject.html#connectSlotsByName
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+#
+# $$\      $$\                         $$\                                 $$$$$$$$\                              $$\     $$\                               
+# $$$\    $$$ |                        $$ |                                $$  _____|                             $$ |    \__|                              
+# $$$$\  $$$$ | $$$$$$\  $$$$$$\$$$$\  $$$$$$$\   $$$$$$\   $$$$$$\        $$ |   $$\   $$\ $$$$$$$\   $$$$$$$\ $$$$$$\   $$\  $$$$$$\  $$$$$$$\   $$$$$$$\ 
+# $$\$$\$$ $$ |$$  __$$\ $$  _$$  _$$\ $$  __$$\ $$  __$$\ $$  __$$\       $$$$$\ $$ |  $$ |$$  __$$\ $$  _____|\_$$  _|  $$ |$$  __$$\ $$  __$$\ $$  _____|
+# $$ \$$$  $$ |$$$$$$$$ |$$ / $$ / $$ |$$ |  $$ |$$$$$$$$ |$$ |  \__|      $$  __|$$ |  $$ |$$ |  $$ |$$ /        $$ |    $$ |$$ /  $$ |$$ |  $$ |\$$$$$$\  
+# $$ |\$  /$$ |$$   ____|$$ | $$ | $$ |$$ |  $$ |$$   ____|$$ |            $$ |   $$ |  $$ |$$ |  $$ |$$ |        $$ |$$\ $$ |$$ |  $$ |$$ |  $$ | \____$$\ 
+# $$ | \_/ $$ |\$$$$$$$\ $$ | $$ | $$ |$$$$$$$  |\$$$$$$$\ $$ |            $$ |   \$$$$$$  |$$ |  $$ |\$$$$$$$\   \$$$$  |$$ |\$$$$$$  |$$ |  $$ |$$$$$$$  |
+# \__|     \__| \_______|\__| \__| \__|\_______/  \_______|\__|            \__|    \______/ \__|  \__| \_______|   \____/ \__| \______/ \__|  \__|\_______/ 
+#
 
     def prepEmployee(self):
         # add the Change Quantity buttons and spin box and the Make Available button
@@ -490,9 +535,15 @@ class Ui_MainWindow(object):
         self.price.setText(_translate("MainWindow", "$"))
         self.available_label.setText(_translate("MainWindow", "Available?"))
         self.available_status.setText(_translate("MainWindow", "Yes/No"))
-
-###################################################################################################################################
-
+#
+#  ________  ________  ________  _______           ________                             ___       ________  ________  ___  ________      
+# |\   __  \|\   __  \|\   ____\|\  ___ \         |\   __  \                           |\  \     |\   __  \|\   ____\|\  \|\   ___  \    
+# \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|        \ \  \|\  \        ____________      \ \  \    \ \  \|\  \ \  \___|\ \  \ \  \\ \  \   
+#  \ \   ____\ \   __  \ \  \  __\ \  \_|/__       \ \  \\\  \      |\____________\     \ \  \    \ \  \\\  \ \  \  __\ \  \ \  \\ \  \  
+#   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \       \ \  \\\  \     \|____________|      \ \  \____\ \  \\\  \ \  \|\  \ \  \ \  \\ \  \ 
+#    \ \__\    \ \__\ \__\ \_______\ \_______\       \ \_______\                          \ \_______\ \_______\ \_______\ \__\ \__\\ \__\
+#     \|__|     \|__|\|__|\|_______|\|_______|        \|_______|                           \|_______|\|_______|\|_______|\|__|\|__| \|__|
+#
     # attempt to log in to Innoventory with username and password offered
     def login(self):
         if self.username_textbox.text() != "" and self.password_textbox.text() != "":
@@ -538,8 +589,16 @@ class Ui_MainWindow(object):
             self.actionChange_Password.setEnabled(False)
         self.actionLogout.setEnabled(False)
         self.switch_page(0)
-
-    # If the user does something weird, tell them off.
+#
+#  ________  ________  ________  _______            _____                             ________  ________  _______   ________  _________  _______           ________  ________  ________  ________  ___  ___  ________   _________   
+# |\   __  \|\   __  \|\   ____\|\  ___ \          / __  \                           |\   ____\|\   __  \|\  ___ \ |\   __  \|\___   ___\\  ___ \         |\   __  \|\   ____\|\   ____\|\   __  \|\  \|\  \|\   ___  \|\___   ___\ 
+# \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|        |\/_|\  \        ____________      \ \  \___|\ \  \|\  \ \   __/|\ \  \|\  \|___ \  \_\ \   __/|        \ \  \|\  \ \  \___|\ \  \___|\ \  \|\  \ \  \\\  \ \  \\ \  \|___ \  \_| 
+#  \ \   ____\ \   __  \ \  \  __\ \  \_|/__      \|/ \ \  \      |\____________\     \ \  \    \ \   _  _\ \  \_|/_\ \   __  \   \ \  \ \ \  \_|/__       \ \   __  \ \  \    \ \  \    \ \  \\\  \ \  \\\  \ \  \\ \  \   \ \  \  
+#   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \          \ \  \     \|____________|      \ \  \____\ \  \\  \\ \  \_|\ \ \  \ \  \   \ \  \ \ \  \_|\ \       \ \  \ \  \ \  \____\ \  \____\ \  \\\  \ \  \\\  \ \  \\ \  \   \ \  \ 
+#    \ \__\    \ \__\ \__\ \_______\ \_______\          \ \__\                          \ \_______\ \__\\ _\\ \_______\ \__\ \__\   \ \__\ \ \_______\       \ \__\ \__\ \_______\ \_______\ \_______\ \_______\ \__\\ \__\   \ \__\
+#     \|__|     \|__|\|__|\|_______|\|_______|           \|__|                           \|_______|\|__|\|__|\|_______|\|__|\|__|    \|__|  \|_______|        \|__|\|__|\|_______|\|_______|\|_______|\|_______|\|__| \|__|    \|__|
+#                                                                                                                                                                                                                                
+    # If the user does something weird, tell them.
     def error(self, cause):
         self.photo.setPixmap(QtGui.QPixmap("../images/Mad_Charlie.jpg"))
 
@@ -577,11 +636,16 @@ class Ui_MainWindow(object):
                 self.CancelButton.setText("Login")
             else:
                 self.error(2)
-
-    # readjusts label sizes so text inside will not overflow
-    def update(self, widget):
-        widget.adjustSize()
-
+#
+#  ________  ________  ________  _______            _______                             ________  _______   ________  ________  ________  ___  ___     
+# |\   __  \|\   __  \|\   ____\|\  ___ \          /  ___  \                           |\   ____\|\  ___ \ |\   __  \|\   __  \|\   ____\|\  \|\  \    
+# \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|        /__/|_/  /|        ____________      \ \  \___|\ \   __/|\ \  \|\  \ \  \|\  \ \  \___|\ \  \\\  \   
+#  \ \   ____\ \   __  \ \  \  __\ \  \_|/__      |__|//  / /       |\____________\     \ \_____  \ \  \_|/_\ \   __  \ \   _  _\ \  \    \ \   __  \  
+#   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \         /  /_/__      \|____________|      \|____|\  \ \  \_|\ \ \  \ \  \ \  \\  \\ \  \____\ \  \ \  \ 
+#    \ \__\    \ \__\ \__\ \_______\ \_______\       |\________\                           ____\_\  \ \_______\ \__\ \__\ \__\\ _\\ \_______\ \__\ \__\
+#     \|__|     \|__|\|__|\|_______|\|_______|        \|_______|                          |\_________\|_______|\|__|\|__|\|__|\|__|\|_______|\|__|\|__|
+#                                                                                         \|_________|                                                 
+#
     # run an item search using the API
     def search_products(self):
         if self.search_box.text() != "":
@@ -607,7 +671,16 @@ class Ui_MainWindow(object):
                     items[str(counter)] = item
                     counter += 1
         return items
-
+#
+#  ________  ________  ________  _______           ________                             ________  _______   ________  ________  ________  ___  ___          ________  _______   ________  ___  ___  ___   _________  ________      
+# |\   __  \|\   __  \|\   ____\|\  ___ \         |\_____  \                           |\   ____\|\  ___ \ |\   __  \|\   __  \|\   ____\|\  \|\  \        |\   __  \|\  ___ \ |\   ____\|\  \|\  \|\  \ |\___   ___\\   ____\     
+# \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|        \|____|\ /_        ____________      \ \  \___|\ \   __/|\ \  \|\  \ \  \|\  \ \  \___|\ \  \\\  \       \ \  \|\  \ \   __/|\ \  \___|\ \  \\\  \ \  \\|___ \  \_\ \  \___|_    
+#  \ \   ____\ \   __  \ \  \  __\ \  \_|/__            \|\  \      |\____________\     \ \_____  \ \  \_|/_\ \   __  \ \   _  _\ \  \    \ \   __  \       \ \   _  _\ \  \_|/_\ \_____  \ \  \\\  \ \  \    \ \  \ \ \_____  \   
+#   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \          __\_\  \     \|____________|      \|____|\  \ \  \_|\ \ \  \ \  \ \  \\  \\ \  \____\ \  \ \  \       \ \  \\  \\ \  \_|\ \|____|\  \ \  \\\  \ \  \____\ \  \ \|____|\  \  
+#    \ \__\    \ \__\ \__\ \_______\ \_______\        |\_______\                           ____\_\  \ \_______\ \__\ \__\ \__\\ _\\ \_______\ \__\ \__\       \ \__\\ _\\ \_______\____\_\  \ \_______\ \_______\ \__\  ____\_\  \ 
+#     \|__|     \|__|\|__|\|_______|\|_______|        \|_______|                          |\_________\|_______|\|__|\|__|\|__|\|__|\|_______|\|__|\|__|        \|__|\|__|\|_______|\_________\|_______|\|_______|\|__| |\_________\
+#                                                                                         \|_________|                                                                            \|_________|                         \|_________|
+#
     # print search results to a list widget
     def display_results(self):
         self.search_listWidget.clear()
@@ -618,15 +691,15 @@ class Ui_MainWindow(object):
             #         item_string += str(result["details"]["name" + str(num)]) + " "
             item = QtWidgets.QListWidgetItem(item_string)
             self.search_listWidget.addItem(item)
-
-    # will switch to widget representing page 'next_page'
-    def switch_page(self, next_page):
-        # if the argument 'next_page' is an integer, 
-        if isinstance(next_page, int):
-            self.stackedWidget.setCurrentIndex(next_page)
-        else:
-            self.stackedWidget.setCurrentWidget(next_page)
-    
+#
+#  ________  ________  ________  _______           ___   ___                             ___  _________  _______   _____ ______           ________  ________  ________  _______      
+# |\   __  \|\   __  \|\   ____\|\  ___ \         |\  \ |\  \                           |\  \|\___   ___\\  ___ \ |\   _ \  _   \        |\   __  \|\   __  \|\   ____\|\  ___ \     
+# \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|        \ \  \\_\  \        ____________      \ \  \|___ \  \_\ \   __/|\ \  \\\__\ \  \       \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|    
+#  \ \   ____\ \   __  \ \  \  __\ \  \_|/__       \ \______  \      |\____________\     \ \  \   \ \  \ \ \  \_|/_\ \  \\|__| \  \       \ \   ____\ \   __  \ \  \  __\ \  \_|/__  
+#   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \       \|_____|\  \     \|____________|      \ \  \   \ \  \ \ \  \_|\ \ \  \    \ \  \       \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \ 
+#    \ \__\    \ \__\ \__\ \_______\ \_______\             \ \__\                          \ \__\   \ \__\ \ \_______\ \__\    \ \__\       \ \__\    \ \__\ \__\ \_______\ \_______\
+#     \|__|     \|__|\|__|\|_______|\|_______|              \|__|                           \|__|    \|__|  \|_______|\|__|     \|__|        \|__|     \|__|\|__|\|_______|\|_______|
+#                                                                                                                                                                                 
     def display_item_page(self, item):
         # print("Item in row", self.search_listWidget.row(item), "was clicked!")
         self.item = item
@@ -654,7 +727,6 @@ class Ui_MainWindow(object):
             self.available_status.setText("No")
         # print product price
         self.price.setText('$' + str(round(product['price'], 2)))
-        self.update(self.item_name)
         self.info_label.setText("")
         if not self.userType:
             if product['availability']:
@@ -691,7 +763,16 @@ class Ui_MainWindow(object):
             self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = new_avail
             self.item_mk_avail_button.setText("Make Unavailable")
             self.available_status.setText("Yes")
-
+#
+#  ________  ________  ________  _______           ________                              ________  ___  ___  ________  ________  ________  ___  ________   ________          ________  ________  ________  _________   
+# |\   __  \|\   __  \|\   ____\|\  ___ \         |\   ____\                            |\   ____\|\  \|\  \|\   __  \|\   __  \|\   __  \|\  \|\   ___  \|\   ____\        |\   ____\|\   __  \|\   __  \|\___   ___\ 
+# \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|        \ \  \___|_         ____________      \ \  \___|\ \  \\\  \ \  \|\  \ \  \|\  \ \  \|\  \ \  \ \  \\ \  \ \  \___|        \ \  \___|\ \  \|\  \ \  \|\  \|___ \  \_| 
+#  \ \   ____\ \   __  \ \  \  __\ \  \_|/__       \ \_____  \       |\____________\     \ \_____  \ \   __  \ \  \\\  \ \   ____\ \   ____\ \  \ \  \\ \  \ \  \  ___       \ \  \    \ \   __  \ \   _  _\   \ \  \  
+#   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \       \|____|\  \      \|____________|      \|____|\  \ \  \ \  \ \  \\\  \ \  \___|\ \  \___|\ \  \ \  \\ \  \ \  \|\  \       \ \  \____\ \  \ \  \ \  \\  \|   \ \  \ 
+#    \ \__\    \ \__\ \__\ \_______\ \_______\        ____\_\  \                            ____\_\  \ \__\ \__\ \_______\ \__\    \ \__\    \ \__\ \__\\ \__\ \_______\       \ \_______\ \__\ \__\ \__\\ _\    \ \__\
+#     \|__|     \|__|\|__|\|_______|\|_______|       |\_________\                          |\_________\|__|\|__|\|_______|\|__|     \|__|     \|__|\|__| \|__|\|_______|        \|_______|\|__|\|__|\|__|\|__|    \|__|
+#                                                    \|_________|                          \|_________|                                                                                                                
+#                                                                                                                                                                    
     def add_to_shoppingcart(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         if product['availability'] and product['quantity']:
@@ -755,29 +836,25 @@ class Ui_MainWindow(object):
                 self.shopping_cart_list = []
                 self.shopping_cart_object.emptyCart()
 
-    # def cart_display_page(self):
-    #     # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
-    #     # add a function to API called quick search that lets you search for one document
-    #     product = {}
-    #     detail_string = ""
-    #     self.switch_page(4)
-    #     self.item_name.setText(product["item"])
-    #     if "details" in product:
-    #         for num in range(0,len(product["details"])):
-    #             detail_string += str(product["details"]["name" + str(num)]) + "\n"
-    #     else:
-    #         self.description_text.setText("-")
-    #     self.description_text.setText(detail_string)
-    #     if "quantity" in product:
-    #         self.numitems.setText(str(product["quantity"]))
-    #     else:
-    #         self.numitems.setText("-")
-    #     self.update(self.item_name)
-    #     self.update(self.description_text)
-    #     # print(item.text())
 
-###########################################################################################################################
+    # will switch to widget representing page 'next_page'
+    def switch_page(self, next_page):
+        # if the argument 'next_page' is an integer, 
+        if isinstance(next_page, int):
+            self.stackedWidget.setCurrentIndex(next_page)
+        else:
+            self.stackedWidget.setCurrentWidget(next_page)
 
+#
+#                             $$\      $$\           $$\           
+#                             $$$\    $$$ |          \__|          
+#                             $$$$\  $$$$ | $$$$$$\  $$\ $$$$$$$\  
+#                             $$\$$\$$ $$ | \____$$\ $$ |$$  __$$\ 
+#                             $$ \$$$  $$ | $$$$$$$ |$$ |$$ |  $$ |
+#                             $$ |\$  /$$ |$$  __$$ |$$ |$$ |  $$ |
+#                             $$ | \_/ $$ |\$$$$$$$ |$$ |$$ |  $$ |
+#                             \__|     \__| \_______|\__|\__|  \__|
+#                      
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
