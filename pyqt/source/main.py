@@ -456,8 +456,6 @@ class Ui_MainWindow(object):
         self.page_3.setPalette(p3)
         self.page_4.setPalette(p4)
 
-        print("Fully prepped for employee")
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Innoventory"))
@@ -668,7 +666,7 @@ class Ui_MainWindow(object):
         else:
             self.available_status.setText("No")
         # print product price
-        self.price.setText('$' + str(product['price']))
+        self.price.setText('$' + str(round(product['price'], 2)))
         self.update(self.item_name)
         self.update(self.description_text)
         self.info_label.setText("")
@@ -738,7 +736,7 @@ class Ui_MainWindow(object):
         total_price = 0
         for item in self.shopping_cart_list:
             total_price += item['price'] * item['quantity']
-        self.cost_label.setText(str(total_price))
+        self.cost_label.setText(str(round(total_price, 2)))
 
     def remove_item(self):
         if self.cart_listWidget.count():
