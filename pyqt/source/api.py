@@ -28,47 +28,18 @@ class Api:
     def connect(self, connectionString=""):
         self.connectionString = connectionString
         client = MongoClient(connectionString)
-        return client
+        return client    
 
-    def authenticate(self, user={}):
-        pass
-
-    def create(self, document={}):
-        pass
-
-    # A test
-    def searchGrocery(self, term):
-        # The term to search for
-        self.term = term
-        # Get database connection client
-        client = self.connect(self.customerConnectionString)
-        # Switch to Innoventory database
-        db = client.Innoventory
-        # Search the Grocery collection
-        result = db.Products.find_one(self.term)
-
-        return result
-    
     # search the product collection for a specific item
     def search(self, term):
         self.term = term
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
-
         # will hold all documents from queries
         result = []
-
-        # Find best result
-        search_one = db.Products.find_one(self.term)
-
-        # Add the result if item was found
-        if search_one != None:
-            result.append([search_one])
-
-        # find more general results
+        result.append([db.Products.find_one(self.term)])
         # split the search term by whitespace
         new_search = self.term["item"].split()
-
         # search database by each word in term
         for word in new_search:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
@@ -81,26 +52,33 @@ class Api:
         for doc in search_result:
             for result in doc:
                 print(result['item'])
-
     # Returns an unordered set of item names from a search
+
     def parse_results(self, search_result):
         # Use a set to avoid duplicate results
         items = set()
-        if search_result != None:
-            for doc in search_result:
-                for result in doc:
-                    items.add(result['item'])
+        for doc in search_result:
+            for result in doc:
+                items.add(result['item'])
         return items
 
 # Employee class offers the two operations an Innoventory employee can perform:
 # change any product's availability and quantity
 class Employee(Api):
+    '''
+    The Employee class provides the functionality to to modify product quantity and availability
+    '''
     def __init__(self):
         client = self.connect(self.employeeConnectionString)
         db = client.Innoventory
         self.collection = db.Products
+    
 
-    # changes item quantity and returns the updated quantity
+    '''
+    The change_quantity method updates the quantity of item, identified by the dictionary
+    ``item``, to the value in ``quantity``.
+    Returns the updated quantity from the database itself to prove the change has been made
+    '''
     def change_quantity(self, item={}, quantity=1):
         return self.collection.find_one_and_update(
             filter=item,
@@ -108,12 +86,17 @@ class Employee(Api):
             return_document=ReturnDocument.AFTER
         )['quantity']
 
-    # changes item quantity and returns the updated availability
+    '''
+    The change_availability method updates the availability of item, identified by the dictionary
+    ``item``, to the value in ``avail``.
+    Returns the updated availability from the database itself to prove the change has been made.
+    '''
     def change_availability(self, item={}, avail=bool):
         return self.collection.find_one_and_update(
             filter=item,
-            update={'$set': {'availability': avail}}
-        )
+            update={'$set': {'availability': avail}},
+            return_document=ReturnDocument.AFTER
+        )['availability']
 
 class Login(Api):
     '''
@@ -201,7 +184,6 @@ class UserManager(Api):
         # Make sure username does not already exist
         # find_one returns None if the username is not in the Users collection
         userExists = collection.find_one({'username': self.data['username']})
-
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
             # all users who create an account from the app are customers (isCustomer = True)

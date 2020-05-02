@@ -694,15 +694,15 @@ class Ui_MainWindow(object):
         # if product is available, make it not
         if product['availability']:
             # change availability of product to false
-            self.employee_object.change_availability(product,False)
-            self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = False
+            new_avail = self.employee_object.change_availability(product,False)
+            self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = new_avail
             self.available_status.setText("No")
             self.item_mk_avail_button.setText("Make Available")
         # if product is not available, make it available
         else:
             # change availability of product to true
-            self.employee_object.change_availability(product,True)
-            self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = True
+            new_avail = self.employee_object.change_availability(product,True)
+            self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = new_avail
             self.item_mk_avail_button.setText("Make Unavailable")
             self.available_status.setText("Yes")
 
