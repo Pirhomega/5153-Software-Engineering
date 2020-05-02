@@ -2,6 +2,7 @@
 
 import api
 import copy
+import decimal
 import pymongo
 import urllib.parse
 import pprint
@@ -85,7 +86,7 @@ class Login(Screen):
         # Get an instance of the login class from the api
         login = api.Login()
 
-        global username  # made this global on line 22
+        global username
         
         self.username =  urllib.parse.quote(self.usernameIn.text) # passwordHell
         self.password =  urllib.parse.quote(self.passwordIn.text) # XR9lYeOp036C%@&@cQn*8z3BU4\
@@ -493,6 +494,9 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
             amountPopup.open()
 
             self.qtyBuy.text = ""
+
+    def clear_qty_box(self):
+        self.qtyBuy.text = ""
         
 
 
@@ -555,6 +559,10 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
         # Adds up all prices in the list
         for dic in self.price:
             total += (float(dic['text']))
+        
+        # Only print two decimal places
+        TWO = decimal.Decimal(10) ** -2
+        total = decimal.Decimal(total).quantize(TWO)
         self.totalPrint = f"{total}"
 
     def clear_recview(self):
