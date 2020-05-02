@@ -604,7 +604,8 @@ class Ui_MainWindow(object):
             self.search_attempt = Api()
             # 'self.search_result' is now an unordered set of all the search results
             self.search_result = self.parse_results(self.search_attempt.search({'item': search_string}))
-            if self.search_result != []:
+            print(self.search_result)
+            if self.search_result != {}:
                 self.switch_page(3)
                 self.display_results()
             else:
