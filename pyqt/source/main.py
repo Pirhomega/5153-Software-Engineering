@@ -598,10 +598,8 @@ class Ui_MainWindow(object):
 #    \ \__\    \ \__\ \__\ \_______\ \_______\          \ \__\                          \ \_______\ \__\\ _\\ \_______\ \__\ \__\   \ \__\ \ \_______\       \ \__\ \__\ \_______\ \_______\ \_______\ \_______\ \__\\ \__\   \ \__\
 #     \|__|     \|__|\|__|\|_______|\|_______|           \|__|                           \|_______|\|__|\|__|\|_______|\|__|\|__|    \|__|  \|_______|        \|__|\|__|\|_______|\|_______|\|_______|\|_______|\|__| \|__|    \|__|
 #                                                                                                                                                                                                                                
-    # If the user does something weird, tell them.
+    # If the user does something weird, raise error.
     def error(self, cause):
-        self.photo.setPixmap(QtGui.QPixmap("../images/Mad_Charlie.jpg"))
-
         if cause == 1:
             self.Instructions.setText("Error: Please enter a value for username and password")
             self.Instructions.adjustSize()
@@ -610,6 +608,7 @@ class Ui_MainWindow(object):
             self.Instructions.setText("Error: That username has already been taken.")
             self.Instructions.adjustSize()
 
+    # erases any text in `UserInput` and `Passinput` and switches to the 'create_account' page
     def switch_to_create_acc(self):
         self.UserInput.setText("")
         self.Passinput.setText("")
@@ -653,7 +652,6 @@ class Ui_MainWindow(object):
             self.search_attempt = Api()
             # 'self.search_result' is now an unordered set of all the search results
             self.search_result = self.parse_results(self.search_attempt.search({'item': search_string}))
-            print(self.search_result)
             if self.search_result != {}:
                 self.switch_page(3)
                 self.display_results()
@@ -700,6 +698,7 @@ class Ui_MainWindow(object):
 #    \ \__\    \ \__\ \__\ \_______\ \_______\             \ \__\                          \ \__\   \ \__\ \ \_______\ \__\    \ \__\       \ \__\    \ \__\ \__\ \_______\ \_______\
 #     \|__|     \|__|\|__|\|_______|\|_______|              \|__|                           \|__|    \|__|  \|_______|\|__|     \|__|        \|__|     \|__|\|__|\|_______|\|_______|
 #                                                                                                                                                                                 
+    # fills the item page with information from 'item'
     def display_item_page(self, item):
         # print("Item in row", self.search_listWidget.row(item), "was clicked!")
         self.item = item
@@ -776,7 +775,7 @@ class Ui_MainWindow(object):
     def add_to_shoppingcart(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         if product['availability'] and product['quantity']:
-            if (product['item'] not in self.shopping_cart_list):
+            if (product not in self.shopping_cart_list):
                 product['quantity'] = 1
                 self.shopping_cart_object.addCart(product)
                 self.shopping_cart_list.append(product)
@@ -792,19 +791,20 @@ class Ui_MainWindow(object):
     def refresh_shoppingcart(self):
         self.cart_listWidget.clear()
         for product in self.shopping_cart_list:
-            print(product)
-            item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str(product['price']))
+            item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str('{0:.2f}'.format(product['price'])))
             self.cart_listWidget.addItem(item)
         self.findPrice()
         self.item_prompt.setText("Click an item to interact")
         self.switch_page(5)
     
+    # calculates the total price of all items in cart and updates the price label
     def findPrice(self):
-        total_price = 0
+        total_price = 0.0
         for item in self.shopping_cart_list:
             total_price += item['price'] * item['quantity']
-        self.cost_label.setText(str(round(total_price, 2)))
+        self.cost_label.setText('$' + str('{0:.2f}'.format(total_price)))
 
+    # Removes the selected item from the cart
     def remove_item(self):
         if self.cart_listWidget.count():
             item = self.cart_listWidget.currentRow()
@@ -816,6 +816,8 @@ class Ui_MainWindow(object):
             self.cart_listWidget.takeItem(item)
             self.findPrice()
 
+    # changes the quantity of the item in the user's cart with the value in the 
+    # quantity spin box
     def change_quan(self):
         if self.cart_listWidget.count():
             self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
@@ -824,6 +826,9 @@ class Ui_MainWindow(object):
             item['quantity'] = self.quantity_spin.value()
             self.refresh_shoppingcart()
 
+    # prompts user if they are sure they want to purchase the items in their cart
+    # After being prompted, they must click the prompt button again to confirm..
+    # Empties the cart after purchase
     def checkout(self):
         if self.cart_listWidget.count():
             if self.prompt_confirm == False:
@@ -835,7 +840,6 @@ class Ui_MainWindow(object):
                 self.cart_listWidget.clear()
                 self.shopping_cart_list = []
                 self.shopping_cart_object.emptyCart()
-
 
     # will switch to widget representing page 'next_page'
     def switch_page(self, next_page):
