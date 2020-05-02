@@ -29,25 +29,6 @@ class Api:
         self.connectionString = connectionString
         client = MongoClient(connectionString)
         return client
-
-    def authenticate(self, user={}):
-        pass
-
-    def create(self, document={}):
-        pass
-
-    # A test
-    def searchGrocery(self, term):
-        # The term to search for
-        self.term = term
-        # Get database connection client
-        client = self.connect(self.customerConnectionString)
-        # Switch to Innoventory database
-        db = client.Innoventory
-        # Search the Grocery collection
-        result = db.Products.find_one(self.term)
-
-        return result
     
     # search the product collection for a specific item
     def search(self, term):

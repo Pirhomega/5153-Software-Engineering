@@ -543,10 +543,10 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
         total = 0.00
         global shopCartInfo
         itemList = shopCartInfo
-        print(itemList)
+        #print(itemList)
         for item in itemList:
-            print(item)
-            print(type(item))
+            #print(item)
+            #print(type(item))
             self.items.append({'text': str(item['item'])})
             self.qty.append({'text': str(item['qty'])})
             self.price.append({'text':str(item['price'])})
@@ -676,6 +676,8 @@ wm.current = "login"
 # Build the main app
 # If main().run() is called from main, the full app will be launched
 class main(App):
+    title = "Innoventory"
+
     def build(self):
         return wm
 
