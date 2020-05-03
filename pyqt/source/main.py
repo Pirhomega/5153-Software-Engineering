@@ -648,7 +648,7 @@ class Ui_MainWindow(object):
     # run an item search using the API
     def search_products(self):
         if self.search_box.text() != "":
-            search_string = self.search_box.text()
+            search_string = self.search_box.text().lower()
             self.search_attempt = Api()
             # 'self.search_result' is now an unordered set of all the search results
             self.search_result = self.parse_results(self.search_attempt.search({'item': search_string}))
