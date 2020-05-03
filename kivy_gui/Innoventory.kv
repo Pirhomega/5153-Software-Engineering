@@ -42,7 +42,6 @@
             size_hint: 0.33,0.33
             pos_hint: {"center_x":0.5,"top":0.99}
             
-
         TextInput:
             id: usernameIn
             hint_text:"Username"
@@ -116,32 +115,6 @@
             size_hint: .90, 0.05
             multiline: False
 
-        # ImgButton:
-        #     source: "search2.png"
-        #     pos_hint: {"center_x":0.5,"top":0.8}   
-        #     size_hint: 0.2,0.2
-
-        #     on_press:
-        #         source: "search2_press.png"
-        #         print("press")
-
-        #     on_release: 
-        #         isource: "search.png"
-        #         root.search()
-        #         root.manager.transition.direction = "up"
-        #         print("release")
-                
-        # Button:
-
-        #     pos_hint:{"center_x":0.5,"top":0.8}
-        #     size_hint:0.2,0.2
-        #     background_normal:"search2.png"
-        #     background_down:"search2_press.png"
-
-        #     on_release:
-        #         root.search()
-        #         root.manager.transition.direction = "up"
-
         Button:
             text: "Search"
             font_size: (20)
@@ -152,7 +125,6 @@
                 root.search()
                 root.manager.transition.direction = "left"
                 
-
         Button:
             text: "Logout"
             font_size: (20)
@@ -245,33 +217,6 @@
                 root.manager.current = "login"
 
 
-
-
-
-#  $$$$$$\                                          $$\       
-# $$  __$$\                                         $$ |      
-# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  
-# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ 
-#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |
-# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |
-# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |
-#  \______/  \_______| \_______|\__|       \_______|\__|  \__|                                                         
-                                                                                                                                                                                                                                                                                                                                                                                                 
-<Search>:
-#
-#    viewclass: 'Label'
-#
-#    RecycleBoxLayout:
-#        default_size: None, dp(56)
-#        default_size_hint: 1, None
-#        size_hint_y: None
-#        height: self.minimum_height
-#        orientation: 'vertical'
-
-
-
-
-
 #  $$$$$$\             $$\     $$\     $$\                               $$\      $$\                               
 # $$  __$$\            $$ |    $$ |    \__|                              $$$\    $$$ |                              
 # $$ /  \__| $$$$$$\ $$$$$$\ $$$$$$\   $$\ $$$$$$$\   $$$$$$\   $$$$$$$\ $$$$\  $$$$ | $$$$$$\  $$$$$$$\  $$\   $$\ 
@@ -295,7 +240,9 @@
             pos_hint: {"center_x":0.5,"top":0.99}
 
         Button:
-            text: "Change Password"
+            text: "Change\nPassword"
+            halign: "center"
+            valigh: "center"
             font_size: (20)
             pos_hint:{"center_x":0.5,"center_y":0.6}
             size_hint: 0.3, 0.1
@@ -303,17 +250,6 @@
             on_release:
                 root.manager.transition.direction = "left"
                 root.changePassword()
-
-        # Button:
-        #     text: "Launch Nukes"
-        #     font_size: (20)
-        #     pos_hint:{"center_x":0.5,"center_y":0.48}
-        #     size_hint: 0.3, 0.1
-
-        #     on_release:
-        #         root.manager.transition.direction = "up"
-        #         root.manager.current = 'hell'
-          
 
         Button:
             text: "Back"
@@ -334,7 +270,6 @@
             on_release:
                 root.manager.transition.direction = "down"
                 root.manager.current = "shoppingCart"
-
 
 
 #  $$$$$$\  $$\                                               $$$$$$$\                                                                       $$\ 
@@ -366,7 +301,7 @@
             hint_text:"Enter your old password"
             font_size: (20) 
             pos_hint: {"center_x": 0.5 , "top":0.66}
-            size_hint: 0.5, 0.07
+            size_hint: 0.75, 0.07
             multiline: False
             password:True
 
@@ -375,7 +310,7 @@
             hint_text:"Enter your new password"
             font_size: (20) 
             pos_hint: {"center_x": 0.5 , "top":0.56}
-            size_hint: 0.5, 0.07
+            size_hint: 0.75, 0.07
             multiline: False
             password:True
 
@@ -384,7 +319,7 @@
             hint_text:"Re-enter your new password"
             font_size: (20) 
             pos_hint: {"center_x": 0.5 , "top":0.46}
-            size_hint: 0.5, 0.07
+            size_hint: 0.75, 0.07
             multiline: False
             password:True            
 
@@ -446,7 +381,6 @@
             viewclass: 'SearchButton'       
             data: root.my_label
             
-
             SelectableRecycleGridLayout:
                 cols: 1
                 default_size: None, dp(60)
@@ -467,7 +401,6 @@
                 root.manager.transition.direction = "right"
                 root.manager.current = "homepage"
 
-
 # 
 #  $$$$$$\                                          $$\       $$$$$$$\              $$\     $$\                         
 # $$  __$$\                                         $$ |      $$  __$$\             $$ |    $$ |                        
@@ -477,18 +410,19 @@
 # $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
 # \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
 #  \______/  \_______| \_______|\__|       \_______|\__|  \__|\_______/  \______/    \____/  \____/  \______/ \__|  \__|
-#                                                                                                                       
+#             
+
+# Even though nothing is implemented for this class in kivy code, it is necessary to have the definition included
 <SearchButton>:                                                                                                                   
                                                                                               
-
-# $$$$$$$\                            $$\                       $$\     $$$$$$\            $$$$$$\           
-# $$  __$$\                           $$ |                      $$ |    \_$$  _|          $$  __$$\          
-# $$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$\   $$\  $$$$$$$\ $$$$$$\     $$ |  $$$$$$$\  $$ /  \__|$$$$$$\  
-# $$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |$$ |  $$ |$$  _____|\_$$  _|    $$ |  $$  __$$\ $$$$\    $$  __$$\ 
-# $$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |$$ |  $$ |$$ /        $$ |      $$ |  $$ |  $$ |$$  _|   $$ /  $$ |
-# $$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\   $$ |  $$ |  $$ |$$ |     $$ |  $$ |
-# $$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  |$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
-# \__|      \__|       \______/  \_______| \______/  \_______|   \____/ \______|\__|  \__|\__|      \______/ 
+# $$$$$$$\                            $$\  $$$$$$\            $$$$$$\           
+# $$  __$$\                           $$ | \_$$  _|          $$  __$$\          
+# $$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |   $$ |  $$$$$$$\  $$ /  \__|$$$$$$\  
+# $$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |   $$ |  $$  __$$\ $$$$\    $$  __$$\ 
+# $$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |   $$ |  $$ |  $$ |$$  _|   $$ /  $$ |
+# $$ |      $$ |      $$ |  $$ |$$ |  $$ |   $$ |  $$ |  $$ |$$ |     $$ |  $$ |
+# $$ |      $$ |      \$$$$$$  |\$$$$$$$ ||$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
+# \__|      \__|       \______/  \_______| \______|\__|  \__|\__|      \______/ 
 
 <ProdInfo>:
     name: "prodInfo"
@@ -547,11 +481,7 @@
 
             SelectableRecycleGridLayout:
                 cols: 1
-                # default_size: None, None#dp(78)
                 default_size_hint: 1, 1
-                # size_hint: 0.45, 0.075
-                # size_hint_y: .2
-                #height: self.minimum_height
                 orientation: 'vertical'
                 multiselect: False
                 touch_multiselect: False
@@ -565,7 +495,7 @@
             on_release:
                 root.manager.transition.direction = "right"
                 root.manager.current = "searchView"
-
+                root.clear_qty_box()
 
         Button:
             text:"Home"
@@ -615,7 +545,6 @@
 # \__|      \__|       \______/  \_______| \______/  \_______|   \____/   \_/    \__| \_______| \_____\____/                
 <ProdView>:
 
-
 #  $$$$$$\  $$\                                     $$\                      $$$$$$\                       $$\     
 # $$  __$$\ $$ |                                    \__|                    $$  __$$\                      $$ |    
 # $$ /  \__|$$$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  $$\ $$$$$$$\   $$$$$$\  $$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
@@ -657,7 +586,6 @@
             viewclass: 'CartView'       
             data: root.items
             
-
             SelectableRecycleGridLayout:
                 cols: 1
                 default_size: None, dp(60)
@@ -672,12 +600,11 @@
                 text_size: self.width, None
 
         RecycleView:
-            size_hint:0.09,0.68  #0.9,0.75
-            pos_hint:{"x":0.71,"y":0.24} #{"right":0.95,"y":0.17}
+            size_hint:0.09,0.68  
+            pos_hint:{"x":0.71,"y":0.24}
             viewclass: 'CartView'       
             data: root.qty
             
-
             SelectableRecycleGridLayout:
                 cols: 1
                 default_size: None, dp(60)
@@ -692,12 +619,11 @@
                 text_size: self.width, None
 
         RecycleView:
-            size_hint:0.15,0.68  #0.9,0.75
-            pos_hint:{"x":0.80,"y":0.24} #{"right":0.95,"y":0.17}
+            size_hint:0.15,0.68 
+            pos_hint:{"x":0.80,"y":0.24}
             viewclass: 'CartView'       
             data: root.price
             
-
             SelectableRecycleGridLayout:
                 cols: 1
                 default_size: None, dp(60)
@@ -711,15 +637,12 @@
                 size_hint_y: None
                 text_size: self.width, None
         
-
-
         Label: 
             text: 'Total: $' + root.totalPrint
             color: 0,0,0,1 
             size_hint: 0.9, 0.05
             pos_hint: {"x":0.05,"y":0.17}    
             font_size: (40) 
-
 
         Button:
             text:"Home"
@@ -751,7 +674,6 @@
 #  \______/  \_______|\__|        \____/   \_/    \__| \_______| \_____\____/ 
 
 <CartView>:
-
 
 
 # $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
