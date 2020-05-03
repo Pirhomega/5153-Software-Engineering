@@ -567,7 +567,6 @@ class Ui_MainWindow(object):
         self.Passinput.setText("")
         self.switch_page(1)
 
-
     # Once the user has filled in the input fields, check to see if they are
     # compatible. If everything works out, then upload their information into the
     # "users" collection.
