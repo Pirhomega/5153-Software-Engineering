@@ -215,6 +215,16 @@ class UserManager(Api):
 
         return status
 
+    # Modifies a user password.
+    def changePassword(self, oldData = {}, newData = {}):
+        self.data = oldData
+        self.data2 = newData
+
+        # If the data authenticates, change the user's password 
+        collection = self.connectToAuthen()
+        collection.update_one(self.data, {'$set':self.data2})
+        return True
+
 # This class represents all the shopping cart functionality
 # See __main__ for example code
 # For security reasons, do not pass passwords in the 'user' dictionary,
