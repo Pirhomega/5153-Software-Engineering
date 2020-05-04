@@ -730,8 +730,9 @@ class Ui_MainWindow(object):
             self.available_status.setText("No")
         # print product price
         self.price.setText('$' + str('{0:.2f}'.format(product['price'])))
-        # if user is an employee, change the text of the availability button
+        # if user is an employee, change the text of the availability button and quantity spinbox
         if not self.userType:
+            self.item_quan_spinBox.setValue(product['quantity'])
             if product['availability']:
                 self.item_mk_avail_button.setText("Make Unavailable")
             else:
