@@ -19,6 +19,7 @@ class Ui_MainWindow(object):
     def __init__(self, start):
         self.start = start
         self.prompt_confirm = False
+        self.search_attempt = Api()
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(400, 621)
@@ -108,10 +109,10 @@ class Ui_MainWindow(object):
         self.Password = QtWidgets.QLabel(self.groupBoxCA)
         self.Password.setGeometry(QtCore.QRect(30,150,91,16))
         self.Password.setObjectName("Password")
-        self.Passinput = QtWidgets.QLineEdit(self.groupBoxCA)
-        self.Passinput.setGeometry(QtCore.QRect(160,150,211,31))
-        self.Passinput.setObjectName("Passinput")
-        self.Passinput.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.PassInput = QtWidgets.QLineEdit(self.groupBoxCA)
+        self.PassInput.setGeometry(QtCore.QRect(160,150,211,31))
+        self.PassInput.setObjectName("PassInput")
+        self.PassInput.setEchoMode(QtWidgets.QLineEdit.Password)
         self.CancelButton = QtWidgets.QPushButton(self.groupBoxCA)
         self.CancelButton.setGeometry(QtCore.QRect(10,260,121,31))
         self.CancelButton.setObjectName("CancelButton")
@@ -388,7 +389,7 @@ class Ui_MainWindow(object):
         self.login_button.clicked.connect(self.login)
 
         # when the user clicks the 'create account' button from the main page
-        self.create_account_button.clicked.connect(self.switch_to_create_acc)
+        self.create_account_button.clicked.connect(self.clear_page)
 
         # Connect the createuser button with the createAcc function
         self.CreateButton.clicked.connect(self.createAcc)
@@ -453,6 +454,8 @@ class Ui_MainWindow(object):
 # \__|     \__| \_______|\__| \__| \__|\_______/  \_______|\__|            \__|    \______/ \__|  \__| \_______|   \____/ \__| \______/ \__|  \__|\_______/ 
 #
 
+    # adds the 'change quantity' and 'change availability' buttons to the item page
+    # for the employee
     def prepEmployee(self):
         # add the Change Quantity buttons and spin box and the Make Available button
         self.item_quan_spinBox = QtWidgets.QSpinBox(self.page_4)
@@ -472,7 +475,7 @@ class Ui_MainWindow(object):
         self.item_mk_avail_button.setText(_translate("MainWindow", "Make Available"))
         # employees do not add items to their carts since they don't have any
         self.addbutton.setEnabled(False)
-        # create the employee object
+        # create the employee object from the API python file
         self.employee_object = Employee()
         # add functionality to employee buttons
         self.item_chng_quan.clicked.connect(self.employee_change_quan)
@@ -492,6 +495,7 @@ class Ui_MainWindow(object):
         self.page_3.setPalette(p3)
         self.page_4.setPalette(p4)
 
+    # initializes all the buttons and labels to the appropriate text
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Innoventory"))
@@ -506,7 +510,6 @@ class Ui_MainWindow(object):
         self.Password.setText(_translate("MainWindow", "Password"))
         self.CancelButton.setText(_translate("MainWindow", "Cancel"))
         self.CreateButton.setText(_translate("MainWindow", "Create User"))
-        self.Instructions.setText(_translate("MainWindow", "Please enter the username and password for your new account."))
         self.item_back_button.setText(_translate("MainWindow", "Back"))
         self.search_back_button.setText(_translate("MainWindow", "Back"))
         self.addbutton.setText(_translate("MainWindow", "Add to Cart"))
@@ -547,28 +550,29 @@ class Ui_MainWindow(object):
     # attempt to log in to Innoventory with username and password offered
     def login(self):
         if self.username_textbox.text() != "" and self.password_textbox.text() != "":
-            self.username_password = {  'username': self.username_textbox.text(), 
+            user = Login()
+            username_password = {  'username': self.username_textbox.text(), 
                                         'password': self.password_textbox.text()
                                     }
-            user = Login()
-            _, login_success, self.userType = user.login(self.username_password)
-            self.login_result(login_success)
+            _, login_success, self.userType = user.login(username_password)
+            self.login_result(login_success, username_password)
 
     # allow user in if credentials are verified; block otherwise
-    def login_result(self, login_success):
+    def login_result(self, login_success, username_password):
         # if the user logged in successfully and they are a customer
         if login_success and self.userType:
             # create the shopping cart object for shopping cart additions, removals, and modifications
-            self.shopping_cart_object = ShoppingCart({'username': self.username_password['username']})
+            self.shopping_cart_object = ShoppingCart({'username': username_password['username']})
             # create a shopping cart copy to prevent multiple database queries (like when checking if an item is already in the cart before adding it)
             self.shopping_cart_list = self.shopping_cart_object.readShoppingcart()
             # re-enable menu bar buttons
             self.actionShopping_Cart.setEnabled(True)
             # self.actionChange_Username.setEnabled(True)
             # self.actionChange_Password.setEnabled(True)
-            self.actionLogout.setEnabled(True)
             self.username_textbox.setText("")
             self.password_textbox.setText("")
+            self.failure_notif.setText("")
+            self.actionLogout.setEnabled(True)
             self.switch_page(2)
         # if the login was successful and the user is not a customer (i.e. an employee)
         elif login_success and not self.userType:
@@ -576,6 +580,7 @@ class Ui_MainWindow(object):
             self.prepEmployee()
             self.username_textbox.setText("")
             self.password_textbox.setText("")
+            self.failure_notif.setText("")
             self.actionLogout.setEnabled(True)
             self.switch_page(2)
         else:
@@ -597,44 +602,40 @@ class Ui_MainWindow(object):
 #   \ \  \___|\ \  \ \  \ \  \|\  \ \  \_|\ \          \ \  \     \|____________|      \ \  \____\ \  \\  \\ \  \_|\ \ \  \ \  \   \ \  \ \ \  \_|\ \       \ \  \ \  \ \  \____\ \  \____\ \  \\\  \ \  \\\  \ \  \\ \  \   \ \  \ 
 #    \ \__\    \ \__\ \__\ \_______\ \_______\          \ \__\                          \ \_______\ \__\\ _\\ \_______\ \__\ \__\   \ \__\ \ \_______\       \ \__\ \__\ \_______\ \_______\ \_______\ \_______\ \__\\ \__\   \ \__\
 #     \|__|     \|__|\|__|\|_______|\|_______|           \|__|                           \|_______|\|__|\|__|\|_______|\|__|\|__|    \|__|  \|_______|        \|__|\|__|\|_______|\|_______|\|_______|\|_______|\|__| \|__|    \|__|
-#                                                                                                                                                                                                                                
-    # If the user does something weird, raise error.
-    def error(self, cause):
-        if cause == 1:
-            self.Instructions.setText("Error: Please enter a value for username and password")
-            self.Instructions.adjustSize()
-        
-        elif cause == 2:
-            self.Instructions.setText("Error: That username has already been taken.")
-            self.Instructions.adjustSize()
-
-    # erases any text in `UserInput` and `Passinput` and switches to the 'create_account' page
-    def switch_to_create_acc(self):
+#
+    # clears the input fields and labels on create account page
+    def clear_page(self):
         self.UserInput.setText("")
-        self.Passinput.setText("")
+        self.PassInput.setText("")
+        self.Instructions.setText("Please enter the username and password for your new account")
         self.switch_page(1)
 
     # Once the user has filled in the input fields, check to see if they are
-    # compatible. If everything works out, then upload their information into the
-    # "users" collection.
+    # can create an account. If they can, create account
     def createAcc(self):
         username = self.UserInput.text()
-        password = self.Passinput.text()
+        password = self.PassInput.text()
 
         # If the user is lazy
         if username == '' or password == '':
-            self.error(1)
+            self.error(0)
         
         # Upload the requested info into our database
         else:
             creation = UserManager()
             if creation.createUser({'username': username, 'password': password}):
                 self.Instructions.setText("Success! Your account has been created!")
-                self.Instructions.adjustSize()
-
                 self.CancelButton.setText("Login")
+
             else:
-                self.error(2)
+                self.error(1)
+
+    # If the user does something weird, raise error.
+    def error(self, cause):
+        if cause == 0:
+            self.Instructions.setText("Error: Please enter a value for username and password")
+        elif cause == 1:
+            self.Instructions.setText("Error: That username has already been taken")
 #
 #  ________  ________  ________  _______            _______                             ________  _______   ________  ________  ________  ___  ___     
 # |\   __  \|\   __  \|\   ____\|\  ___ \          /  ___  \                           |\   ____\|\  ___ \ |\   __  \|\   __  \|\   ____\|\  \|\  \    
@@ -647,20 +648,29 @@ class Ui_MainWindow(object):
 #
     # run an item search using the API
     def search_products(self):
+        # only run the search if the textbox has text in it
         if self.search_box.text() != "":
+            # since all items in the store are in lowercase, convert search string to lowercase too
             search_string = self.search_box.text().lower()
-            self.search_attempt = Api()
-            # 'self.search_result' is now an unordered set of all the search results
             self.search_result = self.parse_results(self.search_attempt.search({'item': search_string}))
+            # if there are search results, switch to the next page
             if self.search_result != {}:
-                self.switch_page(3)
+                self.no_results_notif.setText("")
                 self.display_results()
+                self.switch_page(3)
+            # if no search results, let user know
             else:
                 self.no_results_notif.setText("No results found")
 
-    # Returns an unordered set of item names from a search
+    # Returns a dictionary of dictionaries from a search
+    # Schema:
+    # { 
+    #       '0': {'item':<item name>, 'quantity':###, ...},
+    #       '1': {'item':<item name>, 'quantity':###, ...}},
+    #       '2': {'item':<item name>, 'quantity':###, ...}},
+    #       ...
+    # }
     def parse_results(self, result):
-        # Use a set to avoid duplicate results
         items = {}
         counter = 0
         for doc in result:
@@ -681,14 +691,11 @@ class Ui_MainWindow(object):
 #
     # print search results to a list widget
     def display_results(self):
+        # clear any pre-existing results from previous search
         self.search_listWidget.clear()
         for count in range(0,len(self.search_result)):
-            item_string = self.search_result[str(count)]["item"] + " "
-            # if "details" in result:
-            #     for num in range(0,len(result["details"])):
-            #         item_string += str(result["details"]["name" + str(num)]) + " "
-            item = QtWidgets.QListWidgetItem(item_string)
-            self.search_listWidget.addItem(item)
+            # adds one item from 'search_result' to the search results list widget
+            self.search_listWidget.addItem(QtWidgets.QListWidgetItem(self.search_result[str(count)]["item"].title()))
 #
 #  ________  ________  ________  _______           ___   ___                             ___  _________  _______   _____ ______           ________  ________  ________  _______      
 # |\   __  \|\   __  \|\   ____\|\  ___ \         |\  \ |\  \                           |\  \|\___   ___\\  ___ \ |\   _ \  _   \        |\   __  \|\   __  \|\   ____\|\  ___ \     
@@ -700,20 +707,19 @@ class Ui_MainWindow(object):
 #                                                                                                                                                                                 
     # fills the item page with information from 'item'
     def display_item_page(self, item):
-        # print("Item in row", self.search_listWidget.row(item), "was clicked!")
         self.item = item
-        # 'index'  is the product the user clicked on ('item') found in the 'self.search_result' list 
+        self.info_label.setText("")
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         # print item name
-        self.item_name.setText(product["item"])
-        # print item details
+        self.item_name.setText(product['item'].title())
+        # print item details, which are stored in a list in the database
         detail_string = ""
         if "details" in product:
             for num in range(0,len(product["details"])):
                 detail_string += '-' + str(product["details"]["name" + str(num)]) + "\n"
         else:
             detail_string = '-'
-        self.description_text.setText(detail_string)
+        self.description_text.setText(detail_string.title())
         # print product quantity
         if "quantity" in product:
             self.numitems.setText(str(product["quantity"]))
@@ -725,20 +731,19 @@ class Ui_MainWindow(object):
         else:
             self.available_status.setText("No")
         # print product price
-        self.price.setText('$' + str(round(product['price'], 2)))
-        self.info_label.setText("")
+        self.price.setText('$' + str('{0:.2f}'.format(product['price'])))
+        # if user is an employee, change the text of the availability button
         if not self.userType:
             if product['availability']:
                 self.item_mk_avail_button.setText("Make Unavailable")
             else:
                 self.item_mk_avail_button.setText("Make Available")
         self.switch_page(4)
-        # print(item.text())
 
     # change the quantity of an item
     def employee_change_quan(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
-        # some items don't have a quantity field
+        # some items don't have a quantity field, so don't try to change it
         if 'quantity' in product:
             # changes the quantity of the product, returns the updated quantity, and updates quantity on item page
             new_quan = self.employee_object.change_quantity(product,self.item_quan_spinBox.value())
@@ -750,18 +755,32 @@ class Ui_MainWindow(object):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         # if product is available, make it not
         if product['availability']:
-            # change availability of product to false
             new_avail = self.employee_object.change_availability(product,False)
             self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = new_avail
             self.available_status.setText("No")
             self.item_mk_avail_button.setText("Make Available")
         # if product is not available, make it available
         else:
-            # change availability of product to true
             new_avail = self.employee_object.change_availability(product,True)
             self.search_result[str(self.search_listWidget.row(self.item))]['availability'] = new_avail
             self.item_mk_avail_button.setText("Make Unavailable")
             self.available_status.setText("Yes")
+
+    # adds an item to the customer's shopping cart
+    def add_to_shoppingcart(self):
+        product = self.search_result[str(self.search_listWidget.row(self.item))]
+        # prevents customers from adding items to their cart that are unavailable or aren't in stock
+        if product['availability'] and product['quantity']:
+            if (product not in self.shopping_cart_list):
+                product['quantity'] = 1
+                self.shopping_cart_object.addCart(product)
+                # the shopping cart list will track all items in customer's shopping cart
+                self.shopping_cart_list.append(product)
+                self.info_label.setText("Added to cart!")
+            else:
+                self.info_label.setText("Already in cart!")
+        else:
+            self.info_label.setText("Product unavailable")
 #
 #  ________  ________  ________  _______           ________                              ________  ___  ___  ________  ________  ________  ___  ________   ________          ________  ________  ________  _________   
 # |\   __  \|\   __  \|\   ____\|\  ___ \         |\   ____\                            |\   ____\|\  \|\  \|\   __  \|\   __  \|\   __  \|\  \|\   ___  \|\   ____\        |\   ____\|\   __  \|\   __  \|\___   ___\ 
@@ -771,21 +790,13 @@ class Ui_MainWindow(object):
 #    \ \__\    \ \__\ \__\ \_______\ \_______\        ____\_\  \                            ____\_\  \ \__\ \__\ \_______\ \__\    \ \__\    \ \__\ \__\\ \__\ \_______\       \ \_______\ \__\ \__\ \__\\ _\    \ \__\
 #     \|__|     \|__|\|__|\|_______|\|_______|       |\_________\                          |\_________\|__|\|__|\|_______|\|__|     \|__|     \|__|\|__| \|__|\|_______|        \|_______|\|__|\|__|\|__|\|__|    \|__|
 #                                                    \|_________|                          \|_________|                                                                                                                
-#                                                                                                                                                                    
-    def add_to_shoppingcart(self):
-        product = self.search_result[str(self.search_listWidget.row(self.item))]
-        if product['availability'] and product['quantity']:
-            if (product not in self.shopping_cart_list):
-                product['quantity'] = 1
-                self.shopping_cart_object.addCart(product)
-                self.shopping_cart_list.append(product)
-                self.info_label.setText("Added to cart!")
-                self.findPrice()
-            else:
-                self.info_label.setText("Already in cart!")
-        else:
-            self.info_label.setText("Product unavailable")
-    
+#
+    # prepares the shopping cart page
+    def show_shoppingcart(self):
+        self.item_prompt.setText("Click an item to interact")
+        self.refresh_shoppingcart()
+        self.switch_page(5)
+
     # will fill the list widget on the shopping cart page with all the items in the 
     # user's shopping cart
     def refresh_shoppingcart(self):
@@ -794,10 +805,8 @@ class Ui_MainWindow(object):
             item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str('{0:.2f}'.format(product['price'])))
             self.cart_listWidget.addItem(item)
         self.findPrice()
-        self.item_prompt.setText("Click an item to interact")
-        self.switch_page(5)
     
-    # calculates the total price of all items in cart and updates the price label
+    # calculates the total price of all items in cart and updates the cost_label
     def findPrice(self):
         total_price = 0.0
         for item in self.shopping_cart_list:
@@ -819,27 +828,32 @@ class Ui_MainWindow(object):
     # changes the quantity of the item in the user's cart with the value in the 
     # quantity spin box
     def change_quan(self):
+        # only change an item's quantity if there are items in the cart
         if self.cart_listWidget.count():
+            # updates quantity in database
             self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
-            self.findPrice()
+            # updates quantity in local shopping cart
             item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
             item['quantity'] = self.quantity_spin.value()
             self.refresh_shoppingcart()
 
-    # prompts user if they are sure they want to purchase the items in their cart
-    # After being prompted, they must click the prompt button again to confirm..
+    # prompts user if they are sure they want to purchase the items in their cart.
+    # After being prompted, they must click the prompt button again to confirm.
     # Empties the cart after purchase
     def checkout(self):
+        # again, you can't buy items if there are none in your cart
         if self.cart_listWidget.count():
             if self.prompt_confirm == False:
                 self.checkout_button.setText("Are you sure?")
                 self.prompt_confirm = True
             else:
-                self.prompt_confirm = False
                 self.item_prompt.setText("Thank you for your purchase!\nPress \"Back\" to return to search")
+                self.prompt_confirm = False
                 self.cart_listWidget.clear()
                 self.shopping_cart_list = []
                 self.shopping_cart_object.emptyCart()
+
+#################################################################################################################
 
     # will switch to widget representing page 'next_page'
     def switch_page(self, next_page):
