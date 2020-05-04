@@ -674,9 +674,8 @@ class Ui_MainWindow(object):
         counter = 0
         for doc in result:
             for item in doc:
-                if item != None:
-                    items[str(counter)] = item
-                    counter += 1
+                items[str(counter)] = item
+                counter += 1
         return items
 #
 #  ________  ________  ________  _______           ________                             ________  _______   ________  ________  ________  ___  ___          ________  _______   ________  ___  ___  ___   _________  ________      

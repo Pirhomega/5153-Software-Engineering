@@ -35,11 +35,21 @@ class Api:
         self.term = term
         client = self.connect(self.customerConnectionString)
         db = client.Innoventory
+
         # will hold all documents from queries
         result = []
-        result.append([db.Products.find_one(self.term)])
+
+        # Find best result
+        search_one = db.Products.find_one(self.term)
+
+        # Add the result if item was found
+        if search_one != None:
+            result.append([search_one])
+
+        # find more general results
         # split the search term by whitespace
         new_search = self.term["item"].split()
+
         # search database by each word in term
         for word in new_search:
             # mini_result = db.Products.find({ "item": "/"+word+"/" })
@@ -52,14 +62,15 @@ class Api:
         for doc in search_result:
             for result in doc:
                 print(result['item'])
-    # Returns an unordered set of item names from a search
 
+    # Returns an unordered set of item names from a search
     def parse_results(self, search_result):
         # Use a set to avoid duplicate results
         items = set()
-        for doc in search_result:
-            for result in doc:
-                items.add(result['item'])
+        if search_result != None:
+            for doc in search_result:
+                for result in doc:
+                    items.add(result['item'])
         return items
 
 # Employee class offers the two operations an Innoventory employee can perform:
@@ -73,7 +84,6 @@ class Employee(Api):
         db = client.Innoventory
         self.collection = db.Products
     
-
     '''
     The change_quantity method updates the quantity of item, identified by the dictionary
     ``item``, to the value in ``quantity``.
@@ -184,6 +194,7 @@ class UserManager(Api):
         # Make sure username does not already exist
         # find_one returns None if the username is not in the Users collection
         userExists = collection.find_one({'username': self.data['username']})
+        
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
             # all users who create an account from the app are customers (isCustomer = True)
@@ -216,9 +227,18 @@ class UserManager(Api):
 
         return status
 
+    # Modifies a user password.
+    def changePassword(self, oldData = {}, newData = {}):
+        self.data = oldData
+        self.data2 = newData
+
+        # If the data authenticates, change the user's password 
+        collection = self.connectToAuthen()
+        collection.update_one(self.data, {'$set':self.data2})
+        return True
+
 # This class represents all the shopping cart functionality
 # See __main__ for example code
-
 class ShoppingCart(Api):
     '''
     The ShoppingCart class contains methods for creating, accessing, and modifying
@@ -253,7 +273,6 @@ class ShoppingCart(Api):
         # Returns true if insertion was successful
         return self.collection.insert_one({'username': self.user['username'], 'cart': []}).acknowledged
 
-    # appends a dictionary to the 'cart' list (adds an item to the cart)
     ''' 
     The addCart method will add an item to the user's cart by appending the dictionary ``item``
     to the ``cart`` list 
@@ -267,7 +286,6 @@ class ShoppingCart(Api):
                 {'$push': {'cart': {'$each': [ self.item ]}}}
         ).acknowledged
 
-    # removes an item from the user's cart
     ''' 
     The removeCart method will remove an item from the user's cart by dropping
     the ``item`` document from the ``cart`` list. 
@@ -281,7 +299,6 @@ class ShoppingCart(Api):
             {'$pull': {'cart': self.item }}
         ).acknowledged
     
-    # modify an item quantity
     ''' 
     The changeQuan method will update ``item`` in the customer's shopping cart to 
     have quantity ``quantity``
@@ -297,7 +314,6 @@ class ShoppingCart(Api):
             array_filters=[{'element': self.item}]
         ).acknowledged
     
-    # copies all shopping cart contents to a list
     ''' 
     The readShoppingcart method will return the customer's shopping cart contents
     as a list of dictionaries
@@ -311,7 +327,6 @@ class ShoppingCart(Api):
     def emptyCart(self):
         return self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
-    # erase user's cart
     ''' 
     The eraseUser method will completely delete the user and their shopping cart
     from the Shopping Cart collection
@@ -321,6 +336,7 @@ class ShoppingCart(Api):
 
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
+
     # print("Requirement 2.1 - Login\n----------------------------------\n")
     # validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
     # validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
