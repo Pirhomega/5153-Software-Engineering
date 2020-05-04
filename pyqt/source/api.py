@@ -250,7 +250,8 @@ class ShoppingCart(Api):
     '''
     def createCart(self):
         # create an empty array for cart items
-        self.collection.insert_one({'username': self.user['username'], 'cart': []})
+        # Returns true if insertion was successful
+        return self.collection.insert_one({'username': self.user['username'], 'cart': []}).acknowledged
 
     # appends a dictionary to the 'cart' list (adds an item to the cart)
     ''' 
@@ -261,10 +262,10 @@ class ShoppingCart(Api):
     '''
     def addCart(self, item={}):
         self.item = item
-        self.collection.update_one(
+        return self.collection.update_one(
                 self.user, 
                 {'$push': {'cart': {'$each': [ self.item ]}}}
-        )
+        ).acknowledged
 
     # removes an item from the user's cart
     ''' 
@@ -275,10 +276,10 @@ class ShoppingCart(Api):
     '''  
     def removeCart(self, item={}):
         self.item = item
-        self.collection.update_one(
+        return self.collection.update_one(
             self.user, 
             {'$pull': {'cart': self.item }}
-        )
+        ).acknowledged
     
     # modify an item quantity
     ''' 
@@ -290,11 +291,11 @@ class ShoppingCart(Api):
     def changeQuan(self, item={}, quantity=1):
         self.item = item
         self.quantity = quantity
-        self.collection.update_one(
+        return self.collection.update_one(
             filter=self.user,
             update={'$set': {f"cart.$[element].quantity": self.quantity}},
             array_filters=[{'element': self.item}]
-        )
+        ).acknowledged
     
     # copies all shopping cart contents to a list
     ''' 
@@ -308,7 +309,7 @@ class ShoppingCart(Api):
     The emptyCart method will empty the ``cart`` list of a customer
     '''      
     def emptyCart(self):
-        self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
+        return self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
     # erase user's cart
     ''' 
@@ -316,84 +317,123 @@ class ShoppingCart(Api):
     from the Shopping Cart collection
     '''  
     def eraseUser(self):
-        self.collection.delete_one(self.user)
+        return self.collection.delete_one(self.user).acknowledged
 
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
-    import time
-    validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
-    validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
-    invalidPassword = {'username':'bwalker', 'password':'wrong'}
-    invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
+    # print("Requirement 2.1 - Login\n----------------------------------\n")
+    # validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
+    # validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
+    # invalidPassword = {'username':'bwalker', 'password':'wrong'}
+    # invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
 
-    # Login tests
-    print("*****LOGIN TESTS*****")
-    loginTest = Login()
+    # # Login tests
+    # loginTest = Login()
     
-    # Valid username and password test for customer
-    user, login_success, user_type = loginTest.login(validTestCustomer)
-    pprint(user)
-    if user_type: 
-        print("User is a customer")
+    # # Valid username and password test for customer
+    # user, login_success, user_type = loginTest.login(validTestCustomer)
+    # if login_success:
+    #     print('TC01: Passed')
+    # else:
+    #     print('TC01: Failed')
     
-    # Valid username and password test for employee
-    user, login_success, user_type = loginTest.login(validTestEmployee)
-    pprint(user)
-    if not user_type: 
-        print("User is an employee")
+    # # Valid username and password test for employee
+    # user, login_success, user_type = loginTest.login(validTestEmployee)
+    # if not user_type:
+    #     print('TC02: Passed')
+    # else:
+    #     print('TC02: Failed')
 
-    # Valid username, invalid password test
-    user, login_success, user_type = loginTest.login(invalidPassword)
-    pprint(user)
+    # # Valid username, invalid password test
+    # user, login_success, user_type = loginTest.login(invalidPassword)
+    # if not login_success:
+    #     print('TC03: Passed')
+    # else:
+    #     print('TC03: Failed')
 
-    # Invalid username, Invalid password
-    user, login_success, user_type = loginTest.login(invalidUsername)
-    pprint(user)
+    # # Invalid username, Invalid password
+    # user, login_success, user_type = loginTest.login(invalidUsername)
+    # if not login_success:
+    #     print('TC04: Passed')
+    # else:
+    #     print('TC04: Failed')
 
-    # No login information given
-    user, login_success, _ = loginTest.login()
-    pprint(user)
+    # # No login information given
+    # user, login_success, _ = loginTest.login()
+    # if not login_success:
+    #     print('TC05: Passed')
+    # else:
+    #     print('TC05: Failed')
 
-    print("*****CONNECTION TESTS*****")
-    # Connection tests
-    api = Api()
-    connect1 = api.connect(api.customerConnectionString)
-    testSearch = api.search({'item':'Red Pepper Paste'})
-    pprint(testSearch)
+    # print("*****CONNECTION TESTS*****")
+    # # Connection tests
+    # api = Api()
+    # connect1 = api.connect(api.customerConnectionString)
+    # testSearch = api.search({'item':'Red Pepper Paste'})
+    # pprint(testSearch)
 
-    print("*****CREATE USER TEST*****")
-    userTest = UserManager()
+    # print("*****CREATE USER TEST*****")
+    # userTest = UserManager()
 
-    # Create a user that doesn't exist
-    result = userTest.createUser({'username': 'test', 'password': 'test'})
-    print(f"Create user account (should be True): {result}")
-    time.sleep(5)
+    # # Create a user that doesn't exist
+    # result = userTest.createUser({'username': 'test', 'password': 'test'})
+    # print(f"Create user account (should be True): {result}")
 
-    # Remove the user that was just created
-    result = userTest.removeUser({'username': 'test'})
-    print(f"Delete a user account (should be 1): {result}")
-    time.sleep(5)
+    # # Remove the user that was just created
+    # result = userTest.removeUser({'username': 'test'})
+    # print(f"Delete a user account (should be 1): {result}")
 
-    # Try to create a user using a username that is taken already
-    result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
-    print(f"Try to create a user with a username that's taken (should be False): {result}")
-    time.sleep(5)
+    # # Try to create a user using a username that is taken already
+    # result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
+    # print(f"Try to create a user with a username that's taken (should be False): {result}")
 
-    # Try to delete a user that doesn't exist
-    result = userTest.removeUser({'username': 'test'})
-    print(f"Try to delete an account that doesn't exist (should be 0): {result}")
+    # # Try to delete a user that doesn't exist
+    # result = userTest.removeUser({'username': 'test'})
+    # print(f"Try to delete an account that doesn't exist (should be 0): {result}")
     
     # Create a shopping cart for a user, add some items to it, remove items from it, erase the user's cart completely
+    print("Requirement 2.3 - Item selection and purchase\n----------------------------------\n")
     shop_cart = ShoppingCart({'username': 'cmat'})
-    shop_cart.createCart()
-    shop_cart.addCart({'item':'coke','quantity':1234,'available':True})
-    shop_cart.addCart({'item':'Sprite','quantity':12,'available':False})
-    shop_cart.addCart({'item':'Dr. Pepper','quantity':1,'available':True})
-    shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235)
-    shop_cart.removeCart({'item':'Dr. Pepper'})
-    shop_cart.removeCart({'item':'Sprite','quantity':12})
-    print(shop_cart.readShoppingcart())
-    shop_cart.emptyCart()
-    print("Gimme sec")
-    time.sleep(5)
-    shop_cart.eraseUser()
+
+    # create a customer's cart
+    if shop_cart.createCart():
+        print("TC01: Passed")
+    else:
+        print("TC01: Failed")
+
+    # add an item to the cart
+    if shop_cart.addCart({'item':'coke','quantity':1234,'available':True}) and shop_cart.addCart({'item':'Sprite','quantity':12,'available':False}) and shop_cart.addCart({'item':'Dr. Pepper','quantity':1,'available':True}):
+        print("TC02: Passed")
+    else:
+        print("TC02: Failed")
+
+    # change the quantity of an item in the cart
+    if shop_cart.changeQuan({'item':'coke','quantity':1234,'available':True}, 1235):
+        print("TC03: Passed")
+    else:
+        print("TC03: Failed")
+    
+    # remove items from the cart
+    if shop_cart.removeCart({'item':'coke'}) and shop_cart.removeCart({'item':'Dr. Pepper'}):
+        print("TC04: Passed")
+    else:
+        print("TC04: Failed")
+
+    # return the items in the shopping cart as a list of dicts
+    asdf = shop_cart.readShoppingcart()
+    if asdf == []:
+        print("TC05: Failed")
+    else:
+        print("TC05: Passed | Shopping Cart Contents:", asdf)
+
+    # empty user's cart
+    if shop_cart.emptyCart() == None:
+        print("TC06: Failed")
+    else:
+        print("TC06: Passed")
+
+    # erase the user
+    if shop_cart.eraseUser():
+        print("TC07: Passed")
+    else:
+        print("TC07: Failed")
