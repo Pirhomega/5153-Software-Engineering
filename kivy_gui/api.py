@@ -77,12 +77,19 @@ class Api:
 # Employee class offers the two operations an Innoventory employee can perform:
 # change any product's availability and quantity
 class Employee(Api):
+    '''
+    The Employee class provides the functionality to to modify product quantity and availability
+    '''
     def __init__(self):
         client = self.connect(self.employeeConnectionString)
         db = client.Innoventory
         self.collection = db.Products
 
-    # changes item quantity and returns the updated quantity
+    '''
+    The change_quantity method updates the quantity of item, identified by the dictionary
+    ``item``, to the value in ``quantity``.
+    Returns the updated quantity from the database itself to prove the change has been made
+    '''
     def change_quantity(self, item={}, quantity=1):
         return self.collection.find_one_and_update(
             filter=item,
@@ -90,12 +97,17 @@ class Employee(Api):
             return_document=ReturnDocument.AFTER
         )['quantity']
 
-    # changes item quantity and returns the updated availability
+    '''
+    The change_availability method updates the availability of item, identified by the dictionary
+    ``item``, to the value in ``avail``.
+    Returns the updated availability from the database itself to prove the change has been made.
+    '''
     def change_availability(self, item={}, avail=bool):
         return self.collection.find_one_and_update(
             filter=item,
-            update={'$set': {'availability': avail}}
-        )
+            update={'$set': {'availability': avail}},
+            return_document=ReturnDocument.AFTER
+        )['availability']
 
 class Login(Api):
     '''
@@ -227,9 +239,23 @@ class UserManager(Api):
 
 # This class represents all the shopping cart functionality
 # See __main__ for example code
-# For security reasons, do not pass passwords in the 'user' dictionary,
-# only the username
 class ShoppingCart(Api):
+    '''
+    The ShoppingCart class contains methods for creating, accessing, and modifying
+    a customer's shopping cart.
+    For security reasons, do not pass passwords in the ``user`` dictionary,
+    only the user's name.
+    Per-customer Schema: 
+    "_id": {
+        "$oid": #########
+    },
+    "username": <customer's username>,
+    "cart": [
+        {},
+        {},
+        ...
+    ]
+    '''
     def __init__(self, user={'username': ''}):
         client = self.connect(Api.authenConnectionString)
         # Connect to Authen db
@@ -238,15 +264,23 @@ class ShoppingCart(Api):
         self.collection = db.Shopping_Cart
         self.user = user
 
-    # only call this when a user is creating an account
+    '''
+    The createCart method inserts a document in the Shopping Cart collection
+    for the customer
+    '''
     def createCart(self):
         # create an empty array for cart items
         # Returns true if insertion was successful
-        return self.collection.insert_one({'username': self.user['username'], 'cart': []}).acknowledged
 
-    # appends a dictionary to the 'cart' list (adds an item to the cart)
-    # Example:
-    #       shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+        self.collection.insert_one({'username': self.user['username'], 'cart': []})
+
+
+    ''' 
+    The addCart method will add an item to the user's cart by appending the dictionary ``item``
+    to the ``cart`` list 
+    Example:
+          shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
+    '''    
     def addCart(self, item={}):
         self.item = item
         return self.collection.update_one(
@@ -254,9 +288,13 @@ class ShoppingCart(Api):
                 {'$push': {'cart': {'$each': [ self.item ]}}}
         ).acknowledged
 
-    # removes an item from the user's cart
-    # Example:
-    #       shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})   
+
+    ''' 
+    The removeCart method will remove an item from the user's cart by dropping
+    the ``item`` document from the ``cart`` list. 
+    Example:
+          shop_cart.removeCart({'username': 'bwalker'}, {'item':'Dr. Pepper'})
+    '''  
     def removeCart(self, item={}):
         self.item = item
         return self.collection.update_one(
@@ -264,7 +302,12 @@ class ShoppingCart(Api):
             {'$pull': {'cart': self.item }}
         ).acknowledged
     
-    # modify an item quantity
+    ''' 
+    The changeQuan method will update ``item`` in the customer's shopping cart to 
+    have quantity ``quantity``
+    Example:
+          shop_cart.removeCart({'item':'Dr. Pepper'}, 5)
+    '''  
     def changeQuan(self, item={}, quantity=1):
         self.item = item
         self.quantity = quantity
@@ -274,14 +317,23 @@ class ShoppingCart(Api):
             array_filters=[{'element': self.item}]
         ).acknowledged
     
-    # copies all shopping cart contents to a list
+    ''' 
+    The readShoppingcart method will return the customer's shopping cart contents
+    as a list of dictionaries
+    '''  
     def readShoppingcart(self):
         return dict(self.collection.find_one(filter=self.user))['cart']
-    
+
+    ''' 
+    The emptyCart method will empty the ``cart`` list of a customer
+    '''    
     def emptyCart(self):
         return self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
-    # erase user's cart
+    ''' 
+    The eraseUser method will completely delete the user and their shopping cart
+    from the Shopping Cart collection
+    ''' 
     def eraseUser(self):
         return self.collection.delete_one(self.user).acknowledged
 
