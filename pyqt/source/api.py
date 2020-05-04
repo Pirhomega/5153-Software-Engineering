@@ -153,7 +153,6 @@ class Login(Api):
                 # print("Valid username, invalid password")
                 userInfo = Api.emptyUser
         else:
-            print("Username does not exist")
             userInfo = Api.emptyUser
 
         return userInfo, login_success, customer
@@ -336,77 +335,115 @@ class ShoppingCart(Api):
 
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
-
-    # print("Requirement 2.1 - Login\n----------------------------------\n")
-    # validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
-    # validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
-    # invalidPassword = {'username':'bwalker', 'password':'wrong'}
-    # invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
-
-    # # Login tests
-    # loginTest = Login()
     
-    # # Valid username and password test for customer
-    # user, login_success, user_type = loginTest.login(validTestCustomer)
-    # if login_success:
-    #     print('TC01: Passed')
-    # else:
-    #     print('TC01: Failed')
+    # Requirement 2.1 Tests - Login 
+    ###############################
+
+    print("Requirement 2.1 - Login\n----------------------------------")
+    validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
+    validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
+    invalidPassword = {'username':'bwalker', 'password':'wrong'}
+    invalidUsername = {'username':'bwekrlkd', 'password':'doesntmatter'}
+
+    # Get an instance of the Login class to test login functionality
+    loginTest = Login()
     
-    # # Valid username and password test for employee
-    # user, login_success, user_type = loginTest.login(validTestEmployee)
-    # if not user_type:
-    #     print('TC02: Passed')
-    # else:
-    #     print('TC02: Failed')
-
-    # # Valid username, invalid password test
-    # user, login_success, user_type = loginTest.login(invalidPassword)
-    # if not login_success:
-    #     print('TC03: Passed')
-    # else:
-    #     print('TC03: Failed')
-
-    # # Invalid username, Invalid password
-    # user, login_success, user_type = loginTest.login(invalidUsername)
-    # if not login_success:
-    #     print('TC04: Passed')
-    # else:
-    #     print('TC04: Failed')
-
-    # # No login information given
-    # user, login_success, _ = loginTest.login()
-    # if not login_success:
-    #     print('TC05: Passed')
-    # else:
-    #     print('TC05: Failed')
-
-    # print("*****CONNECTION TESTS*****")
-    # # Connection tests
-    # api = Api()
-    # connect1 = api.connect(api.customerConnectionString)
-    # testSearch = api.search({'item':'Red Pepper Paste'})
-    # pprint(testSearch)
-
-    # print("*****CREATE USER TEST*****")
-    # userTest = UserManager()
-
-    # # Create a user that doesn't exist
-    # result = userTest.createUser({'username': 'test', 'password': 'test'})
-    # print(f"Create user account (should be True): {result}")
-
-    # # Remove the user that was just created
-    # result = userTest.removeUser({'username': 'test'})
-    # print(f"Delete a user account (should be 1): {result}")
-
-    # # Try to create a user using a username that is taken already
-    # result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
-    # print(f"Try to create a user with a username that's taken (should be False): {result}")
-
-    # # Try to delete a user that doesn't exist
-    # result = userTest.removeUser({'username': 'test'})
-    # print(f"Try to delete an account that doesn't exist (should be 0): {result}")
+    # Valid username and password test for customer
+    user, login_success, user_type = loginTest.login(validTestCustomer)
+    if login_success:
+        print('TC01: Passed')
+    else:
+        print('TC01: Failed')
     
+    # Valid username and password test for employee
+    user, login_success, user_type = loginTest.login(validTestEmployee)
+    if not user_type:
+        print('TC02: Passed')
+    else:
+        print('TC02: Failed')
+
+    # Valid username, invalid password test
+    user, login_success, user_type = loginTest.login(invalidPassword)
+    if not login_success:
+        print('TC03: Passed')
+    else:
+        print('TC03: Failed')
+
+    # Invalid username, Invalid password
+    user, login_success, user_type = loginTest.login(invalidUsername)
+    if not login_success:
+        print('TC04: Passed')
+    else:
+        print('TC04: Failed')
+
+    # No login information given
+    user, login_success, _ = loginTest.login()
+    if not login_success:
+        print('TC05: Passed')
+    else:
+        print('TC05: Failed')
+
+    # Create user account
+    userTest = UserManager()
+
+    # Create a user that doesn't exist
+    result = userTest.createUser({'username': 'test', 'password': 'test'})
+    if result == True:
+        print('TC06: Passed')
+    else:
+        print('TC06: Failed')
+
+    # Remove the user that was just created
+    result = userTest.removeUser({'username': 'test'})
+    if result == True:
+        print('TC07: Passed')
+    else:
+        print('TC07: Failed')
+
+    # Try to create a user using a username that is taken already
+    result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
+    if result == False:
+        print('TC08: Passed')
+    else:
+        print('TC08: Failed')
+
+    # Try to delete a user that doesn't exist
+    result = userTest.removeUser({'username': 'test'})
+    if result == False:
+        print('TC09: Passed')
+    else:
+        print('TC09: Failed')
+
+    print('\n')
+
+    # Requirement 2.2 Tests - Item Search and Discovery
+    ###################################################
+
+    print("Requirement 2.2 - Item Search and Discovery\n----------------------------------")
+    # Get an instance of the Api class for querying the database
+    api = Api()
+
+    # Connection test
+    # Returns an instance of a connection with the MongoDB database
+    connection = api.connect(api.customerConnectionString)
+    if connection:
+        print('TC01: Passed')
+    else:
+        print('TC01: Failed')
+
+    # Search for a known available item
+    testSearch = api.search({'item':'red pepper paste'})
+    parsed = api.parse_results(testSearch)
+    if 'red pepper paste' in parsed:
+        print('TC02: Passed')
+    else:
+        print('TC02: Failed')
+    
+    print('\n')
+
+    # Requirement 2.3 Tests - Item Selection and Purchase
+    #####################################################
+
     # Create a shopping cart for a user, add some items to it, remove items from it, erase the user's cart completely
     print("Requirement 2.3 - Item selection and purchase\n----------------------------------\n")
     shop_cart = ShoppingCart({'username': 'cmat'})

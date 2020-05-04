@@ -28,10 +28,9 @@ class Api:
     def connect(self, connectionString=""):
         self.connectionString = connectionString
         client = MongoClient(connectionString)
-        return client
-    
+        return client    
+
     # search the product collection for a specific item
-    # if the search is unsuccessful, an empty list is returned
     def search(self, term):
         self.term = term
         client = self.connect(self.customerConnectionString)
@@ -84,7 +83,7 @@ class Employee(Api):
         client = self.connect(self.employeeConnectionString)
         db = client.Innoventory
         self.collection = db.Products
-
+    
     '''
     The change_quantity method updates the quantity of item, identified by the dictionary
     ``item``, to the value in ``quantity``.
@@ -194,7 +193,7 @@ class UserManager(Api):
         # Make sure username does not already exist
         # find_one returns None if the username is not in the Users collection
         userExists = collection.find_one({'username': self.data['username']})
-
+        
         # If the username does not already exist, it is safe to create the new user
         if userExists == None:
             # all users who create an account from the app are customers (isCustomer = True)
@@ -271,23 +270,20 @@ class ShoppingCart(Api):
     def createCart(self):
         # create an empty array for cart items
         # Returns true if insertion was successful
-
-        self.collection.insert_one({'username': self.user['username'], 'cart': []})
-
+        return self.collection.insert_one({'username': self.user['username'], 'cart': []}).acknowledged
 
     ''' 
     The addCart method will add an item to the user's cart by appending the dictionary ``item``
     to the ``cart`` list 
     Example:
           shop_cart.addCart({'username': 'bwalker'}, {'item':'Dr. Pepper','quantity':1,'available':True})
-    '''    
+    '''
     def addCart(self, item={}):
         self.item = item
         return self.collection.update_one(
                 self.user, 
                 {'$push': {'cart': {'$each': [ self.item ]}}}
         ).acknowledged
-
 
     ''' 
     The removeCart method will remove an item from the user's cart by dropping
@@ -326,14 +322,14 @@ class ShoppingCart(Api):
 
     ''' 
     The emptyCart method will empty the ``cart`` list of a customer
-    '''    
+    '''      
     def emptyCart(self):
         return self.collection.find_one_and_update(self.user, {'$set' : {'cart': []}})
 
     ''' 
     The eraseUser method will completely delete the user and their shopping cart
     from the Shopping Cart collection
-    ''' 
+    '''  
     def eraseUser(self):
         return self.collection.delete_one(self.user).acknowledged
 
