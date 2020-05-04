@@ -1,0 +1,713 @@
+<FloatLay>:
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source:"background.jpg"
+
+<GridLay>:
+    canvas:
+        Color:
+            rgba: 0.3843, 0.7019, 0.8745, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Img>:
+    allow_stretch: True
+    keep_ratio: True
+
+
+# $$\                           $$\           
+# $$ |                          \__|          
+# $$ |       $$$$$$\   $$$$$$\  $$\ $$$$$$$\  
+# $$ |      $$  __$$\ $$  __$$\ $$ |$$  __$$\ 
+# $$ |      $$ /  $$ |$$ /  $$ |$$ |$$ |  $$ |
+# $$ |      $$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |
+# $$$$$$$$\ \$$$$$$  |\$$$$$$$ |$$ |$$ |  $$ |
+# \________| \______/  \____$$ |\__|\__|  \__|
+#                     $$\   $$ |              
+#                     \$$$$$$  |              
+#                      \______/      
+          
+<Login>:
+    name: "login"
+
+    usernameIn: usernameIn
+    passwordIn: passwordIn
+
+    FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+            
+        TextInput:
+            id: usernameIn
+            hint_text:"Username"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.65}
+            size_hint: 0.5, 0.07
+            multiline: False
+            
+        TextInput:
+            id: passwordIn
+            hint_text:"Password"
+            font_size: (20)
+            pos_hint: {"center_x": 0.5, "top":0.55}
+            size_hint: 0.5, 0.07
+            multiline: False
+            password: True
+            
+        Button:
+            text: "Login"
+            font_size: (20)
+            pos_hint:{"x":0.2,"y":0.05}
+            size_hint: 0.6, 0.2
+
+            on_release:
+                root.login()
+                root.manager.transition.direction = "left"
+
+        Button:
+            text: "Create Account"
+            font_size: (12)
+            pos_hint:{"x":0.3,"y":0.3}
+            size_hint: 0.4, 0.1
+
+            on_release:
+                root.manager.transition.direction = "left"
+                root.createAcct()
+
+
+
+
+
+# $$\   $$\                                                                           
+# $$ |  $$ |                                                                          
+# $$ |  $$ | $$$$$$\  $$$$$$\$$$$\   $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  
+# $$$$$$$$ |$$  __$$\ $$  _$$  _$$\ $$  __$$\ $$  __$$\  \____$$\ $$  __$$\ $$  __$$\ 
+# $$  __$$ |$$ /  $$ |$$ / $$ / $$ |$$$$$$$$ |$$ /  $$ | $$$$$$$ |$$ /  $$ |$$$$$$$$ |
+# $$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |$$  __$$ |$$ |  $$ |$$   ____|
+# $$ |  $$ |\$$$$$$  |$$ | $$ | $$ |\$$$$$$$\ $$$$$$$  |\$$$$$$$ |\$$$$$$$ |\$$$$$$$\ 
+# \__|  \__| \______/ \__| \__| \__| \_______|$$  ____/  \_______| \____$$ | \_______|
+#                                             $$ |                $$\   $$ |          
+#                                             $$ |                \$$$$$$  |          
+#                                             \__|                 \______/           
+
+<Homepage>:
+    
+    name: "homepage"
+
+    searchPhraseIn: searchPhrase
+    
+    FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
+        TextInput:
+            id: searchPhrase
+            hint_text: "Enter an item to search for"
+            font_size: 20
+            pos_hint: {"x": 0.05, "top":0.63}
+            size_hint: .90, 0.05
+            multiline: False
+
+        Button:
+            text: "Search"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"top":0.45}
+            size_hint: 0.4, 0.2
+ 
+            on_release:
+                root.search()
+                root.manager.transition.direction = "left"
+                
+        Button:
+            text: "Logout"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.logout()
+        
+        Button:
+            text: "Settings"
+            font_size: (20)
+            pos_hint:{"right":0.95,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.settingsMenu()
+
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
+                    
+
+#  $$$$$$\                                  $$\                $$$$$$\                                                      $$\     
+# $$  __$$\                                 $$ |              $$  __$$\                                                     $$ |    
+# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\  $$$$$$\    $$$$$$\  $$ /  $$ | $$$$$$$\  $$$$$$$\  $$$$$$\  $$\   $$\ $$$$$$$\  $$$$$$\   
+# $$ |      $$  __$$\ $$  __$$\  \____$$\ \_$$  _|  $$  __$$\ $$$$$$$$ |$$  _____|$$  _____|$$  __$$\ $$ |  $$ |$$  __$$\ \_$$  _|  
+# $$ |      $$ |  \__|$$$$$$$$ | $$$$$$$ |  $$ |    $$$$$$$$ |$$  __$$ |$$ /      $$ /      $$ /  $$ |$$ |  $$ |$$ |  $$ |  $$ |    
+# $$ |  $$\ $$ |      $$   ____|$$  __$$ |  $$ |$$\ $$   ____|$$ |  $$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ |$$\ 
+# \$$$$$$  |$$ |      \$$$$$$$\ \$$$$$$$ |  \$$$$  |\$$$$$$$\ $$ |  $$ |\$$$$$$$\ \$$$$$$$\ \$$$$$$  |\$$$$$$  |$$ |  $$ |  \$$$$  |
+#  \______/ \__|       \_______| \_______|   \____/  \_______|\__|  \__| \_______| \_______| \______/  \______/ \__|  \__|   \____/                                                                                                                                                                                                                                                                                                                                                                                                  
+
+<CreateAccount>:
+
+    name: "createAcct"
+
+    usernameIn: usernameIn
+    passwordIn: passwordIn
+
+    FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
+        TextInput:
+            id: usernameIn
+            hint_text:"Username"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.65}
+            size_hint: 0.5, 0.07
+            multiline: False
+            
+        TextInput:
+            id: passwordIn
+            hint_text:"Password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.55}
+            size_hint: 0.5, 0.07
+            multiline: False
+            password: True
+
+        Button:
+            text: "Create Account"
+            font_size: (12)
+            pos_hint:{"x":0.3,"y":0.3}
+            size_hint: 0.4, 0.1
+
+            on_release:
+                root.manager.transition.direction = "left"
+                root.createAccount()
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "login"
+
+
+#  $$$$$$\             $$\     $$\     $$\                               $$\      $$\                               
+# $$  __$$\            $$ |    $$ |    \__|                              $$$\    $$$ |                              
+# $$ /  \__| $$$$$$\ $$$$$$\ $$$$$$\   $$\ $$$$$$$\   $$$$$$\   $$$$$$$\ $$$$\  $$$$ | $$$$$$\  $$$$$$$\  $$\   $$\ 
+# \$$$$$$\  $$  __$$\\_$$  _|\_$$  _|  $$ |$$  __$$\ $$  __$$\ $$  _____|$$\$$\$$ $$ |$$  __$$\ $$  __$$\ $$ |  $$ |
+#  \____$$\ $$$$$$$$ | $$ |    $$ |    $$ |$$ |  $$ |$$ /  $$ |\$$$$$$\  $$ \$$$  $$ |$$$$$$$$ |$$ |  $$ |$$ |  $$ |
+# $$\   $$ |$$   ____| $$ |$$\ $$ |$$\ $$ |$$ |  $$ |$$ |  $$ | \____$$\ $$ |\$  /$$ |$$   ____|$$ |  $$ |$$ |  $$ |
+# \$$$$$$  |\$$$$$$$\  \$$$$  |\$$$$  |$$ |$$ |  $$ |\$$$$$$$ |$$$$$$$  |$$ | \_/ $$ |\$$$$$$$\ $$ |  $$ |\$$$$$$  |
+#  \______/  \_______|  \____/  \____/ \__|\__|  \__| \____$$ |\_______/ \__|     \__| \_______|\__|  \__| \______/ 
+#                                                    $$\   $$ |                                                     
+#                                                    \$$$$$$  |                                                     
+#                                                     \______/                                                      
+
+<SettingsMenu>:
+    name:"settingsMenu"
+
+    FloatLay:
+
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
+        Button:
+            text: "Change\nPassword"
+            halign: "center"
+            valigh: "center"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"center_y":0.6}
+            size_hint: 0.3, 0.1
+
+            on_release:
+                root.manager.transition.direction = "left"
+                root.changePassword()
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "homepage"
+
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
+
+#  $$$$$$\  $$\                                               $$$$$$$\                                                                       $$\ 
+# $$  __$$\ $$ |                                              $$  __$$\                                                                      $$ |
+# $$ /  \__|$$$$$$$\   $$$$$$\  $$$$$$$\   $$$$$$\   $$$$$$\  $$ |  $$ |$$$$$$\   $$$$$$$\  $$$$$$$\ $$\  $$\  $$\  $$$$$$\   $$$$$$\   $$$$$$$ |
+# $$ |      $$  __$$\  \____$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$$$$$$  |\____$$\ $$  _____|$$  _____|$$ | $$ | $$ |$$  __$$\ $$  __$$\ $$  __$$ |
+# $$ |      $$ |  $$ | $$$$$$$ |$$ |  $$ |$$ /  $$ |$$$$$$$$ |$$  ____/ $$$$$$$ |\$$$$$$\  \$$$$$$\  $$ | $$ | $$ |$$ /  $$ |$$ |  \__|$$ /  $$ |
+# $$ |  $$\ $$ |  $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$   ____|$$ |     $$  __$$ | \____$$\  \____$$\ $$ | $$ | $$ |$$ |  $$ |$$ |      $$ |  $$ |
+# \$$$$$$  |$$ |  $$ |\$$$$$$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$$\ $$ |     \$$$$$$$ |$$$$$$$  |$$$$$$$  |\$$$$$\$$$$  |\$$$$$$  |$$ |      \$$$$$$$ |
+#  \______/ \__|  \__| \_______|\__|  \__| \____$$ | \_______|\__|      \_______|\_______/ \_______/  \_____\____/  \______/ \__|       \_______|
+#                                         $$\   $$ |                                                                                             
+#                                         \$$$$$$  |                                                                                             
+#                                          \______/                                                                                              
+                                                                                       
+<ChangePassword>:
+    name:"changePassword"
+    oldPasswordIn: oldPasswordIn
+    newPasswordIn: newPasswordIn
+    newPasswordIn2: newPasswordIn2
+    FloatLay:
+
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+
+        TextInput:
+            id: oldPasswordIn
+            hint_text:"Enter your old password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.66}
+            size_hint: 0.75, 0.07
+            multiline: False
+            password:True
+
+        TextInput:
+            id: newPasswordIn
+            hint_text:"Enter your new password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.56}
+            size_hint: 0.75, 0.07
+            multiline: False
+            password:True
+
+        TextInput:
+            id: newPasswordIn2
+            hint_text:"Re-enter your new password"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.46}
+            size_hint: 0.75, 0.07
+            multiline: False
+            password:True            
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "settingsMenu"
+        
+        Button:
+            text: "Submit"
+            font_size: (20)
+            pos_hint:{"x":0.75,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.changePass()
+                root.manager.transition.direction = "left"
+                root.manager.current = "homepage"
+
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
+
+# 
+#  $$$$$$\                                          $$\      $$\    $$\ $$\                         
+# $$  __$$\                                         $$ |     $$ |   $$ |\__|                        
+# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |\$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ | \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |  \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+#  \______/  \_______| \_______|\__|       \_______|\__|  \__|   \_/    \__| \_______| \_____\____/ 
+#                                                                                                                                                                                                                                                                                                   
+<SearchView>:
+    name: "searchView"
+    FloatLay:
+
+        Label: 
+            text: 'Results'
+            size_hint: 0.2, 0.05
+            pos_hint: {"center_x":0.5,"top":0.98}    
+            font_size: (30)  
+
+        RecycleView:
+            size_hint:0.9,0.735
+            pos_hint:{"right":0.95,"y":0.17}
+            viewclass: 'SearchButton'       
+            data: root.my_label
+            
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "homepage"
+
+# 
+#  $$$$$$\                                          $$\       $$$$$$$\              $$\     $$\                         
+# $$  __$$\                                         $$ |      $$  __$$\             $$ |    $$ |                        
+# $$ /  \__| $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+# \$$$$$$\  $$  __$$\  \____$$\ $$  __$$\ $$  _____|$$  __$$\ $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+#  \____$$\ $$$$$$$$ | $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |$$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+# $$\   $$ |$$   ____|$$  __$$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+# \$$$$$$  |\$$$$$$$\ \$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+#  \______/  \_______| \_______|\__|       \_______|\__|  \__|\_______/  \______/    \____/  \____/  \______/ \__|  \__|
+#             
+
+# Even though nothing is implemented for this class in kivy code, it is necessary to have the definition included
+<SearchButton>:                                                                                                                   
+                                                                                              
+# $$$$$$$\                            $$\  $$$$$$\            $$$$$$\           
+# $$  __$$\                           $$ | \_$$  _|          $$  __$$\          
+# $$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |   $$ |  $$$$$$$\  $$ /  \__|$$$$$$\  
+# $$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |   $$ |  $$  __$$\ $$$$\    $$  __$$\ 
+# $$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |   $$ |  $$ |  $$ |$$  _|   $$ /  $$ |
+# $$ |      $$ |      $$ |  $$ |$$ |  $$ |   $$ |  $$ |  $$ |$$ |     $$ |  $$ |
+# $$ |      $$ |      \$$$$$$  |\$$$$$$$ ||$$$$$$\ $$ |  $$ |$$ |     \$$$$$$  |
+# \__|      \__|       \______/  \_______| \______|\__|  \__|\__|      \______/ 
+
+<ProdInfo>:
+    name: "prodInfo"
+    qtyBuy: qtyBuy
+    FloatLay:
+
+        Label: 
+            text: 'Product Info'
+            size_hint: 0.2, 0.05
+            pos_hint: {"center_x":0.5,"top":0.98}    
+            font_size: (30)  
+
+        Label: 
+            text: 'Product ID'
+            size_hint: 0.3, 0.11
+            pos_hint: {"x":0.05,"top":0.915}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Name'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.805}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Qty in stock'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.695}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Available'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.585}    
+            font_size: (20)  
+
+        Label:
+            text: 'Price'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.475}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Details'
+            size_hint: 0.3, 0.13
+            pos_hint: {"x":0.05,"top":0.365}    
+            font_size: (20)  
+
+
+        RecycleView:
+            size_hint:0.6,0.65
+            pos_hint:{"right":0.95,"y":0.255}
+            viewclass: 'ProdView'       
+            data: root.product
+            
+
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size_hint: 1, 1
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+        Button:
+            text: "Back"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "searchView"
+                root.clear_qty_box()
+
+        Button:
+            text:"Home"
+            font_size: (20)
+            pos_hint:{"right":0.95,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "homepage"
+        
+        Button:
+            text:"Cart"
+            font_size: (20)
+            pos_hint:{"center_x":0.5,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "down"
+                root.manager.current = "shoppingCart"
+
+        TextInput:
+            id: qtyBuy
+            hint_text:"Qty to add"
+            font_size: (20) 
+            pos_hint: {"right": 0.5 , "y":0.18}
+            size_hint: 0.45, 0.05
+            multiline: False
+            password: False
+
+        Button:
+            text:"Add to cart"
+            font_size: (20)
+            pos_hint:{"x":0.55,"y":0.18}
+            size_hint: .4, 0.05
+
+            on_release:
+                root.addToCart()
+
+#  $$$$$$$\                            $$\                       $$\   $$\    $$\ $$\                         
+# $$  __$$\                           $$ |                      $$ |  $$ |   $$ |\__|                        
+# $$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$ |$$\   $$\  $$$$$$$\ $$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+# $$$$$$$  |$$  __$$\ $$  __$$\ $$  __$$ |$$ |  $$ |$$  _____|\_$$  _|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+# $$  ____/ $$ |  \__|$$ /  $$ |$$ /  $$ |$$ |  $$ |$$ /        $$ |   \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+# $$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |        $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+# $$ |      $$ |      \$$$$$$  |\$$$$$$$ |\$$$$$$  |\$$$$$$$\   \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+# \__|      \__|       \______/  \_______| \______/  \_______|   \____/   \_/    \__| \_______| \_____\____/                
+<ProdView>:
+
+#  $$$$$$\  $$\                                     $$\                      $$$$$$\                       $$\     
+# $$  __$$\ $$ |                                    \__|                    $$  __$$\                      $$ |    
+# $$ /  \__|$$$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  $$\ $$$$$$$\   $$$$$$\  $$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\   
+# \$$$$$$\  $$  __$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$ |$$  __$$\ $$  __$$\ $$ |       \____$$\ $$  __$$\\_$$  _|  
+#  \____$$\ $$ |  $$ |$$ /  $$ |$$ /  $$ |$$ /  $$ |$$ |$$ |  $$ |$$ /  $$ |$$ |       $$$$$$$ |$$ |  \__| $$ |    
+# $$\   $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$ |$$ |  $$\ $$  __$$ |$$ |       $$ |$$\ 
+# \$$$$$$  |$$ |  $$ |\$$$$$$  |$$$$$$$  |$$$$$$$  |$$ |$$ |  $$ |\$$$$$$$ |\$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |
+#  \______/ \__|  \__| \______/ $$  ____/ $$  ____/ \__|\__|  \__| \____$$ | \______/  \_______|\__|        \____/ 
+#                               $$ |      $$ |                    $$\   $$ |                                       
+#                               $$ |      $$ |                    \$$$$$$  |                                       
+#                               \__|      \__|                     \______/                                       
+<ShoppingCart>:
+    name:"shoppingCart"
+    FloatLay:
+        Label: 
+            text: 'Item'
+            color: 0,0,0,1      
+            size_hint: 0.66, 0.05
+            pos_hint: {"x":0.05,"top":0.98}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Qty'
+            color: 0,0,0,1      
+            size_hint: 0.09, 0.05
+            pos_hint: {"x":0.71,"top":0.98}    
+            font_size: (20)  
+
+        Label: 
+            text: 'Price'
+            color: 0,0,0,1      
+            size_hint: 0.15, 0.05
+            pos_hint: {"x":0.8,"top":0.98}    
+            font_size: (20)  
+
+        RecycleView:
+            size_hint:0.66,0.68
+            pos_hint:{"x":0.05,"y":0.24}
+            viewclass: 'CartView'       
+            data: root.items
+            
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+                size_hint_y: None
+                text_size: self.width, None
+
+        RecycleView:
+            size_hint:0.09,0.68  
+            pos_hint:{"x":0.71,"y":0.24}
+            viewclass: 'CartView'       
+            data: root.qty
+            
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+                size_hint_y: None
+                text_size: self.width, None
+
+        RecycleView:
+            size_hint:0.15,0.68 
+            pos_hint:{"x":0.80,"y":0.24}
+            viewclass: 'CartView'       
+            data: root.price
+            
+            SelectableRecycleGridLayout:
+                cols: 1
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: False
+                touch_multiselect: False
+
+                size_hint_y: None
+                text_size: self.width, None
+        
+        Label: 
+            text: 'Total: $' + root.totalPrint
+            color: 0,0,0,1 
+            size_hint: 0.9, 0.05
+            pos_hint: {"x":0.05,"y":0.17}    
+            font_size: (40) 
+
+        Button:
+            text:"Home"
+            font_size: (20)
+            pos_hint:{"x":0.05,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "homepage"
+
+        Button:
+            text: "Checkout"
+            font_size: (20)
+            pos_hint:{"right":0.95,"y":0.05}
+            size_hint: 0.2, 0.1
+
+            on_release:
+                root.checkout()
+            
+
+#  $$$$$$\                       $$\   $$\    $$\ $$\                         
+# $$  __$$\                      $$ |  $$ |   $$ |\__|                        
+# $$ /  \__| $$$$$$\   $$$$$$\ $$$$$$\ $$ |   $$ |$$\  $$$$$$\  $$\  $$\  $$\ 
+# $$ |       \____$$\ $$  __$$\\_$$  _|\$$\  $$  |$$ |$$  __$$\ $$ | $$ | $$ |
+# $$ |       $$$$$$$ |$$ |  \__| $$ |   \$$\$$  / $$ |$$$$$$$$ |$$ | $$ | $$ |
+# $$ |  $$\ $$  __$$ |$$ |       $$ |$$\ \$$$  /  $$ |$$   ____|$$ | $$ | $$ |
+# \$$$$$$  |\$$$$$$$ |$$ |       \$$$$  | \$  /   $$ |\$$$$$$$\ \$$$$$\$$$$  |
+#  \______/  \_______|\__|        \____/   \_/    \__| \_______| \_____\____/ 
+
+<CartView>:
+
+
+# $$$$$$$$\                    $$\     $$$$$$$\              $$\     $$\                         
+# \__$$  __|                   $$ |    $$  __$$\             $$ |    $$ |                        
+#    $$ | $$$$$$\   $$$$$$$\ $$$$$$\   $$ |  $$ |$$\   $$\ $$$$$$\ $$$$$$\    $$$$$$\  $$$$$$$\  
+#    $$ |$$  __$$\ $$  _____|\_$$  _|  $$$$$$$\ |$$ |  $$ |\_$$  _|\_$$  _|  $$  __$$\ $$  __$$\ 
+#    $$ |$$$$$$$$ |\$$$$$$\    $$ |    $$  __$$\ $$ |  $$ |  $$ |    $$ |    $$ /  $$ |$$ |  $$ |
+#    $$ |$$   ____| \____$$\   $$ |$$\ $$ |  $$ |$$ |  $$ |  $$ |$$\ $$ |$$\ $$ |  $$ |$$ |  $$ |
+#    $$ |\$$$$$$$\ $$$$$$$  |  \$$$$  |$$$$$$$  |\$$$$$$  |  \$$$$  |\$$$$  |\$$$$$$  |$$ |  $$ |
+#    \__| \_______|\_______/    \____/ \_______/  \______/    \____/  \____/  \______/ \__|  \__|                                                                                                                                                                                                                                                                                      
+
+<TestButton>:
+    name: "testButton"
+    input: test_input
+
+    FloatLay:
+        Img:
+            source:"Inno.png"
+            size_hint: 0.33,0.33
+            pos_hint: {"center_x":0.5,"top":0.99}
+            
+        TextInput:
+            id: test_input
+            hint_text:"test_input"
+            font_size: (20) 
+            pos_hint: {"center_x": 0.5 , "top":0.65}
+            size_hint: 0.5, 0.07
+            multiline: False
+            
+        Button:
+            text: "Test"
+            font_size: (20)
+            pos_hint:{"x":0.2,"y":0.05}
+            size_hint: 0.6, 0.2
+            
+            on_release:
+                root.testSearch()
