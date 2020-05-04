@@ -24,6 +24,5 @@
 4.	Execute the following command: `conda activate InnoventoryMobile`
 5.	Execute the following command: `python .\Innoventory.py`
 ## Desktop Instructions
-#### To run the desktop app
 1. Navigate to [Desktop](./Desktop)
 2. Double-click `Innoventory.exe`
