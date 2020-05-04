@@ -659,6 +659,7 @@ class Ui_MainWindow(object):
             # if no search results, let user know
             else:
                 self.no_results_notif.setText("No results found")
+        self.search_box.setText("")
 
     # Returns a dictionary of dictionaries from a search
     # Schema:
