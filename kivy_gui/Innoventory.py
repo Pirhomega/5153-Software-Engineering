@@ -447,7 +447,8 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
 
     # get the dict of the item the user clicked on
     def getProduct(self):
-        # print(self.full_data)
+        count = 0
+        #print(self.full_data)
         # full_data is a list that contains a single entry which is a list
         for lis in self.full_data:
             #pp.pprint(lis)
@@ -457,7 +458,8 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
                 #print(f'{dic["item"]}, {self.item}')
                 # if the "item" entry in the dict matched the item the user
                 # clicked on, assign the entire dict to product
-                if dic["item"] == self.item:
+                if dic["item"] == self.item and count < 1:
+                    pp.pprint(dic)
                     #make the product dict available to other functions
                     self.productInfo = dic
                     # If the dict has more the "details" key
@@ -469,8 +471,15 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
                     else:
                         dic["alt names"] = f"None"
                     #print(type(dic))
-                    self.product = [{"text": str(dic[key])} for key in dic.keys()] 
-                    #print(self.product)
+                    
+                    # build product dictionary
+                    self.product = [ {'text': str(dic['_id'])}, {'text': str(dic['item'])}, {'text': str(dic['quantity'])}, 
+                                      {'text': str(dic['availability'])}, {'text': str(dic['price'])}, {'text': str(dic['alt names'])} ]
+
+                    print(self.product)
+
+                    count += 1
+    
 
     def addToCart(self):
 
