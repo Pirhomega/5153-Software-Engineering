@@ -16,8 +16,7 @@ from api import Api, Login, Employee, UserManager, ShoppingCart
 import sys
 
 class Ui_MainWindow(object):
-    def __init__(self, start):
-        self.start = start
+    def __init__(self):
         self.prompt_confirm = False
         self.search_attempt = Api()
     def setupUi(self, MainWindow):
@@ -188,6 +187,7 @@ class Ui_MainWindow(object):
         self.addbutton.setEnabled(True)
         self.name = QtWidgets.QLabel(self.page_4)
         self.name.setGeometry(QtCore.QRect(10, 150, 121, 31))
+        self.name.setObjectName("name")
         self.price = QtWidgets.QLabel(self.page_4)
         self.price.setGeometry(QtCore.QRect(140, 370, 81, 31))
         self.price.setObjectName("price")
@@ -203,20 +203,18 @@ class Ui_MainWindow(object):
         self.available_label.setGeometry(QtCore.QRect(10, 410, 121, 31))
         self.available_label.setObjectName("available_label")
         self.itemdescription = QtWidgets.QLabel(self.page_4)
-        self.itemdescription.setGeometry(QtCore.QRect(10, 210, 121, 41))
+        self.itemdescription.setGeometry(QtCore.QRect(10, 180, 121, 41))
         self.itemdescription.setObjectName("itemdescription")
         self.description_text = QtWidgets.QLabel(self.page_4)
-        self.description_text.setGeometry(QtCore.QRect(140, 220, 251, 101))
+        self.description_text.setGeometry(QtCore.QRect(140, 190, 251, 141))
         self.description_text.setScaledContents(True)
         self.description_text.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.description_text.setWordWrap(True)
         self.description_text.setObjectName("description_text")
-        self.name.setObjectName("name")
         self.item_name = QtWidgets.QLabel(self.page_4)
         self.item_name.setGeometry(QtCore.QRect(140, 160, 251, 51))
         self.item_name.setScaledContents(True)
         self.item_name.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.item_name.setWordWrap(True)
         self.item_name.setObjectName("item_name")
         self.available_status = QtWidgets.QLabel(self.page_4)
         self.available_status.setGeometry(QtCore.QRect(140, 410, 81, 31))
@@ -322,7 +320,7 @@ class Ui_MainWindow(object):
         self.font.setWeight(75)
         self.Instructions.setFont(self.font)
         
-        self.font.setPointSize(14)
+        self.font.setPointSize(12)
         self.font.setBold(True)
         self.font.setWeight(75)
         self.price.setFont(self.font)
@@ -410,7 +408,7 @@ class Ui_MainWindow(object):
         self.addbutton.clicked.connect(self.add_to_shoppingcart)
 
         # navigate to the user's shopping cart
-        self.actionShopping_Cart.triggered.connect(self.refresh_shoppingcart)
+        self.actionShopping_Cart.triggered.connect(self.show_shoppingcart)
 
         # go back to the search results page from the shopping cart
         self.cart_back_button.clicked.connect(lambda: self.switch_page(2))
@@ -436,7 +434,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         # sets the starting page to index 0 when app is started
-        self.stackedWidget.setCurrentIndex(self.start)
+        self.stackedWidget.setCurrentIndex(0)
 
         # Searches recursively for all child objects of the given object, and connects matching signals from them to slots of object that follow the following form:
         #       ``void on_<object name>_<signal name>(<signal parameters>)``;
@@ -743,12 +741,10 @@ class Ui_MainWindow(object):
     # change the quantity of an item
     def employee_change_quan(self):
         product = self.search_result[str(self.search_listWidget.row(self.item))]
-        # some items don't have a quantity field, so don't try to change it
-        if 'quantity' in product:
-            # changes the quantity of the product, returns the updated quantity, and updates quantity on item page
-            new_quan = self.employee_object.change_quantity(product,self.item_quan_spinBox.value())
-            self.numitems.setText(str(new_quan))
-            self.search_result[str(self.search_listWidget.row(self.item))]['quantity'] = new_quan
+        # changes the quantity of the product, returns the updated quantity, and updates quantity on item page
+        new_quan = self.employee_object.change_quantity(product,self.item_quan_spinBox.value())
+        self.numitems.setText(str(new_quan))
+        self.search_result[str(self.search_listWidget.row(self.item))]['quantity'] = new_quan
 
     # change the quantity of an item
     def employee_change_avail(self):
@@ -794,15 +790,15 @@ class Ui_MainWindow(object):
     # prepares the shopping cart page
     def show_shoppingcart(self):
         self.item_prompt.setText("Click an item to interact")
-        self.refresh_shoppingcart()
+        self.init_shoppingcart()
         self.switch_page(5)
 
     # will fill the list widget on the shopping cart page with all the items in the 
     # user's shopping cart
-    def refresh_shoppingcart(self):
+    def init_shoppingcart(self):
         self.cart_listWidget.clear()
         for product in self.shopping_cart_list:
-            item = QtWidgets.QListWidgetItem("Item: " + product['item'] + ", Count: " + str(product['quantity']) + ", Price: " + str('{0:.2f}'.format(product['price'])))
+            item = QtWidgets.QListWidgetItem("Item: " + product['item'].title() + " | Count: " + str(product['quantity']) + " | Price: " + str('{0:.2f}'.format(product['price'])))
             self.cart_listWidget.addItem(item)
         self.findPrice()
     
@@ -815,7 +811,7 @@ class Ui_MainWindow(object):
 
     # Removes the selected item from the cart
     def remove_item(self):
-        if self.cart_listWidget.count():
+        if self.cart_listWidget.count() and self.cart_listWidget.currentRow() > -1:
             item = self.cart_listWidget.currentRow()
             # remove the item from the database shopping cart
             self.shopping_cart_object.removeCart(self.shopping_cart_list[item])
@@ -825,17 +821,20 @@ class Ui_MainWindow(object):
             self.cart_listWidget.takeItem(item)
             self.findPrice()
 
-    # changes the quantity of the item in the user's cart with the value in the 
-    # quantity spin box
+    # changes the quantity of the item in the user's cart with the value in the quantity spin box
     def change_quan(self):
         # only change an item's quantity if there are items in the cart
-        if self.cart_listWidget.count():
+        if self.cart_listWidget.count() and self.cart_listWidget.currentRow() > -1:
+            item = self.cart_listWidget.currentRow()
             # updates quantity in database
-            self.shopping_cart_object.changeQuan(self.shopping_cart_list[self.cart_listWidget.currentRow()], self.quantity_spin.value())
+            self.shopping_cart_object.changeQuan(self.shopping_cart_list[item], self.quantity_spin.value())
             # updates quantity in local shopping cart
-            item = self.shopping_cart_list[(self.cart_listWidget.currentRow())]
+            item = self.shopping_cart_list[item]
             item['quantity'] = self.quantity_spin.value()
-            self.refresh_shoppingcart()
+            # updates the item in the list widget
+            self.cart_listWidget.item(item).setText("Item: " + item['item'].title() + " | Count: " + str(item['quantity']) + " | Price: " + str('{0:.2f}'.format(item['price'])))
+            # recalculate shopping cart total
+            self.findPrice()
 
     # prompts user if they are sure they want to purchase the items in their cart.
     # After being prompted, they must click the prompt button again to confirm.
@@ -855,13 +854,10 @@ class Ui_MainWindow(object):
 
 #################################################################################################################
 
-    # will switch to widget representing page 'next_page'
+    # will switch to widget representing page 'next_page'.
+    # 'next_page` can be a stacked_widget type or integer
     def switch_page(self, next_page):
-        # if the argument 'next_page' is an integer, 
-        if isinstance(next_page, int):
-            self.stackedWidget.setCurrentIndex(next_page)
-        else:
-            self.stackedWidget.setCurrentWidget(next_page)
+        self.stackedWidget.setCurrentIndex(next_page)
 
 #
 #                             $$\      $$\           $$\           
@@ -876,7 +872,7 @@ class Ui_MainWindow(object):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow(int(input("")))
+    ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
