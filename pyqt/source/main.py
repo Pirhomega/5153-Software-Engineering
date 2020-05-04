@@ -811,6 +811,7 @@ class Ui_MainWindow(object):
 
     # Removes the selected item from the cart
     def remove_item(self):
+        # only remove if an item is selected and if there are items in the cart
         if self.cart_listWidget.count() and self.cart_listWidget.currentRow() > -1:
             item = self.cart_listWidget.currentRow()
             # remove the item from the database shopping cart
@@ -823,7 +824,7 @@ class Ui_MainWindow(object):
 
     # changes the quantity of the item in the user's cart with the value in the quantity spin box
     def change_quan(self):
-        # only change an item's quantity if there are items in the cart
+        # only change an item's quantity if there are items in the cart AND if an item is selected
         if self.cart_listWidget.count() and self.cart_listWidget.currentRow() > -1:
             item = self.cart_listWidget.currentRow()
             # updates quantity in database
