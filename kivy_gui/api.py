@@ -286,7 +286,7 @@ class ShoppingCart(Api):
 
 # If api.py is run on its own, all tests will be run and the results will be shown
 if __name__ == "__main__":
-    import time
+    
     validTestCustomer = {'username':'bwalker', 'password':'GC2020'}
     validTestEmployee = {'username':'cmatamoros', 'password':'GC2030'}
     invalidPassword = {'username':'bwalker', 'password':'wrong'}
@@ -333,17 +333,17 @@ if __name__ == "__main__":
     # Create a user that doesn't exist
     result = userTest.createUser({'username': 'test', 'password': 'test'})
     print(f"Create user account (should be True): {result}")
-    time.sleep(5)
+    
 
     # Remove the user that was just created
     result = userTest.removeUser({'username': 'test'})
     print(f"Delete a user account (should be 1): {result}")
-    time.sleep(5)
+    
 
     # Try to create a user using a username that is taken already
     result = userTest.createUser({'username': 'bwalker', 'password' : 'random'})
     print(f"Try to create a user with a username that's taken (should be False): {result}")
-    time.sleep(5)
+    
 
     # Try to delete a user that doesn't exist
     result = userTest.removeUser({'username': 'test'})
@@ -360,6 +360,5 @@ if __name__ == "__main__":
     shop_cart.removeCart({'item':'Sprite','quantity':12})
     print(shop_cart.readShoppingcart())
     shop_cart.emptyCart()
-    print("Gimme sec")
-    time.sleep(5)
+    
     shop_cart.eraseUser()
