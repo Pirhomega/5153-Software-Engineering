@@ -49,5 +49,4 @@ dependencies:
     - pycodestyle==2.5.0
     - pyinstaller==3.6
     - pywin32-ctypes==0.2.0
-prefix: C:\Users\Broday\Anaconda3\envs\KivyApp
 
