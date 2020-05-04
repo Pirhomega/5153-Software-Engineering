@@ -19,10 +19,10 @@
 
 ## Mobile Instructions
 1. [Download and install Miniconda](https://docs.conda.io/en/latest/miniconda.html)
-2.	Navigate to `5153-Software-Engineering\kivy_gui\`
+2.	Navigate to `5153-Software-Engineering\Mobile\`
 3.	Execute the following command: `conda env create -f InnoventoryMobile.yml`
 4.	Execute the following command: `conda activate InnoventoryMobile`
 5.	Execute the following command: `python .\Innoventory.py`
 ## Desktop Instructions
-1. Navigate to [Desktop](./Desktop)
+1. Navigate to `5153-Software-Engineering\Desktop\`
 2. Double-click `Innoventory.exe`
