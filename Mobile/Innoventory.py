@@ -466,7 +466,7 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
                 # if the "item" entry in the dict matched the item the user
                 # clicked on, assign the entire dict to product
                 if dic["item"] == self.item and count < 1:
-                    pp.pprint(dic)
+                    #pp.pprint(dic)
                     #make the product dict available to other functions
                     self.productInfo = dic
                     # If the dict has more the "details" key
@@ -483,7 +483,7 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
                     self.product = [ {'text': str(dic['_id'])}, {'text': str(dic['item'])}, {'text': str(dic['quantity'])}, 
                                       {'text': str(dic['availability'])}, {'text': str(dic['price'])}, {'text': str(dic['alt names'])} ]
 
-                    print(self.product)
+                    #print(self.product)
 
                     count += 1
     
@@ -501,7 +501,7 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
 
             self.qtyBuy.text = ""
 
-        elif self.qtyBuy.text == "" or int(self.qtyBuy.text) <= 0 or self.qtyBuy.text.isnumeric() == False:
+        elif self.qtyBuy.text == "" or self.qtyBuy.text.isnumeric() == False or int(self.qtyBuy.text) <= 0:
              # Create a popup window 
             amountPopup = Popup(title="Invalid Amount", title_align="center", 
                 content=Label(text="Please enter a valid amount"), 
