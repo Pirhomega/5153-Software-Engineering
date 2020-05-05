@@ -563,6 +563,7 @@ class Ui_MainWindow(object):
             self.shopping_cart_object = ShoppingCart({'username': username_password['username']})
             # create a shopping cart copy to prevent multiple database queries (like when checking if an item is already in the cart before adding it)
             self.shopping_cart_list = self.shopping_cart_object.readShoppingcart()
+            print(self.shopping_cart_list)
             # re-enable menu bar buttons
             self.actionShopping_Cart.setEnabled(True)
             # self.actionChange_Username.setEnabled(True)
@@ -765,11 +766,16 @@ class Ui_MainWindow(object):
 
     # adds an item to the customer's shopping cart
     def add_to_shoppingcart(self):
+        # if false, the item is in the customer's cart already
+        checker = False
         product = self.search_result[str(self.search_listWidget.row(self.item))]
         # prevents customers from adding items to their cart that are unavailable or aren't in stock
         if product['availability'] and product['quantity']:
-            if (product not in self.shopping_cart_list):
-                product['quantity'] = 1
+            product['quantity'] = 1
+            for item in self.shopping_cart_list:
+                if (product['item'] == item['item']):
+                    checker = True
+            if not checker:
                 self.shopping_cart_object.addCart(product)
                 # the shopping cart list will track all items in customer's shopping cart
                 self.shopping_cart_list.append(product)
@@ -831,10 +837,10 @@ class Ui_MainWindow(object):
             # updates quantity in database
             self.shopping_cart_object.changeQuan(self.shopping_cart_list[item], self.quantity_spin.value())
             # updates quantity in local shopping cart
-            item = self.shopping_cart_list[item]
-            item['quantity'] = self.quantity_spin.value()
+            product = self.shopping_cart_list[item]
+            product['quantity'] = self.quantity_spin.value()
             # updates the item in the list widget
-            self.cart_listWidget.item(item).setText("Item: " + item['item'].title() + " | Count: " + str(item['quantity']) + " | Price: " + str('{0:.2f}'.format(item['price'])))
+            self.cart_listWidget.item(item).setText("Item: " + product['item'].title() + " | Count: " + str(product['quantity']) + " | Price: " + str('{0:.2f}'.format(product['price'])))
             # recalculate shopping cart total
             self.findPrice()
 
