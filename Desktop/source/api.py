@@ -233,8 +233,8 @@ class UserManager(Api):
 
         # If the data authenticates, change the user's password 
         collection = self.connectToAuthen()
-        collection.update_one(self.data, {'$set':self.data2})
-        return True
+        
+        return collection.update_one(self.data, {'$set':self.data2}).acknowledged
 
 # This class represents all the shopping cart functionality
 # See __main__ for example code
