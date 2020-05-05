@@ -314,11 +314,13 @@ class ChangePassword(Screen):
         self.newPassword =  urllib.parse.quote(self.newPasswordIn.text)
         self.newPassword2 =  urllib.parse.quote(self.newPasswordIn2.text)
         
-        if(self.newPassword == self.newPassword2):
+        if(self.newPassword == self.newPassword2 and self.newPassword != "" and self.newPassword2 != ""):
             # Pass the new and old data to the api
-           result = manage.changePassword(
+            result = manage.changePassword(
                 {'username': username, 'password': self.oldPassword},
                 {'username': username, 'password': self.newPassword})
+        else:
+            result = False
         self.reset()
             
         if result == True:
@@ -328,7 +330,9 @@ class ChangePassword(Screen):
             passChangePopup.open()
         
         else:
-            print("password change fail")
+            passChangePopup = Popup(title="Password Change Failure", title_align="center", 
+                content=Label(text="Password Failed to Change"), size_hint=(.75,.5))
+            passChangePopup.open()
    
     # Removes input from text boxes
     def reset(self):
