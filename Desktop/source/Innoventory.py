@@ -10,7 +10,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPalette
+from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import Qt
 from api import Api, Login, Employee, UserManager, ShoppingCart
 import sys
@@ -301,7 +301,7 @@ class Ui_MainWindow(object):
 
         # set the fonts
         self.font = QtGui.QFont()
-        self.font.setFamily("Onyx")
+        self.font.setFamily("Calibri")
         self.font.setPointSize(20)
         self.username_label.setFont(self.font)
         self.password_label.setFont(self.font)
@@ -497,7 +497,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Innoventory"))
-        self.search_prompt_label.setText(_translate("MainWindow", "What are you looking for?"))
+        self.search_prompt_label.setText(_translate("MainWindow", "Search"))
         self.search_button.setText(_translate("MainWindow", "Search"))
         self.username_label.setText(_translate("MainWindow", "Username"))
         self.password_label.setText(_translate("MainWindow", "Password"))
