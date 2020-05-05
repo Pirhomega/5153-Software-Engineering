@@ -563,7 +563,6 @@ class Ui_MainWindow(object):
             self.shopping_cart_object = ShoppingCart({'username': username_password['username']})
             # create a shopping cart copy to prevent multiple database queries (like when checking if an item is already in the cart before adding it)
             self.shopping_cart_list = self.shopping_cart_object.readShoppingcart()
-            print(self.shopping_cart_list)
             # re-enable menu bar buttons
             self.actionShopping_Cart.setEnabled(True)
             # self.actionChange_Username.setEnabled(True)
