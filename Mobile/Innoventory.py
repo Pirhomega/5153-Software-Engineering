@@ -228,11 +228,18 @@ class CreateAccount(Screen):
         # Get a UserManager object
         user = api.UserManager()
         # Create the user
+        if self.username == "" or self.password == "":
+            valid_input = False
+        else:
+            valid_input = True
+
         # Returns True if the user was successfully created
-        result = user.createUser({'username': self.username, 'password': self.password})
+        if valid_input == True:
+            result = user.createUser({'username': self.username, 'password': self.password})
+        else:
+            result = False
 
         if result == True:
-            print("Successfully created user")
             wm.current = "homepage"
         else:
             # Create a popup window to display the authentication failure
