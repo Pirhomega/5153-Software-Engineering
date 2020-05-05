@@ -593,6 +593,7 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
     qty = ListProperty()
     price = ListProperty()
     totalPrint = StringProperty("0.00")
+    
 
     # The screen updates itself as soon as the user enters
     def on_pre_enter(self):
@@ -605,7 +606,11 @@ class ShoppingCart(Screen,BoxLayout,GridLayout):
             #print(type(item))
             self.items.append({'text': str(item['item'])})
             self.qty.append({'text': str(item['qty'])})
-            self.price.append({'text':str(item['price'])})
+            # Only print two decimal places
+            format_price = item['price']       
+            TWO = decimal.Decimal(10) ** -2
+            format_price = decimal.Decimal(format_price).quantize(TWO)
+            self.price.append({'text':str(format_price)})
         shopCartInfo.clear()
 
         # Adds up all prices in the list
