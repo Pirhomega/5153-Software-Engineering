@@ -478,10 +478,15 @@ class ProdInfo(Screen, BoxLayout, GridLayout):
                     else:
                         dic["alt names"] = f"None"
                     #print(type(dic))
+
+                    format_price = dic['price']
+                    # Only print two decimal places
+                    TWO = decimal.Decimal(10) ** -2
+                    format_price = decimal.Decimal(format_price).quantize(TWO)
                     
                     # build product dictionary
                     self.product = [ {'text': str(dic['_id'])}, {'text': str(dic['item'])}, {'text': str(dic['quantity'])}, 
-                                      {'text': str(dic['availability'])}, {'text': str(dic['price'])}, {'text': str(dic['alt names'])} ]
+                                      {'text': str(dic['availability'])}, {'text': str(format_price)}, {'text': str(dic['alt names'])} ]
 
                     #print(self.product)
 
